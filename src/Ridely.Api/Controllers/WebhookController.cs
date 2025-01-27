@@ -1,12 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Soloride.Application.Features.Common.Calls.Command;
-using SolorideAPI.Controllers.Base;
+using Ridely.Application.Features.Common.Calls.Command;
+using RidelyAPI.Controllers.Base;
 using Twilio.AspNet.Core;
 using Twilio.TwiML;
 using Twilio.TwiML.Voice;
 
-namespace SolorideAPI.Controllers;
+namespace RidelyAPI.Controllers;
 
 //public class WebhookController(IVoiceService voiceService) : BaseController<WebhookController>
 //{

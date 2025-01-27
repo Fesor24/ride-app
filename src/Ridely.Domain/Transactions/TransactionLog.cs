@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Abstractions;
+﻿using Ridely.Domain.Abstractions;
 
-namespace Soloride.Domain.Transactions;
+namespace Ridely.Domain.Transactions;
 public sealed class TransactionLog : Entity
 {
     private TransactionLog()

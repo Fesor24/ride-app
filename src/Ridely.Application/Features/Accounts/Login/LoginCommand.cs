@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using Soloride.Domain.Abstractions;
+using Ridely.Domain.Abstractions;
 
-namespace Soloride.Application.Features.Accounts.Login;
+namespace Ridely.Application.Features.Accounts.Login;
 public record LoginCommand(
     string Email,
     string Password

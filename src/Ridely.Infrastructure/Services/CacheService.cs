@@ -1,8 +1,8 @@
-﻿using Soloride.Domain.Services;
+﻿using Ridely.Domain.Services;
 using StackExchange.Redis;
 using System.Text.Json;
 
-namespace Soloride.Infrastructure.Services;
+namespace Ridely.Infrastructure.Services;
 internal class CacheService(IConnectionMultiplexer connectionMultiplexer) : ICacheService
 {
     private readonly IDatabase db = connectionMultiplexer.GetDatabase();

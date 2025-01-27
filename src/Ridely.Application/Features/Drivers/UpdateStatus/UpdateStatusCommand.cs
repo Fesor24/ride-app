@@ -1,6 +1,6 @@
-﻿using Soloride.Application.Abstractions.Messaging;
+﻿using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Drivers.UpdateStatus;
+namespace Ridely.Application.Features.Drivers.UpdateStatus;
 public sealed record UpdateStatusCommand(UpdateDriverStatusEnum Status, long DriverId)
     : ICommand;
 

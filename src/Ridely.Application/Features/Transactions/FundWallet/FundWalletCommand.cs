@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using Soloride.Application.Abstractions.Messaging;
+using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Transactions.FundWallet;
+namespace Ridely.Application.Features.Transactions.FundWallet;
 public sealed record FundWalletCommand(long? DriverId, long? RiderId, int Amount) :
     ICommand<FundWalletResponse>;
 

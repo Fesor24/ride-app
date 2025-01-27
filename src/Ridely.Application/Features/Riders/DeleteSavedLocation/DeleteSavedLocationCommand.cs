@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using Soloride.Application.Abstractions.Messaging;
+using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Riders.DeleteSavedLocation;
+namespace Ridely.Application.Features.Riders.DeleteSavedLocation;
 public sealed record DeleteSavedLocationCommand(long SavedLocationId) :
     ICommand;
 

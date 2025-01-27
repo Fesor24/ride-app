@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Models.Users;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Rides;
-using Soloride.Domain.Users;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Models.Users;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Rides;
+using Ridely.Domain.Users;
 
-namespace Soloride.Infrastructure.Repositories;
+namespace Ridely.Infrastructure.Repositories;
 internal sealed class UserRepository(ApplicationDbContext context) :
     GenericRepository<User>(context), IUserRepository
 {

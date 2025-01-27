@@ -1,4 +1,4 @@
-﻿namespace Soloride.Domain.Transactions;
+﻿namespace Ridely.Domain.Transactions;
 public enum TransactionLogEvent
 {
     PaystackGeneralEvent = 1,

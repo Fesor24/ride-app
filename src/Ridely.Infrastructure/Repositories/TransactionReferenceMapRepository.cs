@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Soloride.Domain.Transactions;
+using Ridely.Domain.Transactions;
 
-namespace Soloride.Infrastructure.Repositories;
+namespace Ridely.Infrastructure.Repositories;
 internal sealed class TransactionReferenceMapRepository(ApplicationDbContext context) :
     GenericRepository<TransactionReferenceMap>(context), ITransactionReferenceMapRepository
 {

@@ -1,8 +1,8 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Riders;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Riders;
 
-namespace Soloride.Application.Features.Riders.DeleteSavedLocation;
+namespace Ridely.Application.Features.Riders.DeleteSavedLocation;
 internal sealed class DeleteSavedLocationCommandHandler :
     ICommandHandler<DeleteSavedLocationCommand>
 {

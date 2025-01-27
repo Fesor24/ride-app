@@ -1,6 +1,6 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Models.Shared;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Models.Shared;
 
-namespace Soloride.Application.Features.Drivers.GetOtp;
+namespace Ridely.Application.Features.Drivers.GetOtp;
 
 public sealed record GetOtpQuery(OtpReason OtpReason, long DriverId) : IQuery;

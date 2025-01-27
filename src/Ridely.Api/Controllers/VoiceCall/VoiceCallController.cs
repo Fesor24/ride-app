@@ -1,15 +1,15 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Soloride.Application.Features.VoiceCall.AccessToken;
-using Soloride.Application.Features.VoiceCall.EndCall;
-using Soloride.Application.Features.VoiceCall.NotifyRecipient;
-using Soloride.Application.Features.VoiceCall.StartCall;
-using SolorideAPI.Controllers.Base;
-using SolorideAPI.Extensions;
-using SolorideAPI.Shared;
+using Ridely.Application.Features.VoiceCall.AccessToken;
+using Ridely.Application.Features.VoiceCall.EndCall;
+using Ridely.Application.Features.VoiceCall.NotifyRecipient;
+using Ridely.Application.Features.VoiceCall.StartCall;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Extensions;
+using RidelyAPI.Shared;
 
-namespace SolorideAPI.Controllers.VoiceCall
+namespace RidelyAPI.Controllers.VoiceCall
 {
     [ApiVersion(ApiVersions.V1)]
     [ApiVersion(ApiVersions.V2)]

@@ -1,17 +1,17 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Abstractions.Notifications;
-using Soloride.Application.Abstractions.VoiceCall;
-using Soloride.Application.Abstractions.Websocket;
-using Soloride.Application.Models.WebSocket;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Rides;
-using Soloride.Shared.Constants;
-using Soloride.Shared.Helper;
-using Soloride.Shared.Helper.Keys;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Abstractions.Notifications;
+using Ridely.Application.Abstractions.VoiceCall;
+using Ridely.Application.Abstractions.Websocket;
+using Ridely.Application.Models.WebSocket;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Rides;
+using Ridely.Shared.Constants;
+using Ridely.Shared.Helper;
+using Ridely.Shared.Helper.Keys;
 
-namespace Soloride.Application.Features.VoiceCall.NotifyRecipient
+namespace Ridely.Application.Features.VoiceCall.NotifyRecipient
 {
     internal sealed class NotifyRecipientCommandHandler :
         ICommandHandler<NotifyRecipientCommand>

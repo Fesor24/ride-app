@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Abstractions;
+﻿using Ridely.Domain.Abstractions;
 
-namespace Soloride.Domain.Common;
+namespace Ridely.Domain.Common;
 public sealed class Bank : Entity
 {
     private Bank()

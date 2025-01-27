@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Riders;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Riders;
 
-namespace Soloride.Domain.Rides;
+namespace Ridely.Domain.Rides;
 public sealed class Ratings : Entity
 {
     private Ratings()

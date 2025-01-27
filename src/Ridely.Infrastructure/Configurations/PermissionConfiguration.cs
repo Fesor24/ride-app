@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Soloride.Domain.Users;
+using Ridely.Domain.Users;
 
-namespace Soloride.Infrastructure.Configurations;
+namespace Ridely.Infrastructure.Configurations;
 internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permission>
 {
     public void Configure(EntityTypeBuilder<Permission> builder)

@@ -1,11 +1,11 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Rides;
-using Soloride.Shared.Helper.Keys;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Rides;
+using Ridely.Shared.Helper.Keys;
 
-namespace Soloride.Application.Features.Users.GetUserStatus;
+namespace Ridely.Application.Features.Users.GetUserStatus;
 internal sealed class GetCurrentUserStatusQueryHandler:
     IQueryHandler<GetCurrentUserStatusQuery, GetCurrentUserStatusResponse>
 {

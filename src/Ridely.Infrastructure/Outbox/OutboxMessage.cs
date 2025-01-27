@@ -1,4 +1,4 @@
-﻿namespace Soloride.Infrastructure.Outbox;
+﻿namespace Ridely.Infrastructure.Outbox;
 public sealed class OutboxMessage
 {
     public OutboxMessage(string type, string content)

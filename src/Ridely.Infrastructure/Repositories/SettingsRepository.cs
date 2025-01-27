@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Common;
+﻿using Ridely.Domain.Common;
 
-namespace Soloride.Infrastructure.Repositories;
+namespace Ridely.Infrastructure.Repositories;
 internal sealed class SettingsRepository(ApplicationDbContext context) :
     GenericRepository<Settings>(context), ISettingsRepository
 {

@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Abstractions.Notifications;
+﻿namespace Ridely.Application.Abstractions.Notifications;
 public interface ISmsService
 {
     Task SendAsync(string phoneNumber, string message);

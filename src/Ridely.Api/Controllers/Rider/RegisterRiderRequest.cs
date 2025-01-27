@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Shared;
+﻿using Ridely.Domain.Shared;
 
-namespace SolorideAPI.Controllers.Rider;
+namespace RidelyAPI.Controllers.Rider;
 
 public sealed record RegisterRiderRequest(
     string? ReferrerCode,

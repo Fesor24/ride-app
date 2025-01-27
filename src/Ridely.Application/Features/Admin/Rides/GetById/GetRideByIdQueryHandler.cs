@@ -1,9 +1,9 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Extensions;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Rides;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Extensions;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Rides;
 
-namespace Soloride.Application.Features.Admin.Rides.GetById;
+namespace Ridely.Application.Features.Admin.Rides.GetById;
 internal sealed class GetRideByIdQueryHandler : IQueryHandler<GetRideByIdQuery, GetRideResponse>
 {
     private readonly IRideRepository _rideRepository;

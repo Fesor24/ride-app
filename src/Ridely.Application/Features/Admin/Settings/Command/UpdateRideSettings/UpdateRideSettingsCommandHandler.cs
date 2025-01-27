@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Common;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Common;
 
-namespace Soloride.Application.Features.Admin.Settings.Command.UpdateRideSettings;
+namespace Ridely.Application.Features.Admin.Settings.Command.UpdateRideSettings;
 internal class UpdateRideSettingsCommandHandler : 
     IRequestHandler<UpdateRideSettingsCommand, Result<bool>>
 {

@@ -1,4 +1,4 @@
-﻿namespace Soloride.Domain.Models.Rides;
+﻿namespace Ridely.Domain.Models.Rides;
 public class ChatSearchQueryParams : SearchParams
 {
     public long RideId { get; set; }

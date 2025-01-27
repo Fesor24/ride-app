@@ -1,14 +1,14 @@
 ﻿using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
-using Soloride.Application.Abstractions.Payment;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Common;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Rides;
-using Soloride.Domain.Transactions;
+using Ridely.Application.Abstractions.Payment;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Common;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Rides;
+using Ridely.Domain.Transactions;
 
-namespace Soloride.Infrastructure.Payments;
+namespace Ridely.Infrastructure.Payments;
 internal sealed class PaymentService : IPaymentService
 {
     private readonly ApplicationDbContext _context;

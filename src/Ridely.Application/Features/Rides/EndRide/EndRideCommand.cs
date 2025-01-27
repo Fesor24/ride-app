@@ -1,5 +1,5 @@
-﻿using Soloride.Application.Abstractions.Messaging;
+﻿using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Rides.EndRide;
+namespace Ridely.Application.Features.Rides.EndRide;
 public sealed record EndRideCommand(long RideId) :
     ICommand<EndRideResponse>;

@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Soloride.Domain.Riders;
-using Soloride.Infrastructure.Converter;
+using Ridely.Domain.Riders;
+using Ridely.Infrastructure.Converter;
 
-namespace Soloride.Infrastructure.Configurations;
+namespace Ridely.Infrastructure.Configurations;
 internal sealed class RiderTransactionHistoryConfiguration : IEntityTypeConfiguration<RiderTransactionHistory>
 {
     public void Configure(EntityTypeBuilder<RiderTransactionHistory> builder)

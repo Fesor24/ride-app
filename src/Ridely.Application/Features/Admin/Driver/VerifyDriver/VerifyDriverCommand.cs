@@ -1,4 +1,4 @@
-﻿using Soloride.Application.Abstractions.Messaging;
+﻿using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Admin.Driver.VerifyDriver;
+namespace Ridely.Application.Features.Admin.Driver.VerifyDriver;
 public sealed record VerifyDriverCommand(string PhoneNo) : ICommand;

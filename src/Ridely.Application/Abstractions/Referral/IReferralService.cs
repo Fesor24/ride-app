@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Abstractions.Referral;
+﻿namespace Ridely.Application.Abstractions.Referral;
 public interface IReferralService
 {
     Task RewardsAfterRidersFirstCompletedRide(long riderId);

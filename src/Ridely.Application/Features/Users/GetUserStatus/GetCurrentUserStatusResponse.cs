@@ -1,7 +1,7 @@
-﻿using Soloride.Domain.Models;
-using Soloride.Domain.Rides;
+﻿using Ridely.Domain.Models;
+using Ridely.Domain.Rides;
 
-namespace Soloride.Application.Features.Users.GetUserStatus;
+namespace Ridely.Application.Features.Users.GetUserStatus;
 public sealed class GetCurrentUserStatusResponse
 {
     public CurrentUserStatusEnum Status { get; set; }

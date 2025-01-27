@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Soloride.Application.Models.Payment;
+namespace Ridely.Application.Models.Payment;
 
 public abstract class BasePaymentResponse
 {

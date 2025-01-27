@@ -1,12 +1,12 @@
 ﻿using MediatR;
-using Soloride.Application.Abstractions.Authentication;
-using Soloride.Application.Features.Accounts.Login;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Riders;
-using Soloride.Shared.Constants;
+using Ridely.Application.Abstractions.Authentication;
+using Ridely.Application.Features.Accounts.Login;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Riders;
+using Ridely.Shared.Constants;
 
-namespace Soloride.Application.Features.Accounts.Token;
+namespace Ridely.Application.Features.Accounts.Token;
 internal sealed class GetAccessTokenCommandHandler(IJwtService tokenService, IRiderRepository riderRepository,
     IDriverRepository driverRepository) : 
     IRequestHandler<GetAccessTokenCommand, Result<LoginResponse>>

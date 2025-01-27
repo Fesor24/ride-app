@@ -1,7 +1,7 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Models;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Models;
 
-namespace Soloride.Application.Features.Rides.Reassign;
+namespace Ridely.Application.Features.Rides.Reassign;
 public sealed record ReassignRideCommand(int RideId,
     Location Source,
     string SourceAddress,

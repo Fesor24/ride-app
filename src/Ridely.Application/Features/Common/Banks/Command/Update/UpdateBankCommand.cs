@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using Soloride.Domain.Abstractions;
+using Ridely.Domain.Abstractions;
 
-namespace Soloride.Application.Features.Common.Banks.Command.Update;
+namespace Ridely.Application.Features.Common.Banks.Command.Update;
 public record UpdateBankCommand(
     int Id,
     string Name) : IRequest<Result<bool>>;

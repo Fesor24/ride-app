@@ -1,5 +1,5 @@
-﻿using Soloride.Application.Abstractions.Messaging;
+﻿using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Transactions.RemovePaymentCard;
+namespace Ridely.Application.Features.Transactions.RemovePaymentCard;
 public sealed record RemovePaymentCardCommand(long PaymentCardId, long RiderId) :
     ICommand;

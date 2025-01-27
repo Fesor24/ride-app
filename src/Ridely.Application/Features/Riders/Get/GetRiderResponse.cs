@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Riders;
+﻿using Ridely.Domain.Riders;
 
-namespace Soloride.Application.Features.Riders.Get;
+namespace Ridely.Application.Features.Riders.Get;
 public class GetRiderResponse
 {
     public string FirstName { get; set; }

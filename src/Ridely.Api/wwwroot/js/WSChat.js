@@ -110,7 +110,7 @@ function SetUser(jwt) {
 
 function ConnectToWS() {
     // create websocket instance uid += "/web-chat";
-    socket = new WebSocket("wss://api.soloride.app/web-chat");
+    socket = new WebSocket("wss://api.ridely.app/web-chat");
     // add event listener reacting when message is received
     socket.onmessage = function (event) {
         // put text into our output div

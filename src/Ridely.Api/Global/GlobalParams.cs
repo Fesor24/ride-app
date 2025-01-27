@@ -1,4 +1,4 @@
-﻿namespace SolorideAPI.Global
+﻿namespace RidelyAPI.Global
 {
     public static class GlobalParams
     {

@@ -1,23 +1,23 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Soloride.Application.Features.Drivers.CreateBankAccount;
-using Soloride.Application.Features.Drivers.DeleteBankAccount;
-using Soloride.Application.Features.Drivers.Get;
-using Soloride.Application.Features.Drivers.GetBankAcounts;
-using Soloride.Application.Features.Drivers.GetOtp;
-using Soloride.Application.Features.Drivers.RegisterDriver;
-using Soloride.Application.Features.Drivers.Transactions;
-using Soloride.Application.Features.Drivers.UpdateStatus;
-using Soloride.Application.Features.Drivers.VerifyBankAccount;
-using Soloride.Application.Models.Shared;
-using Soloride.Domain.Models;
-using SolorideAPI.Controllers.Base;
-using SolorideAPI.Extensions;
-using SolorideAPI.Filter;
-using SolorideAPI.Shared;
+using Ridely.Application.Features.Drivers.CreateBankAccount;
+using Ridely.Application.Features.Drivers.DeleteBankAccount;
+using Ridely.Application.Features.Drivers.Get;
+using Ridely.Application.Features.Drivers.GetBankAcounts;
+using Ridely.Application.Features.Drivers.GetOtp;
+using Ridely.Application.Features.Drivers.RegisterDriver;
+using Ridely.Application.Features.Drivers.Transactions;
+using Ridely.Application.Features.Drivers.UpdateStatus;
+using Ridely.Application.Features.Drivers.VerifyBankAccount;
+using Ridely.Application.Models.Shared;
+using Ridely.Domain.Models;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Extensions;
+using RidelyAPI.Filter;
+using RidelyAPI.Shared;
 
-namespace SolorideAPI.Controllers.Driver;
+namespace RidelyAPI.Controllers.Driver;
 
 [ApiVersion(ApiVersions.V1)]
 [ApiVersion(ApiVersions.V2)]

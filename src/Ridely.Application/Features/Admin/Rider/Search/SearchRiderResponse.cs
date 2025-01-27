@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Features.Admin.Rider.Query.Search;
+﻿namespace Ridely.Application.Features.Admin.Rider.Query.Search;
 public sealed class SearchRiderResponse
 {
     public long Id { get; set; }

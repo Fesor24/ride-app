@@ -1,7 +1,7 @@
-﻿using Soloride.Domain.Abstractions;
-using Soloride.Domain.Models.Users;
+﻿using Ridely.Domain.Abstractions;
+using Ridely.Domain.Models.Users;
 
-namespace Soloride.Domain.Users;
+namespace Ridely.Domain.Users;
 public interface IUserRepository : IGenericRepository<User>
 {
     Task<User?> GetByEmailAsync(string email);

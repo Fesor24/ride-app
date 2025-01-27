@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
-using Soloride.Application.Abstractions.Websocket;
-using Soloride.Application.Models.WebSocket;
+using Ridely.Application.Abstractions.Websocket;
+using Ridely.Application.Models.WebSocket;
 using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
 
-namespace Soloride.Infrastructure.Services;
+namespace Ridely.Infrastructure.Services;
 internal class WebSocketManager : IWebSocketManager
 {
     private readonly ConcurrentDictionary<string, WebSocket> _sockets = new();

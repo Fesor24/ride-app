@@ -1,9 +1,9 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Models.Riders;
-using Soloride.Domain.Riders;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Models.Riders;
+using Ridely.Domain.Riders;
 
-namespace Soloride.Application.Features.Riders.Get;
+namespace Ridely.Application.Features.Riders.Get;
 internal sealed class GetRiderQueryHandler :
     IQueryHandler<GetRiderQuery, GetRiderResponse>
 {

@@ -1,4 +1,4 @@
-﻿namespace Soloride.Infrastructure.Route;
+﻿namespace Ridely.Infrastructure.Route;
 
 public sealed class GoogleRouteOptions
 {

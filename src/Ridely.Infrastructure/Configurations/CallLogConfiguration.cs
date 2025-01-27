@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Soloride.Domain.Call;
+using Ridely.Domain.Call;
 
-namespace Soloride.Infrastructure.Configurations
+namespace Ridely.Infrastructure.Configurations
 {
     internal sealed class CallLogConfiguration : IEntityTypeConfiguration<CallLog>
     {

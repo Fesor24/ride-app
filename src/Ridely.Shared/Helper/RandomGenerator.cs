@@ -1,6 +1,6 @@
 ﻿using HashidsNet;
 
-namespace Soloride.Shared.Helper;
+namespace Ridely.Shared.Helper;
 public static class RandomGenerator
 {
     public static string GenerateCode(int codeLength)

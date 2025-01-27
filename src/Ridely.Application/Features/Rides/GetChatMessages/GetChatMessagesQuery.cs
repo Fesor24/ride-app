@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
-using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Models;
+using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Models;
 
-namespace Soloride.Application.Features.Rides.GetChatMessages;
+namespace Ridely.Application.Features.Rides.GetChatMessages;
 public sealed class GetChatMessagesQuery : IQuery<PaginatedList<GetChatMessagesResponse>>
 {
     public long RideId { get; set; }

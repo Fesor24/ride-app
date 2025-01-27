@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Abstractions;
+﻿using Ridely.Domain.Abstractions;
 
-namespace Soloride.Domain.Common;
+namespace Ridely.Domain.Common;
 public interface IBankRepository : IGenericRepository<Bank>
 {
     Task<List<Bank>> GetAllBanks();

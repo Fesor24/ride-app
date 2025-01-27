@@ -2,9 +2,9 @@
 using Amazon.S3.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using Soloride.Application.Abstractions.Storage;
+using Ridely.Application.Abstractions.Storage;
 
-namespace Soloride.Infrastructure.Store;
+namespace Ridely.Infrastructure.Store;
 internal sealed class ObjectStoreService : IObjectStoreService
 {
     private readonly AmazonS3Client _s3;

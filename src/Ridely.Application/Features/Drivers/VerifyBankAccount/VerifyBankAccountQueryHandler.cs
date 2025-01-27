@@ -1,10 +1,10 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Abstractions.Payment;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Common;
-using Soloride.Domain.Drivers;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Abstractions.Payment;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Common;
+using Ridely.Domain.Drivers;
 
-namespace Soloride.Application.Features.Drivers.VerifyBankAccount;
+namespace Ridely.Application.Features.Drivers.VerifyBankAccount;
 internal sealed class VerifyBankAccountQueryHandler :
     IQueryHandler<VerifyBankAccountQuery, VerifyBankAccountResponse>
 {

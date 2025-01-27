@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Soloride.Application.Helper;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Models;
-using Soloride.Domain.Models.Drivers;
+using Ridely.Application.Helper;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Models;
+using Ridely.Domain.Models.Drivers;
 
-namespace Soloride.Infrastructure.Repositories;
+namespace Ridely.Infrastructure.Repositories;
 internal sealed class DriverRepository(ApplicationDbContext context) :
     GenericRepository<Driver>(context), IDriverRepository
 {

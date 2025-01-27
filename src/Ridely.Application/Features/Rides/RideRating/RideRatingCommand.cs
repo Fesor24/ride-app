@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using Soloride.Application.Abstractions.Messaging;
+using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Rides.RideRating;
+namespace Ridely.Application.Features.Rides.RideRating;
 public sealed record RideRatingCommand(int RideId, int Rating, string Feedback) : ICommand;
 
 public class RideRatingCommandValidator : AbstractValidator<RideRatingCommand>

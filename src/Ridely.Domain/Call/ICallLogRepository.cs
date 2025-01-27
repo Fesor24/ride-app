@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Abstractions;
+﻿using Ridely.Domain.Abstractions;
 
-namespace Soloride.Domain.Call;
+namespace Ridely.Domain.Call;
 public interface ICallLogRepository : IGenericRepository<CallLog>
 {
 }

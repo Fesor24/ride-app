@@ -1,4 +1,4 @@
-﻿namespace Soloride.Domain.Riders;
+﻿namespace Ridely.Domain.Riders;
 public enum PaymentCardType
 {
     Unknown = 0,

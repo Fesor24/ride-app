@@ -1,9 +1,9 @@
 ﻿using AgoraIO.Media;
 using Microsoft.Extensions.Options;
-using Soloride.Application.Abstractions.VoiceCall;
-using Soloride.Infrastructure.VoiceCall;
+using Ridely.Application.Abstractions.VoiceCall;
+using Ridely.Infrastructure.VoiceCall;
 
-namespace Soloride.Infrastructure.Services;
+namespace Ridely.Infrastructure.Services;
 internal class VoiceService : IVoiceService
 {
     private readonly AgoraCredentials _agoraCredentials;

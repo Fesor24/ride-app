@@ -1,7 +1,7 @@
-﻿using Soloride.Domain.Riders;
-using Soloride.Domain.Transactions;
+﻿using Ridely.Domain.Riders;
+using Ridely.Domain.Transactions;
 
-namespace SolorideAPI.Controllers.Admin.Rider;
+namespace RidelyAPI.Controllers.Admin.Rider;
 
 public sealed class SearchRiderTransaction : SearchRequest
 {

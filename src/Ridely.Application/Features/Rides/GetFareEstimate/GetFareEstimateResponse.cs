@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Rides;
+﻿using Ridely.Domain.Rides;
 
-namespace Soloride.Application.Features.Rides.GetFareEstimate;
+namespace Ridely.Application.Features.Rides.GetFareEstimate;
 public sealed class GetFareEstimateResponse
 {
     public long RideId { get; set; }

@@ -1,8 +1,8 @@
-﻿using Soloride.Domain.Abstractions;
-using Soloride.Domain.Models;
-using Soloride.Domain.Models.Riders;
+﻿using Ridely.Domain.Abstractions;
+using Ridely.Domain.Models;
+using Ridely.Domain.Models.Riders;
 
-namespace Soloride.Domain.Riders;
+namespace Ridely.Domain.Riders;
 public interface IRiderRepository : IGenericRepository<Rider>
 {
     Task<Rider?> GetByPhoneNoAsync(string phoneNo);

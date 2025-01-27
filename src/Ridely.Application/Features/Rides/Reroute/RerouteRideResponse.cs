@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Models;
+﻿using Ridely.Domain.Models;
 
-namespace Soloride.Application.Features.Rides.Reroute;
+namespace Ridely.Application.Features.Rides.Reroute;
 public sealed class RerouteRideResponse
 {
     public Location DestinationCoordinates { get; set; }

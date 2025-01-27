@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Soloride.Infrastructure.Outbox;
+using Ridely.Infrastructure.Outbox;
 
-namespace Soloride.Infrastructure.Configurations;
+namespace Ridely.Infrastructure.Configurations;
 internal sealed class OutboxMessagesConfiguration : IEntityTypeConfiguration<OutboxMessage>
 {
     public void Configure(EntityTypeBuilder<OutboxMessage> builder)

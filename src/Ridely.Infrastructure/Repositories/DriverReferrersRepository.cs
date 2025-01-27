@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Soloride.Domain.Drivers;
+using Ridely.Domain.Drivers;
 
-namespace Soloride.Infrastructure.Repositories;
+namespace Ridely.Infrastructure.Repositories;
 internal sealed class DriverReferrersRepository(ApplicationDbContext context)
     : GenericRepository<DriverReferrers>(context), IDriverReferrersRepository
 {

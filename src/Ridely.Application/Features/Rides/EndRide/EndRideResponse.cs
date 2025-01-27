@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Features.Rides.EndRide;
+﻿namespace Ridely.Application.Features.Rides.EndRide;
 public class EndRideResponse
 {
     public long Fare { get; set; }

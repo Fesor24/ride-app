@@ -1,9 +1,9 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Riders;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Riders;
 
-namespace Soloride.Application.Features.Users.UpdateDeviceToken;
+namespace Ridely.Application.Features.Users.UpdateDeviceToken;
 internal sealed class UpdateDeviceTokenCommandHandler(IUnitOfWork unitOfWork, 
     IDriverRepository driverRepository, IRiderRepository riderRepository) :
     ICommandHandler<UpdateDeviceTokenCommand>

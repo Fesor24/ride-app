@@ -4,15 +4,15 @@ using System.Text.Json.Serialization;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Soloride.Application.Abstractions.Notifications;
-using Soloride.Application.Abstractions.Payment;
-using Soloride.Application.Abstractions.Storage;
-using Soloride.Application.Abstractions.VoiceCall;
-using Soloride.Contracts.Events;
-using SolorideAPI.Controllers.Base;
+using Ridely.Application.Abstractions.Notifications;
+using Ridely.Application.Abstractions.Payment;
+using Ridely.Application.Abstractions.Storage;
+using Ridely.Application.Abstractions.VoiceCall;
+using Ridely.Contracts.Events;
+using RidelyAPI.Controllers.Base;
 using StackExchange.Redis;
 
-namespace SolorideAPI.Controllers;
+namespace RidelyAPI.Controllers;
 
 public class TestController(ISmsService smsService, IDeviceNotificationService deviceNotificationService, 
     IConnectionMultiplexer connectionMultiplexer, 
@@ -122,5 +122,5 @@ public class TestTermii
     public string Type { get; set; } = "plain";
 
     [JsonPropertyName("sms")]
-    public string Sms { get; set; } = "Your (Soloride) Verification Pin is 2002. Valid for 5 minutes, one-time use only.(Soloride)";
+    public string Sms { get; set; } = "Your (Ridely) Verification Pin is 2002. Valid for 5 minutes, one-time use only.(Ridely)";
 }

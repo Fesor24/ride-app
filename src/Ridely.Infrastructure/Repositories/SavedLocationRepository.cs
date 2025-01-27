@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Soloride.Domain.Models.Common;
-using Soloride.Domain.Riders;
+using Ridely.Domain.Models.Common;
+using Ridely.Domain.Riders;
 
-namespace Soloride.Infrastructure.Repositories;
+namespace Ridely.Infrastructure.Repositories;
 internal sealed class SavedLocationRepository(ApplicationDbContext context) :
     GenericRepository<SavedLocation>(context), ISavedLocationRepository
 {

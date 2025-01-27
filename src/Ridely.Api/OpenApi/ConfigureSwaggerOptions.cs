@@ -1,10 +1,10 @@
 ﻿using Asp.Versioning.ApiExplorer;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using SolorideAPI.Controllers;
+using RidelyAPI.Controllers;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace SolorideAPI.OpenApi
+namespace RidelyAPI.OpenApi
 {
     public sealed class ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider) : 
         IConfigureNamedOptions<SwaggerGenOptions>
@@ -26,7 +26,7 @@ namespace SolorideAPI.OpenApi
         {
             var openApiInfo = new OpenApiInfo
             {
-                Title = $"Soloride.Api v{versionDescription.ApiVersion}",
+                Title = $"Ridely.Api v{versionDescription.ApiVersion}",
                 Description = "V." + versionDescription.ApiVersion.ToString()
             };
 
@@ -35,8 +35,8 @@ namespace SolorideAPI.OpenApi
 
             if(versionDescription.GroupName.Equals(SwaggerGroupNames.Admin, StringComparison.InvariantCultureIgnoreCase))
             {
-                openApiInfo.Title = "Soloride.Api Admin";
-                openApiInfo.Description = "Soloride Admin Endpoints";
+                openApiInfo.Title = "Ridely.Api Admin";
+                openApiInfo.Description = "Ridely Admin Endpoints";
             }
 
             return openApiInfo;

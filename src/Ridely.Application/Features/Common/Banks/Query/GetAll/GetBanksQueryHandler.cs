@@ -1,8 +1,8 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Common;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Common;
 
-namespace Soloride.Application.Features.Common.Banks.Query.GetAll;
+namespace Ridely.Application.Features.Common.Banks.Query.GetAll;
 internal sealed class GetBanksQueryHandler(IBankRepository bankRepository) :
     IQueryHandler<GetBanksQuery, List<GetBankResponse>>
 {

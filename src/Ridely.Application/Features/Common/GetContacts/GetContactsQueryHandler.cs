@@ -1,7 +1,7 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Abstractions;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Abstractions;
 
-namespace Soloride.Application.Features.Common.GetContacts;
+namespace Ridely.Application.Features.Common.GetContacts;
 internal sealed class GetContactsQueryHandler :
     IQueryHandler<GetContactSupportQuery, GetContactsResponse>
 {
@@ -13,7 +13,7 @@ internal sealed class GetContactsQueryHandler :
             Emergency = ["01-4931260", "01-4978899"],
             Support = new()
             {
-                Emails = ["customercare@soloride.com"],
+                Emails = ["customercare@ridely.com"],
                 Whatsapp = ["+23481909298283"]
             }
         };

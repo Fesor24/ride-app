@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Abstractions;
+﻿using Ridely.Domain.Abstractions;
 
-namespace Soloride.Domain.Users;
+namespace Ridely.Domain.Users;
 public sealed class RolePermission : Entity
 {
     public long RoleId { get; private set; }

@@ -1,9 +1,9 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Models;
-using Soloride.Domain.Transactions;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Models;
+using Ridely.Domain.Transactions;
 
-namespace Soloride.Application.Features.Admin.Driver.SearchTransactions;
+namespace Ridely.Application.Features.Admin.Driver.SearchTransactions;
 public sealed class SearchDriverTransactionQuery : IQuery<PaginatedList<SearchDriverTransactionResponse>>
 {
     public int PageNumber { get; set; }

@@ -1,15 +1,15 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Abstractions.Rides;
-using Soloride.Contracts.Models;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Models;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Rides;
-using Soloride.Domain.Services;
-using Soloride.Domain.Transactions;
-using Soloride.Shared.Helper.Keys;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Abstractions.Rides;
+using Ridely.Contracts.Models;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Models;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Rides;
+using Ridely.Domain.Services;
+using Ridely.Domain.Transactions;
+using Ridely.Shared.Helper.Keys;
 
-namespace Soloride.Application.Features.Rides.RideRequest;
+namespace Ridely.Application.Features.Rides.RideRequest;
 internal sealed class RideRequestCommandHandler:
     ICommandHandler<RideRequestCommand, RideRequestResponse>
 {

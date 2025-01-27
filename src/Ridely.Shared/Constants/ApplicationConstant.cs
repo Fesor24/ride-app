@@ -1,4 +1,4 @@
-﻿namespace Soloride.Shared.Constants;
+﻿namespace Ridely.Shared.Constants;
 public static class ApplicationConstant
 {
     public static int DRIVER_RESPONSETIME_INSECONDS = 90;

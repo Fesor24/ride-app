@@ -1,11 +1,11 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Extensions;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Models;
-using Soloride.Domain.Models.Riders;
-using Soloride.Domain.Riders;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Extensions;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Models;
+using Ridely.Domain.Models.Riders;
+using Ridely.Domain.Riders;
 
-namespace Soloride.Application.Features.Admin.Rider.SearchTransactions;
+namespace Ridely.Application.Features.Admin.Rider.SearchTransactions;
 internal sealed class SearchRiderTransactionQueryHandler : 
     IQueryHandler<SearchRiderTransactionQuery, PaginatedList<SearchRiderTransactionResponse>>
 {

@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Features.Admin.Rider.SearchTransactions;
+﻿namespace Ridely.Application.Features.Admin.Rider.SearchTransactions;
 public sealed class SearchRiderTransactionResponse
 {
     public string Reference { get; set; }

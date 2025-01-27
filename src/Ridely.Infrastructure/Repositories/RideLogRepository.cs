@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Soloride.Domain.Rides;
+using Ridely.Domain.Rides;
 
-namespace Soloride.Infrastructure.Repositories;
+namespace Ridely.Infrastructure.Repositories;
 internal sealed class RideLogRepository(ApplicationDbContext context) :
     GenericRepository<RideLog>(context), IRideLogRepository
 {

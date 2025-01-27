@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Soloride.Domain.Drivers;
+using Ridely.Domain.Drivers;
 
-namespace Soloride.Infrastructure.Configurations;
+namespace Ridely.Infrastructure.Configurations;
 internal sealed class BankAccountConfiguration : IEntityTypeConfiguration<BankAccount>
 {
     public void Configure(EntityTypeBuilder<BankAccount> builder)

@@ -1,8 +1,8 @@
-﻿using Soloride.Domain.Drivers;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Users;
+﻿using Ridely.Domain.Drivers;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Users;
 
-namespace Soloride.Application.Abstractions.Authentication;
+namespace Ridely.Application.Abstractions.Authentication;
 public interface IJwtService
 {
     Task<(string AccessToken, string RefreshToken)> GenerateToken(User user, bool populateExp = false);

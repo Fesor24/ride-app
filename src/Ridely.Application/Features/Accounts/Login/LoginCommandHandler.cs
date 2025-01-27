@@ -1,10 +1,10 @@
 ﻿using MediatR;
-using Soloride.Application.Abstractions.Authentication;
-using Soloride.Application.Abstractions.Security;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Users;
+using Ridely.Application.Abstractions.Authentication;
+using Ridely.Application.Abstractions.Security;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Users;
 
-namespace Soloride.Application.Features.Accounts.Login;
+namespace Ridely.Application.Features.Accounts.Login;
 internal sealed class LoginCommandHandler : IRequestHandler<LoginCommand, Result<LoginResponse>>
 {
     private readonly IJwtService _tokenService;

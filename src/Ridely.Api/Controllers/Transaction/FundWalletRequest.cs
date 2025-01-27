@@ -1,4 +1,4 @@
-﻿namespace SolorideAPI.Controllers.Transaction;
+﻿namespace RidelyAPI.Controllers.Transaction;
 
 public class FundWalletRequest
 {

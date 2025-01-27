@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Models;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Models;
 
-namespace Soloride.Domain.Riders;
+namespace Ridely.Domain.Riders;
 public sealed class SavedLocation : Entity
 {
     private SavedLocation()

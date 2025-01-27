@@ -1,7 +1,7 @@
-﻿using Soloride.Domain.Drivers;
-using Soloride.Domain.Transactions;
+﻿using Ridely.Domain.Drivers;
+using Ridely.Domain.Transactions;
 
-namespace SolorideAPI.Controllers.Admin.Driver;
+namespace RidelyAPI.Controllers.Admin.Driver;
 
 public class SearchDriverTransactionRequest : SearchRequest
 {

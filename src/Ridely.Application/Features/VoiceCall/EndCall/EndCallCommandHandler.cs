@@ -1,8 +1,8 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Call;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Call;
 
-namespace Soloride.Application.Features.VoiceCall.EndCall
+namespace Ridely.Application.Features.VoiceCall.EndCall
 {
     internal sealed class EndCallCommandHandler(IUnitOfWork unitOfWork, ICallLogRepository callLogRepository) : 
         ICommandHandler<EndCallCommand>

@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Soloride.Domain.Abstractions;
+namespace Ridely.Domain.Abstractions;
 public interface IDomainEvent : INotification
 {
 }

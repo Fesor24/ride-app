@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Models.WebSocket;
+﻿namespace Ridely.Application.Models.WebSocket;
 
 public class WebSocketResponse<T>
 {

@@ -1,5 +1,5 @@
-﻿using Soloride.Application.Abstractions.Messaging;
+﻿using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Users.GetUserStatus;
+namespace Ridely.Application.Features.Users.GetUserStatus;
 public sealed record GetCurrentUserStatusQuery(long? DriverId, long? RiderId) :
     IQuery<GetCurrentUserStatusResponse>;

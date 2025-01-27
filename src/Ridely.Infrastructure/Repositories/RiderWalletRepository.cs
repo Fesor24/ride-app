@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Soloride.Domain.Riders;
+using Ridely.Domain.Riders;
 
-namespace Soloride.Infrastructure.Repositories;
+namespace Ridely.Infrastructure.Repositories;
 internal sealed class RiderWalletRepository(ApplicationDbContext context) :
     GenericRepository<RiderWallet>(context), IRiderWalletRepository
 {

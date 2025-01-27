@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Soloride.Application.Features.Admin.Driver.GetByPhoneNo;
-using Soloride.Application.Features.Admin.Driver.Search;
-using Soloride.Application.Features.Admin.Driver.SearchTransactions;
-using Soloride.Application.Features.Admin.Driver.VerifyDriver;
-using Soloride.Domain.Models;
-using SolorideAPI.Controllers.Base;
-using SolorideAPI.Extensions;
-using SolorideAPI.Shared;
+using Ridely.Application.Features.Admin.Driver.GetByPhoneNo;
+using Ridely.Application.Features.Admin.Driver.Search;
+using Ridely.Application.Features.Admin.Driver.SearchTransactions;
+using Ridely.Application.Features.Admin.Driver.VerifyDriver;
+using Ridely.Domain.Models;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Extensions;
+using RidelyAPI.Shared;
 
-namespace SolorideAPI.Controllers.Admin.Driver;
+namespace RidelyAPI.Controllers.Admin.Driver;
 
 [Route("api/drivers")]
 public class DriverController : AdminBaseController<DriverController>

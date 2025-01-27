@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Call;
+﻿using Ridely.Domain.Call;
 
-namespace Soloride.Infrastructure.Repositories
+namespace Ridely.Infrastructure.Repositories
 {
     internal sealed class CallLogRepository(ApplicationDbContext context) :
         GenericRepository<CallLog>(context), ICallLogRepository

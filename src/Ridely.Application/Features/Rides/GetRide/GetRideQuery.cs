@@ -1,4 +1,4 @@
-﻿using Soloride.Application.Abstractions.Messaging;
+﻿using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Rides.GetRide;
+namespace Ridely.Application.Features.Rides.GetRide;
 public sealed record GetRideQuery(int RideId) : IQuery<GetRideResponse>;

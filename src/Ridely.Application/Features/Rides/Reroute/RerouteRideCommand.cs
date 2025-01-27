@@ -1,7 +1,7 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Models;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Models;
 
-namespace Soloride.Application.Features.Rides.Reroute;
+namespace Ridely.Application.Features.Rides.Reroute;
 public sealed record RerouteRideCommand(
     long RideId,
     string SourceAddress,

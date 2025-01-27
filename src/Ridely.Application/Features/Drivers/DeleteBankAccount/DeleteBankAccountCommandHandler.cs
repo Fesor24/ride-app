@@ -1,8 +1,8 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
 
-namespace Soloride.Application.Features.Drivers.DeleteBankAccount;
+namespace Ridely.Application.Features.Drivers.DeleteBankAccount;
 internal sealed class DeleteBankAccountCommandHandler(IUnitOfWork unitOfWork, IBankAccountRepository bankAccountRepository) :
     ICommandHandler<DeleteBankAccountCommand>
 {

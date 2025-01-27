@@ -1,4 +1,4 @@
-﻿namespace Soloride.Infrastructure.VoiceCall
+﻿namespace Ridely.Infrastructure.VoiceCall
 {
     public sealed class AgoraCredentials
     {

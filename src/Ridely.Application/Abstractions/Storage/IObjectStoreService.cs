@@ -1,7 +1,7 @@
 ﻿using Amazon.S3.Model;
 using Microsoft.AspNetCore.Http;
 
-namespace Soloride.Application.Abstractions.Storage;
+namespace Ridely.Application.Abstractions.Storage;
 public interface IObjectStoreService
 {
     Task<PutObjectResponse> UploadAsync(string key, IFormFile file);

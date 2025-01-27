@@ -1,6 +1,6 @@
-﻿using Soloride.Contracts.Models;
+﻿using Ridely.Contracts.Models;
 
-namespace Soloride.Contracts.Events;
+namespace Ridely.Contracts.Events;
 public sealed class RideRequestedEvent
 {
     public List<DriverProfile> AvailableDriverProfile { get; init; } = [];

@@ -1,9 +1,9 @@
 ﻿using System.Security.Claims;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Soloride.Shared.Constants;
+using Ridely.Shared.Constants;
 
-namespace SolorideAPI.Controllers.Base;
+namespace RidelyAPI.Controllers.Base;
 
 [ApiController]
 public class BaseController<TController> : ControllerBase

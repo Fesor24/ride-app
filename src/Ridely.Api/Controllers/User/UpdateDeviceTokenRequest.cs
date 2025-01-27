@@ -1,4 +1,4 @@
-﻿namespace SolorideAPI.Controllers.User;
+﻿namespace RidelyAPI.Controllers.User;
 
 public class UpdateDeviceTokenRequest
 {

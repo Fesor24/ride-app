@@ -1,4 +1,4 @@
-﻿namespace Soloride.Shared.Helper.Keys;
+﻿namespace Ridely.Shared.Helper.Keys;
 public static class RideKeys
 {
     public static string RiderRequestRide(long riderId) => $"RIDER.RIDEREQUEST-{riderId}";

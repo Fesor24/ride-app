@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Features.Drivers.UpdateStatus;
+﻿namespace Ridely.Application.Features.Drivers.UpdateStatus;
 public enum UpdateDriverStatusEnum
 {
     Offline = 0,

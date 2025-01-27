@@ -1,7 +1,7 @@
-﻿using Soloride.Domain.Drivers;
-using Soloride.Domain.Transactions;
+﻿using Ridely.Domain.Drivers;
+using Ridely.Domain.Transactions;
 
-namespace Soloride.Domain.Models.Drivers;
+namespace Ridely.Domain.Models.Drivers;
 public sealed class DriverTransactionSearchParams : SearchParams
 {
     public long? DriverId { get; set; }

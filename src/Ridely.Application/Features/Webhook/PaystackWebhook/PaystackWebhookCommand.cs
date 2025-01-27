@@ -1,6 +1,6 @@
-﻿using Soloride.Application.Abstractions.Messaging;
+﻿using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Webhook.PaystackWebhook;
+namespace Ridely.Application.Features.Webhook.PaystackWebhook;
 public sealed class PaystackWebhookCommand : ICommand
 {
     public string Event { get; set; } = string.Empty;

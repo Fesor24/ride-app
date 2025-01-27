@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Models.Payment;
+﻿namespace Ridely.Application.Models.Payment;
 public class InitializePayment
 {
     public int Amount { get; set; }

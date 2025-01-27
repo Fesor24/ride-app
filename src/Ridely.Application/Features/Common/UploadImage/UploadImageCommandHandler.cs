@@ -1,11 +1,11 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Abstractions.Storage;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Riders;
-using Soloride.Shared.Exceptions;
-using Soloride.Shared.Helper.Keys;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Abstractions.Storage;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Riders;
+using Ridely.Shared.Exceptions;
+using Ridely.Shared.Helper.Keys;
 
-namespace Soloride.Application.Features.Common.UploadImage;
+namespace Ridely.Application.Features.Common.UploadImage;
 internal sealed class UploadImageCommandHandler :
     ICommandHandler<UploadImageCommand>
 {

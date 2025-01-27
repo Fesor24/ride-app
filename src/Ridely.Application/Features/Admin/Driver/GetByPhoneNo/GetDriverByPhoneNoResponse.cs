@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Features.Admin.Driver.GetByPhoneNo;
+﻿namespace Ridely.Application.Features.Admin.Driver.GetByPhoneNo;
 public sealed class GetDriverByPhoneNoResponse
 {
     public string FirstName { get; set; }

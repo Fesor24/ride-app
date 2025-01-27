@@ -1,9 +1,9 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Extensions;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Rides;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Extensions;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Rides;
 
-namespace Soloride.Application.Features.Rides.GetRide;
+namespace Ridely.Application.Features.Rides.GetRide;
 internal sealed class GetRideQueryHandler(IRideRepository rideRepository, IRatingsRepository ratingsRepository) :
     IQueryHandler<GetRideQuery, GetRideResponse>
 {

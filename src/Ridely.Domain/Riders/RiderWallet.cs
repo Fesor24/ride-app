@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Soloride.Domain.Abstractions;
+using Ridely.Domain.Abstractions;
 
-namespace Soloride.Domain.Riders;
+namespace Ridely.Domain.Riders;
 public sealed class RiderWallet : Entity
 {
     private RiderWallet()

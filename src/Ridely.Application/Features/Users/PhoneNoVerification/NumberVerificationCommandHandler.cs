@@ -1,16 +1,16 @@
 ﻿using Hangfire;
-using Soloride.Application.Abstractions.Authentication;
-using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Abstractions.Storage;
-using Soloride.Application.Extensions;
-using Soloride.Application.Features.Accounts;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Services;
-using Soloride.Shared.Helper.Keys;
+using Ridely.Application.Abstractions.Authentication;
+using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Abstractions.Storage;
+using Ridely.Application.Extensions;
+using Ridely.Application.Features.Accounts;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Services;
+using Ridely.Shared.Helper.Keys;
 
-namespace Soloride.Application.Features.Users.PhoneNoVerification;
+namespace Ridely.Application.Features.Users.PhoneNoVerification;
 internal sealed class NumberVerificationCommandHandler:
     ICommandHandler<NumberVerificationCommand, NumberVerificationResponse>
 {

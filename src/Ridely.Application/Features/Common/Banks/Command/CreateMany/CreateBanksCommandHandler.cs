@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Common;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Common;
 
-namespace Soloride.Application.Features.Common.Banks.Command.CreateMany;
+namespace Ridely.Application.Features.Common.Banks.Command.CreateMany;
 internal sealed class CreateBanksCommandHandler(IBankRepository bankRepository, IUnitOfWork unitOfWork, IMapper mapper) :
     IRequestHandler<CreateBanksCommand, Result<bool>>
 {

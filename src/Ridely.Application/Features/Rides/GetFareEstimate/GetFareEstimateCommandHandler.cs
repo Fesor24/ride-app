@@ -1,14 +1,14 @@
-﻿using Soloride.Application.Abstractions.Location;
-using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Abstractions.Rides;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Common;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Rides;
-using Soloride.Shared.Exceptions;
+﻿using Ridely.Application.Abstractions.Location;
+using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Abstractions.Rides;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Common;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Rides;
+using Ridely.Shared.Exceptions;
 
-namespace Soloride.Application.Features.Rides.GetFareEstimate;
+namespace Ridely.Application.Features.Rides.GetFareEstimate;
 internal sealed class GetFareEstimateCommandHandler :
     ICommandHandler<GetFareEstimateCommand, GetFareEstimateResponse>
 {

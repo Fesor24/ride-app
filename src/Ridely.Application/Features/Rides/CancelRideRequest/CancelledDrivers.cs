@@ -1,2 +1,2 @@
-﻿namespace Soloride.Application.Features.Rides.CancelRideRequest;
+﻿namespace Ridely.Application.Features.Rides.CancelRideRequest;
 public record CancelledDrivers(long DriverId, DateTime Expiry);

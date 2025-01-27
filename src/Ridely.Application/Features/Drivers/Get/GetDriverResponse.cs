@@ -1,7 +1,7 @@
-﻿using Soloride.Application.Features.Riders.Get;
-using Soloride.Domain.Drivers;
+﻿using Ridely.Application.Features.Riders.Get;
+using Ridely.Domain.Drivers;
 
-namespace Soloride.Application.Features.Drivers.Get;
+namespace Ridely.Application.Features.Drivers.Get;
 public class GetDriverResponse
 {
     // NOTE: Used by both admin and mobile

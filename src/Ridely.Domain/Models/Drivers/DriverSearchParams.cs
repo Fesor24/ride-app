@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Drivers;
+﻿using Ridely.Domain.Drivers;
 
-namespace Soloride.Domain.Models.Drivers;
+namespace Ridely.Domain.Models.Drivers;
 public class DriverSearchParams : SearchParams
 {
     public CabType? CabType { get; set; }

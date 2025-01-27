@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Abstractions;
+﻿using Ridely.Domain.Abstractions;
 
-namespace Soloride.Domain.Riders;
+namespace Ridely.Domain.Riders;
 public sealed class PaymentCard : Entity
 {
     private PaymentCard()

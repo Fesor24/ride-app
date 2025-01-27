@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Soloride.Application.Features.Admin.Users.Query.GetDashboard;
-using Soloride.Application.Features.Admin.Users.Query.GetProfile;
-using SolorideAPI.Controllers.Base;
-using SolorideAPI.Extensions;
-using SolorideAPI.Shared;
+using Ridely.Application.Features.Admin.Users.Query.GetDashboard;
+using Ridely.Application.Features.Admin.Users.Query.GetProfile;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Extensions;
+using RidelyAPI.Shared;
 
-namespace SolorideAPI.Controllers.Admin.User;
+namespace RidelyAPI.Controllers.Admin.User;
 
 [Route("api/user")]
 public class UserController : AdminBaseController<UserController>

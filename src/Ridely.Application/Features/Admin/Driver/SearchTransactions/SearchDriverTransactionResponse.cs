@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Features.Admin.Driver.SearchTransactions;
+﻿namespace Ridely.Application.Features.Admin.Driver.SearchTransactions;
 public sealed class SearchDriverTransactionResponse
 {
     public string Reference { get; set; }

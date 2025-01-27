@@ -1,4 +1,4 @@
-﻿namespace Soloride.Infrastructure.Store;
+﻿namespace Ridely.Infrastructure.Store;
 internal sealed class S3Options
 {
     public string BucketName { get; init; } = string.Empty;

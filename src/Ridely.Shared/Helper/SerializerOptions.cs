@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace Soloride.Shared.Helper;
+namespace Ridely.Shared.Helper;
 public static class SerializerOptions
 {
     public static readonly JsonSerializerOptions Read = new JsonSerializerOptions

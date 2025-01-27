@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Soloride.Infrastructure.Migrations
+namespace Ridely.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class _init_ : Migration

@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Soloride.Domain.Abstractions;
+using Ridely.Domain.Abstractions;
 
-namespace Soloride.Application.Features.Admin.Settings.Query.GetSettings;
+namespace Ridely.Application.Features.Admin.Settings.Query.GetSettings;
 public record GetSettingsQuery : IRequest<Result<GetSettingsResponse>>;

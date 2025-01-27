@@ -1,11 +1,11 @@
 ﻿using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
-using Soloride.Infrastructure.Outbox;
-using SolorideAPI.Middlewares;
+using Ridely.Infrastructure.Outbox;
+using RidelyAPI.Middlewares;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace SolorideAPI.Extensions;
+namespace RidelyAPI.Extensions;
 
 public static class ApplicationBuilderExtensions
 {

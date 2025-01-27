@@ -1,7 +1,7 @@
-﻿using Soloride.Domain.Drivers;
-using Soloride.Domain.Shared;
+﻿using Ridely.Domain.Drivers;
+using Ridely.Domain.Shared;
 
-namespace SolorideAPI.Controllers.Driver;
+namespace RidelyAPI.Controllers.Driver;
 
 public sealed record RegisterDriverRequest(
     string? ReferrerCode,

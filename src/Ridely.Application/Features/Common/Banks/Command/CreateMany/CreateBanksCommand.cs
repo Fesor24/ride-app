@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using Soloride.Domain.Abstractions;
+using Ridely.Domain.Abstractions;
 
-namespace Soloride.Application.Features.Common.Banks.Command.CreateMany;
+namespace Ridely.Application.Features.Common.Banks.Command.CreateMany;
 public class CreateBanksCommand : IRequest<Result<bool>>
 {
     public int UserId { get; set; }

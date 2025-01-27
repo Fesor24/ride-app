@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Rides;
+﻿using Ridely.Domain.Rides;
 
-namespace Soloride.Domain.Models.Rides;
+namespace Ridely.Domain.Models.Rides;
 public sealed class RideSearchParams: SearchParams
 {
     public long? DriverId { get; set; }

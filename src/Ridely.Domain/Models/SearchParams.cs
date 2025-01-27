@@ -1,4 +1,4 @@
-﻿namespace Soloride.Domain.Models;
+﻿namespace Ridely.Domain.Models;
 public abstract class SearchParams
 {
     private int _pageSize = 10;

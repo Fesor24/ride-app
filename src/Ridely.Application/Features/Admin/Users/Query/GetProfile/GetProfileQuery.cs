@@ -1,4 +1,4 @@
-﻿using Soloride.Application.Abstractions.Messaging;
+﻿using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Admin.Users.Query.GetProfile;
+namespace Ridely.Application.Features.Admin.Users.Query.GetProfile;
 public sealed record GetProfileQuery(long UserId) : IQuery<GetProfileResponse>;

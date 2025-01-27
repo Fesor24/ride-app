@@ -1,12 +1,12 @@
-using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Rides;
-using Soloride.Domain.Services;
-using Soloride.Shared.Helper.Keys;
+using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Rides;
+using Ridely.Domain.Services;
+using Ridely.Shared.Helper.Keys;
 
-namespace Soloride.Application.Features.Common.Calls.Command;
+namespace Ridely.Application.Features.Common.Calls.Command;
 
 internal sealed class RouteCallCommandHandler : 
     ICommandHandler<RouteCallCommand, string?>

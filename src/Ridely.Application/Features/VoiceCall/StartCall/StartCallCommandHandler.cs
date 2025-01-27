@@ -1,9 +1,9 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Call;
-using Soloride.Domain.Rides;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Call;
+using Ridely.Domain.Rides;
 
-namespace Soloride.Application.Features.VoiceCall.StartCall
+namespace Ridely.Application.Features.VoiceCall.StartCall
 {
     internal sealed class StartCallCommandHandler : 
         ICommandHandler<StartCallCommand, StartCallResponse>

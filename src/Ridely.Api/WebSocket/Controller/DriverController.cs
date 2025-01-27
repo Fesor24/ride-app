@@ -1,9 +1,9 @@
 ﻿using Hangfire;
-using Soloride.Application.Abstractions.Location;
-using Soloride.Domain.Models;
-using SolorideAPI.WebSocket.Attributes;
+using Ridely.Application.Abstractions.Location;
+using Ridely.Domain.Models;
+using RidelyAPI.WebSocket.Attributes;
 
-namespace SolorideAPI.WebSocket.Controller;
+namespace RidelyAPI.WebSocket.Controller;
 
 [WebSocketRoute("DRIVER")]
 public class DriverController(ILocationService locationService) : WebSocketControllerBase

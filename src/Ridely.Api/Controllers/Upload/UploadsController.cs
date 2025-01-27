@@ -1,14 +1,14 @@
 ﻿using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Soloride.Application.Features.Common.UploadImage;
-using Soloride.Domain.Abstractions;
-using SolorideAPI.Controllers.Base;
-using SolorideAPI.Extensions;
-using SolorideAPI.Filter;
-using SolorideAPI.Shared;
+using Ridely.Application.Features.Common.UploadImage;
+using Ridely.Domain.Abstractions;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Extensions;
+using RidelyAPI.Filter;
+using RidelyAPI.Shared;
 
-namespace SolorideAPI.Controllers.Upload;
+namespace RidelyAPI.Controllers.Upload;
 
 [Authorize]
 [ResourceAuthorizationFilter]

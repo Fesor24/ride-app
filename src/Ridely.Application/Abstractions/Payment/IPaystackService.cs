@@ -1,7 +1,7 @@
-﻿using Soloride.Application.Models.Payment;
-using Soloride.Domain.Abstractions;
+﻿using Ridely.Application.Models.Payment;
+using Ridely.Domain.Abstractions;
 
-namespace Soloride.Application.Abstractions.Payment;
+namespace Ridely.Application.Abstractions.Payment;
 public interface IPaystackService
 {
     Task<Result<InitializePaymentResponse>> InitializeAsync(InitializePayment initializePayment,

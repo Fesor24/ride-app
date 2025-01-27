@@ -1,10 +1,10 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Transactions;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Transactions;
 
-namespace Soloride.Application.Features.Users.Delete;
+namespace Ridely.Application.Features.Users.Delete;
 internal sealed class DeleteAccountCommandHandler :
     ICommandHandler<DeleteAccountCommand>
 {

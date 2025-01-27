@@ -1,4 +1,4 @@
-﻿namespace SolorideAPI.Controllers.Admin.Driver;
+﻿namespace RidelyAPI.Controllers.Admin.Driver;
 
 public class SearchDriverRequest
 {

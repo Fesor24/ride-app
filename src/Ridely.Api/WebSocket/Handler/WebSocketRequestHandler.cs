@@ -1,10 +1,10 @@
 ﻿using Modules.ChatSystem.Models;
 using Newtonsoft.Json.Linq;
-using SolorideAPI.WebSocket.Attributes;
-using SolorideAPI.WebSocket.Controller;
+using RidelyAPI.WebSocket.Attributes;
+using RidelyAPI.WebSocket.Controller;
 using System.Reflection;
 
-namespace SolorideAPI.WebSocket.Handler;
+namespace RidelyAPI.WebSocket.Handler;
 
 public class WebSocketRequestHandler
 {

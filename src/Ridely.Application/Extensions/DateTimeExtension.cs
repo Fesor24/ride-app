@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Extensions;
+﻿namespace Ridely.Application.Extensions;
 internal static class DateTimeExtension
 {
     internal static string ToCustomDateString(this DateTime date) =>

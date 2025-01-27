@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
-namespace Soloride.Infrastructure.Notifications;
+namespace Ridely.Infrastructure.Notifications;
 internal sealed class TermiiService
 {
     private readonly HttpClient _httpClient;
@@ -60,8 +60,8 @@ internal sealed class TermiiService
 
     private async Task SendViaSmsAsync(string phoneNo, string otp, string expiryInMinutes)
     {
-        string message = $"Your (Soloride) Verification Pin is {otp}. Valid for {expiryInMinutes} " +
-            $"minutes, one-time use only.(Soloride)";
+        string message = $"Your (Ridely) Verification Pin is {otp}. Valid for {expiryInMinutes} " +
+            $"minutes, one-time use only.(Ridely)";
 
         var request = new
         {

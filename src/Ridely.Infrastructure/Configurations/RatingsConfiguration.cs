@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Soloride.Domain.Rides;
+using Ridely.Domain.Rides;
 
-namespace Soloride.Infrastructure.Configurations;
+namespace Ridely.Infrastructure.Configurations;
 internal sealed class RatingsConfiguration : IEntityTypeConfiguration<Ratings>
 {
     public void Configure(EntityTypeBuilder<Ratings> builder)

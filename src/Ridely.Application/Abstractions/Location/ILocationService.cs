@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Drivers;
+﻿using Ridely.Domain.Drivers;
 
-namespace Soloride.Application.Abstractions.Location;
+namespace Ridely.Application.Abstractions.Location;
 public interface ILocationService
 {
     Task UpdateDriverLocationAsync(Domain.Models.Location location, string driverUserKey);

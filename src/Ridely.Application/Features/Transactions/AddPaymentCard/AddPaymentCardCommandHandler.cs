@@ -1,10 +1,10 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Abstractions.Payment;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Transactions;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Abstractions.Payment;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Transactions;
 
-namespace Soloride.Application.Features.Transactions.AddPaymentCard;
+namespace Ridely.Application.Features.Transactions.AddPaymentCard;
 internal sealed class AddPaymentCardCommandHandler :
     ICommandHandler<AddPaymentCardCommand, AddPaymentCardResponse>
 {

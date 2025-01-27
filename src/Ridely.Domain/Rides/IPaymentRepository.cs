@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Abstractions;
+﻿using Ridely.Domain.Abstractions;
 
-namespace Soloride.Domain.Rides;
+namespace Ridely.Domain.Rides;
 public interface IPaymentRepository : IGenericRepository<Payment>
 {
     Task<Payment?> GetByReferenceAsync(Ulid reference);

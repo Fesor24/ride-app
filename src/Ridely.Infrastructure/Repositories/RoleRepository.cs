@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Soloride.Domain.Users;
+using Ridely.Domain.Users;
 
-namespace Soloride.Infrastructure.Repositories;
+namespace Ridely.Infrastructure.Repositories;
 internal class RoleRepository(ApplicationDbContext context) :
     GenericRepository<Role>(context), IRoleRepository
 {

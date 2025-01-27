@@ -1,13 +1,13 @@
 ﻿using System.Net;
 using System.Text.Json;
-using Soloride.Application.Exceptions;
-using Soloride.Domain.Abstractions;
-using Soloride.Shared.Exceptions;
-using Soloride.Shared.Helper;
-using SolorideAPI.Shared;
-using ValidationError = Soloride.Domain.Abstractions.ValidationError;
+using Ridely.Application.Exceptions;
+using Ridely.Domain.Abstractions;
+using Ridely.Shared.Exceptions;
+using Ridely.Shared.Helper;
+using RidelyAPI.Shared;
+using ValidationError = Ridely.Domain.Abstractions.ValidationError;
 
-namespace SolorideAPI.Middlewares;
+namespace RidelyAPI.Middlewares;
 
 public class ExceptionHandlingMiddleware(
     RequestDelegate next,
@@ -64,7 +64,7 @@ public class ExceptionHandlingMiddleware(
             return new(defaultError);
 
         var validationErrors = JsonSerializer
-            .Deserialize<IEnumerable<Soloride.Application.Exceptions.ValidationError>>(ex.Message);
+            .Deserialize<IEnumerable<Ridely.Application.Exceptions.ValidationError>>(ex.Message);
 
         if (validationErrors is null || !validationErrors.Any())
             return new(defaultError);

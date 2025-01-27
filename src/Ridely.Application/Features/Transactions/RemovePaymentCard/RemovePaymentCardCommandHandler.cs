@@ -1,9 +1,9 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Rides;
-using Soloride.Domain.Transactions;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Rides;
+using Ridely.Domain.Transactions;
 
-namespace Soloride.Application.Features.Transactions.RemovePaymentCard;
+namespace Ridely.Application.Features.Transactions.RemovePaymentCard;
 internal sealed class RemovePaymentCardCommandHandler :
     ICommandHandler<RemovePaymentCardCommand>
 {

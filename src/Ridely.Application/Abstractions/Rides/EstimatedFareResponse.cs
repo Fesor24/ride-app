@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Abstractions.Rides;
+﻿namespace Ridely.Application.Abstractions.Rides;
 public sealed record EstimatedFareResponse(
     ulong EstimatedFare,
     ulong DeliveryFare,

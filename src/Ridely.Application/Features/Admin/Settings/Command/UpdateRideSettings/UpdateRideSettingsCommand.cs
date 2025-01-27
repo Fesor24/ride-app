@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using Soloride.Domain.Abstractions;
+using Ridely.Domain.Abstractions;
 
-namespace Soloride.Application.Features.Admin.Settings.Command.UpdateRideSettings;
+namespace Ridely.Application.Features.Admin.Settings.Command.UpdateRideSettings;
 public record UpdateRideSettingsCommand(
     decimal BaseFare,
     decimal RatePerKilometer,

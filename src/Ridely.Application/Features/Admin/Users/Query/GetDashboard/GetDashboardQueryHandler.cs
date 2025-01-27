@@ -1,11 +1,11 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Rides;
-using Soloride.Domain.Users;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Rides;
+using Ridely.Domain.Users;
 
-namespace Soloride.Application.Features.Admin.Users.Query.GetDashboard;
+namespace Ridely.Application.Features.Admin.Users.Query.GetDashboard;
 internal sealed class GetDashboardQueryHandler : 
     IQueryHandler<GetDashboardQuery, GetDashboardResponse>
 {

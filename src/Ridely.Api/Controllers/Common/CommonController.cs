@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Soloride.Application.Features.Common.Banks.Query.GetAll;
-using Soloride.Application.Features.Common.GetContacts;
-using SolorideAPI.Controllers.Base;
-using SolorideAPI.Extensions;
-using SolorideAPI.Filter;
-using SolorideAPI.Shared;
+using Ridely.Application.Features.Common.Banks.Query.GetAll;
+using Ridely.Application.Features.Common.GetContacts;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Extensions;
+using RidelyAPI.Filter;
+using RidelyAPI.Shared;
 
-namespace SolorideAPI.Controllers.Common;
+namespace RidelyAPI.Controllers.Common;
 
 [ResourceAuthorizationFilter]
 public class CommonController : BaseController<CommonController>

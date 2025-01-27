@@ -1,7 +1,7 @@
-﻿using Soloride.Domain.Riders;
-using Soloride.Domain.Transactions;
+﻿using Ridely.Domain.Riders;
+using Ridely.Domain.Transactions;
 
-namespace Soloride.Domain.Models.Riders;
+namespace Ridely.Domain.Models.Riders;
 public sealed class RiderTransactionSearchParams : SearchParams
 {
     public string? PhoneNo { get; set; }

@@ -1,7 +1,7 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Rides;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Rides;
 
-namespace Soloride.Application.Features.Rides.RideRequest;
+namespace Ridely.Application.Features.Rides.RideRequest;
 public sealed record RideRequestCommand(long RideId,
     PaymentMethod PaymentMethod,
     MusicGenre MusicGenre,

@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Common;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Common;
 
-namespace Soloride.Application.Features.Common.Banks.Command.Update;
+namespace Ridely.Application.Features.Common.Banks.Command.Update;
 internal sealed class UpdateBankCommandHandler(IUnitOfWork unitOfWork, IBankRepository bankRepository) :
     IRequestHandler<UpdateBankCommand, Result<bool>>
 {

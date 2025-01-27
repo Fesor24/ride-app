@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Soloride.Application.Features.Admin.Rides.GetById;
-using Soloride.Application.Features.Admin.Rides.GetRideLogs;
-using Soloride.Application.Features.Admin.Rides.Search;
-using Soloride.Domain.Models;
-using SolorideAPI.Controllers.Base;
-using SolorideAPI.Extensions;
-using SolorideAPI.Shared;
+using Ridely.Application.Features.Admin.Rides.GetById;
+using Ridely.Application.Features.Admin.Rides.GetRideLogs;
+using Ridely.Application.Features.Admin.Rides.Search;
+using Ridely.Domain.Models;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Extensions;
+using RidelyAPI.Shared;
 
-namespace SolorideAPI.Controllers.Admin.Ride;
+namespace RidelyAPI.Controllers.Admin.Ride;
 
 [Route("api/rides")]
 public class RideController : AdminBaseController<RideController>

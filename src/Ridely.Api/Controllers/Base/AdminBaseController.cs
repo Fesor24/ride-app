@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using SolorideAPI.Filter;
+using RidelyAPI.Filter;
 
-namespace SolorideAPI.Controllers.Base
+namespace RidelyAPI.Controllers.Base
 {
     [ApiExplorerSettings(GroupName = SwaggerGroupNames.Admin)]
     [ApiController]

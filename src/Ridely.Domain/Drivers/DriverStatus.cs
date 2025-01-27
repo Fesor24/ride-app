@@ -1,4 +1,4 @@
-﻿namespace Soloride.Domain.Drivers;
+﻿namespace Ridely.Domain.Drivers;
 public enum DriverStatus
 {
     Unknown = 0,

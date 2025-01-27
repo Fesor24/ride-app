@@ -1,6 +1,6 @@
-﻿using Soloride.Application.Features.Drivers.UpdateStatus;
+﻿using Ridely.Application.Features.Drivers.UpdateStatus;
 
-namespace SolorideAPI.Controllers.Driver;
+namespace RidelyAPI.Controllers.Driver;
 
 public sealed class UpdateStatusRequest
 {

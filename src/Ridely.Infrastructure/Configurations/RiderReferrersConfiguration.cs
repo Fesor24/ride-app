@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Soloride.Domain.Riders;
+using Ridely.Domain.Riders;
 
-namespace Soloride.Infrastructure.Configurations;
+namespace Ridely.Infrastructure.Configurations;
 internal sealed class RiderReferrersConfiguration : IEntityTypeConfiguration<RiderReferrers>
 {
     public void Configure(EntityTypeBuilder<RiderReferrers> builder)

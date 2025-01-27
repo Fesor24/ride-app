@@ -1,4 +1,4 @@
-﻿namespace SolorideAPI.WebSocket.Controller;
+﻿namespace RidelyAPI.WebSocket.Controller;
 
 public class WebSocketControllerBase
 {

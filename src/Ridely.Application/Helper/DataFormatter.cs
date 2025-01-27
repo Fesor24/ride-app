@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Helper;
+﻿namespace Ridely.Application.Helper;
 public static class DataFormatter
 {
     public static string FormatPhoneNo(string phoneNo)

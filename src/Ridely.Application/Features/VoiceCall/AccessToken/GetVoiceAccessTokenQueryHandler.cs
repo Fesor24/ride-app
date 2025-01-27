@@ -1,11 +1,11 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Abstractions.VoiceCall;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Rides;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Abstractions.VoiceCall;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Rides;
 
-namespace Soloride.Application.Features.VoiceCall.AccessToken;
+namespace Ridely.Application.Features.VoiceCall.AccessToken;
 internal sealed class GetVoiceAccessTokenQueryHandler :
     IQueryHandler<GetVoiceAccessTokenQuery, GetVoiceAccessTokenResponse>
 {

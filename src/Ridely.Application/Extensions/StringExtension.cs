@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Extensions;
+﻿namespace Ridely.Application.Extensions;
 internal static class StringExtension
 {
     internal static string ToPhoneNumber(this string phoneNumber)

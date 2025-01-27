@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Features.Rides.GetChatMessages;
+﻿namespace Ridely.Application.Features.Rides.GetChatMessages;
 public sealed class GetChatMessagesResponse
 {
     public long Id { get; set; }

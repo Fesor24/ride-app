@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Abstractions;
+﻿using Ridely.Domain.Abstractions;
 
-namespace Soloride.Domain.Riders.Events;
+namespace Ridely.Domain.Riders.Events;
 public sealed record RiderRegisteredDomainEvent(
     string PhoneNo,
     string ReferredByCode

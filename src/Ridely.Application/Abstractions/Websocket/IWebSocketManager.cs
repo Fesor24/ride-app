@@ -1,7 +1,7 @@
-﻿using Soloride.Application.Models.WebSocket;
+﻿using Ridely.Application.Models.WebSocket;
 using System.Net.WebSockets;
 
-namespace Soloride.Application.Abstractions.Websocket;
+namespace Ridely.Application.Abstractions.Websocket;
 public interface IWebSocketManager
 {
     WebSocket AddWebSocket(string userKey, WebSocket socket);

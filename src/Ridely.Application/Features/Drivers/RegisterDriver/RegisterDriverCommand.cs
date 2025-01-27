@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
-using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Shared;
+using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Shared;
 
-namespace Soloride.Application.Features.Drivers.RegisterDriver;
+namespace Ridely.Application.Features.Drivers.RegisterDriver;
 public sealed record RegisterDriverCommand(
     string? ReferrerCode,
     RegisterDriverInfo PersonalInfo,

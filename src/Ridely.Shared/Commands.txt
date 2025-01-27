@@ -1,7 +1,7 @@
 
 
-dotnet ef migrations remove -s src/Soloride.API -p src/Soloride.Infrastructure
+dotnet ef migrations remove -s src/Ridely.API -p src/Ridely.Infrastructure
 
-dotnet ef migrations add ride -s src/Soloride.API -p src/Soloride.Infrastructure
+dotnet ef migrations add ride -s src/Ridely.API -p src/Ridely.Infrastructure
 
-dotnet ef migrations script -p src/Soloride.Infrastructure -s src/Soloride.API -o src/Soloride.Infrastructure/MigScript
+dotnet ef migrations script -p src/Ridely.Infrastructure -s src/Ridely.API -o src/Ridely.Infrastructure/MigScript

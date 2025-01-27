@@ -1,6 +1,6 @@
-﻿using Soloride.Application.Abstractions.Messaging;
+﻿using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.VoiceCall.StartCall
+namespace Ridely.Application.Features.VoiceCall.StartCall
 {
     public sealed record StartCallCommand(int RideId, bool DriverCalled) : 
         ICommand<StartCallResponse>;

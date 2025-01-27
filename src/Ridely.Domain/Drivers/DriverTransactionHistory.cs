@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Transactions;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Transactions;
 
-namespace Soloride.Domain.Drivers;
+namespace Ridely.Domain.Drivers;
 public sealed class DriverTransactionHistory : Entity
 {
     private DriverTransactionHistory()

@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
-using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Models;
-using Soloride.Domain.Riders;
+using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Models;
+using Ridely.Domain.Riders;
 
-namespace Soloride.Application.Features.Riders.AddSavedLocation;
+namespace Ridely.Application.Features.Riders.AddSavedLocation;
 public sealed record AddSavedLocationCommand(long RiderId,
     SavedLocationType LocationType,
     Location Coordinates, string Address) :

@@ -1,7 +1,7 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Rides;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Rides;
 
-namespace Soloride.Application.Features.Rides.UpdatePaymentMethod;
+namespace Ridely.Application.Features.Rides.UpdatePaymentMethod;
 public sealed record UpdatePaymentMethodCommand(
     long RideId,
     PaymentMethod PaymentMethod,

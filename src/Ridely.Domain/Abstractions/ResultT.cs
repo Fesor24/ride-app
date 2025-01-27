@@ -1,4 +1,4 @@
-﻿namespace Soloride.Domain.Abstractions;
+﻿namespace Ridely.Domain.Abstractions;
 public class Result<TValue> : Result
 {
     private readonly TValue _value;

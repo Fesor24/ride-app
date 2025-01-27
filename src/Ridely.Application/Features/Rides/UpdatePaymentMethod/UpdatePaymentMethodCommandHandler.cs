@@ -1,10 +1,10 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Rides;
-using Soloride.Domain.Transactions;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Rides;
+using Ridely.Domain.Transactions;
 
-namespace Soloride.Application.Features.Rides.UpdatePaymentMethod;
+namespace Ridely.Application.Features.Rides.UpdatePaymentMethod;
 internal sealed class UpdatePaymentMethodCommandHandler : ICommandHandler<UpdatePaymentMethodCommand>
 {
     private readonly IRideRepository _rideRepository;

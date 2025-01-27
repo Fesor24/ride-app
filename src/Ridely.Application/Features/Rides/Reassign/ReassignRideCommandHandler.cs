@@ -1,20 +1,20 @@
 ﻿using Hangfire;
-using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Abstractions.Referral;
-using Soloride.Application.Abstractions.Rides;
-using Soloride.Application.Abstractions.Websocket;
-using Soloride.Application.Models.WebSocket;
-using Soloride.Contracts.Models;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Rides;
-using Soloride.Domain.Services;
-using Soloride.Shared.Constants;
-using Soloride.Shared.Helper;
-using Soloride.Shared.Helper.Keys;
+using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Abstractions.Referral;
+using Ridely.Application.Abstractions.Rides;
+using Ridely.Application.Abstractions.Websocket;
+using Ridely.Application.Models.WebSocket;
+using Ridely.Contracts.Models;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Rides;
+using Ridely.Domain.Services;
+using Ridely.Shared.Constants;
+using Ridely.Shared.Helper;
+using Ridely.Shared.Helper.Keys;
 
-namespace Soloride.Application.Features.Rides.Reassign;
+namespace Ridely.Application.Features.Rides.Reassign;
 internal sealed class ReassignRideCommandHandler :
     ICommandHandler<ReassignRideCommand, ReassignRideResponse>
 {

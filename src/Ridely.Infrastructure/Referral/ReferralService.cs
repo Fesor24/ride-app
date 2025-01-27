@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Soloride.Application.Abstractions.Referral;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Rides;
+using Ridely.Application.Abstractions.Referral;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Rides;
 
-namespace Soloride.Infrastructure.Referral;
+namespace Ridely.Infrastructure.Referral;
 internal sealed class ReferralService : IReferralService
 {
     private readonly ApplicationDbContext _context;

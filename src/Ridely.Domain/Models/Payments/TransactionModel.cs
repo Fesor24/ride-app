@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Transactions;
+﻿using Ridely.Domain.Transactions;
 
-namespace Soloride.Domain.Models.Payments;
+namespace Ridely.Domain.Models.Payments;
 public class TransactionModel : BaseModel
 {
     public string Reference { get; set; }

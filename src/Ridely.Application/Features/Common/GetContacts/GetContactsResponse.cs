@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Features.Common.GetContacts;
+﻿namespace Ridely.Application.Features.Common.GetContacts;
 public sealed class GetContactsResponse
 {
     public SupportContact Support { get; set; }

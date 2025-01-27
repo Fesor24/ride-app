@@ -1,2 +1,2 @@
-﻿namespace Soloride.Application.Features.Riders.RegisterRider;
+﻿namespace Ridely.Application.Features.Riders.RegisterRider;
 public sealed record RegisterRiderResponse(string AccessToken, string RefreshToken);

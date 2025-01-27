@@ -3,11 +3,11 @@ using Google.Apis.Auth.OAuth2;
 using Hangfire;
 using Microsoft.Extensions.FileProviders;
 using Serilog;
-using Soloride.Application;
-using Soloride.Infrastructure;
-using SolorideAPI.Extensions;
-using SolorideAPI.Middlewares;
-using SolorideAPI.OpenApi;
+using Ridely.Application;
+using Ridely.Infrastructure;
+using RidelyAPI.Extensions;
+using RidelyAPI.Middlewares;
+using RidelyAPI.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +22,7 @@ builder.Host.UseSerilog();
 FirebaseApp.Create(new AppOptions()
 {
     Credential = GoogleCredential.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-    "soloride-app-firebase-adminsdk-o64ak-05a4f56e1e.json"))
+    "ridely-app-firebase-adminsdk-o64ak-05a4f56e1e.json"))
 });
 
 builder.Services

@@ -1,5 +1,5 @@
-using Soloride.Application.Abstractions.Messaging;
+using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Common.Calls.Command;
+namespace Ridely.Application.Features.Common.Calls.Command;
 
 public record RouteCallCommand(string PhoneNo) : ICommand<string?>;

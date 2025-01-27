@@ -1,4 +1,4 @@
-﻿using Soloride.Application.Abstractions.Messaging;
+﻿using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Drivers.DeleteBankAccount;
+namespace Ridely.Application.Features.Drivers.DeleteBankAccount;
 public sealed record DeleteBankAccountCommand(long BankAccountId, long DriverId) : ICommand;

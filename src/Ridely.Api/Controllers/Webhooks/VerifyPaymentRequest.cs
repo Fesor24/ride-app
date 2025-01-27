@@ -1,4 +1,4 @@
-﻿namespace SolorideAPI.Controllers.Webhooks;
+﻿namespace RidelyAPI.Controllers.Webhooks;
 
 public class VerifyPaymentRequest
 {

@@ -1,12 +1,12 @@
-﻿using Soloride.Domain.Abstractions;
+﻿using Ridely.Domain.Abstractions;
 
-namespace Soloride.Domain.Common;
+namespace Ridely.Domain.Common;
 public sealed class Settings : Entity
 {
     public decimal BaseFare { get; set; }
     public decimal RatePerKilometer { get; set; }
     public decimal DeliveryRatePerKilometer { get; set; }
-    // 100% means driver gets paid all...if Soloride wants 30%, then driver commisison would be 70%
+    // 100% means driver gets paid all...if Ridely wants 30%, then driver commisison would be 70%
     public decimal DriverCommissionFromRide { get; set; }
     public decimal RatePerMinute { get; set; }
     public string SupportEmails { get; private set; } = "";

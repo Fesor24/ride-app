@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Soloride.Application.Abstractions.Data;
-using Soloride.Domain.Abstractions;
+using Ridely.Application.Abstractions.Data;
+using Ridely.Domain.Abstractions;
 
-namespace Soloride.Infrastructure.Outbox;
+namespace Ridely.Infrastructure.Outbox;
 public sealed class ProcessOutboxMessagesJob
 {
     private readonly IPublisher _publisher;

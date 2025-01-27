@@ -1,8 +1,8 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
 
-namespace Soloride.Application.Features.Drivers.UpdateStatus;
+namespace Ridely.Application.Features.Drivers.UpdateStatus;
 internal sealed class UpdateStatusCommandHandler(IUnitOfWork unitOfWork, IDriverRepository driverRepository) :
     ICommandHandler<UpdateStatusCommand>
 {

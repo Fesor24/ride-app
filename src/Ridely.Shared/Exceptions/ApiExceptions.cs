@@ -1,4 +1,4 @@
-﻿namespace Soloride.Shared.Exceptions;
+﻿namespace Ridely.Shared.Exceptions;
 public class ApiUnauthorizedException(string message) : Exception(message)
 {
 }

@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Models;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Models;
 
-namespace Soloride.Application.Features.Admin.Driver.Search;
+namespace Ridely.Application.Features.Admin.Driver.Search;
 public class SearchDriverQuery : IRequest<Result<PaginatedList<SearchDriverResponse>>>
 {
     public int PageSize { get; set; }

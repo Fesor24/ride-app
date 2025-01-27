@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Common;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Common;
 
-namespace Soloride.Application.Features.Common.Banks.Command.Create;
+namespace Ridely.Application.Features.Common.Banks.Command.Create;
 internal sealed class CreateBankCommandHandler(IBankRepository bankRepository, IUnitOfWork unitOfWork) :
     IRequestHandler<CreateBankCommand, Result<bool>>
 {

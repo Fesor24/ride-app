@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Soloride.Application.Helper;
-using Soloride.Domain.Models;
-using Soloride.Domain.Models.Riders;
-using Soloride.Domain.Riders;
+using Ridely.Application.Helper;
+using Ridely.Domain.Models;
+using Ridely.Domain.Models.Riders;
+using Ridely.Domain.Riders;
 
-namespace Soloride.Infrastructure.Repositories;
+namespace Ridely.Infrastructure.Repositories;
 internal sealed class RiderTransactionHistoryRepository(ApplicationDbContext context) :
     GenericRepository<RiderTransactionHistory>(context), IRiderTransactionHistoryRepository
 {

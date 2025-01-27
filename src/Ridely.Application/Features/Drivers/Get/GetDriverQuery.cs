@@ -1,4 +1,4 @@
-﻿using Soloride.Application.Abstractions.Messaging;
+﻿using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Drivers.Get;
+namespace Ridely.Application.Features.Drivers.Get;
 public sealed record GetDriverQuery(long DriverId) : IQuery<GetDriverResponse>;

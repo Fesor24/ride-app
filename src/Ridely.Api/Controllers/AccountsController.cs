@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Soloride.Application.Features.Accounts.Login;
-using SolorideAPI.Controllers.Base;
-using SolorideAPI.Dto.Account;
-using SolorideAPI.Extensions;
-using SolorideAPI.Filter;
-using SolorideAPI.Shared;
+using Ridely.Application.Features.Accounts.Login;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Dto.Account;
+using RidelyAPI.Extensions;
+using RidelyAPI.Filter;
+using RidelyAPI.Shared;
 
-namespace SolorideAPI.Controllers;
+namespace RidelyAPI.Controllers;
 
 [ResourceAuthorizationFilter]
 public class AccountsController : BaseController<AccountsController>

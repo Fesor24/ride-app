@@ -1,4 +1,4 @@
-﻿namespace SolorideAPI.Controllers
+﻿namespace RidelyAPI.Controllers
 {
     public abstract class SearchRequest
     {

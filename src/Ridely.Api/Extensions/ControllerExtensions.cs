@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Soloride.Domain.Abstractions;
-using SolorideAPI.Shared;
+using Ridely.Domain.Abstractions;
+using RidelyAPI.Shared;
 
-namespace SolorideAPI.Extensions;
+namespace RidelyAPI.Extensions;
 
 internal static class ControllerExtensions
 {

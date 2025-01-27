@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using Soloride.Infrastructure;
+using Ridely.Infrastructure;
 
 #nullable disable
 
-namespace Soloride.Infrastructure.Migrations
+namespace Ridely.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -22,7 +22,7 @@ namespace Soloride.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Soloride.Domain.Call.CallLog", b =>
+            modelBuilder.Entity("Ridely.Domain.Call.CallLog", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -55,7 +55,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("CallLog", "rds");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Common.Bank", b =>
+            modelBuilder.Entity("Ridely.Domain.Common.Bank", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -83,7 +83,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("Bank", "com");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Common.Settings", b =>
+            modelBuilder.Entity("Ridely.Domain.Common.Settings", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -126,7 +126,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("Settings", "com");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Drivers.BankAccount", b =>
+            modelBuilder.Entity("Ridely.Domain.Drivers.BankAccount", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -167,7 +167,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("BankAccount", "drv");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Drivers.Cab", b =>
+            modelBuilder.Entity("Ridely.Domain.Drivers.Cab", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -213,7 +213,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("Cab", "drv");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Drivers.Driver", b =>
+            modelBuilder.Entity("Ridely.Domain.Drivers.Driver", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -353,7 +353,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("Driver", "drv");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Drivers.DriverReferrers", b =>
+            modelBuilder.Entity("Ridely.Domain.Drivers.DriverReferrers", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -377,7 +377,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("DriverReferrers", "drv");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Drivers.DriverTransactionHistory", b =>
+            modelBuilder.Entity("Ridely.Domain.Drivers.DriverTransactionHistory", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -420,7 +420,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("DriverTransactionHistory", "drv");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Drivers.DriverWallet", b =>
+            modelBuilder.Entity("Ridely.Domain.Drivers.DriverWallet", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -454,7 +454,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("DriverWallet", "drv");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Riders.PaymentCard", b =>
+            modelBuilder.Entity("Ridely.Domain.Riders.PaymentCard", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -510,7 +510,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("PaymentCard", "rdr");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Riders.Rider", b =>
+            modelBuilder.Entity("Ridely.Domain.Riders.Rider", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -608,7 +608,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("Rider", "rdr");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Riders.RiderReferrers", b =>
+            modelBuilder.Entity("Ridely.Domain.Riders.RiderReferrers", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -632,7 +632,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("RiderReferrers", "rdr");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Riders.RiderTransactionHistory", b =>
+            modelBuilder.Entity("Ridely.Domain.Riders.RiderTransactionHistory", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -674,7 +674,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("RiderTransactionHistory", "rdr");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Riders.RiderWallet", b =>
+            modelBuilder.Entity("Ridely.Domain.Riders.RiderWallet", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -708,7 +708,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("RiderWallet", "rdr");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Riders.SavedLocation", b =>
+            modelBuilder.Entity("Ridely.Domain.Riders.SavedLocation", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -738,7 +738,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("SavedLocation", "rdr");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Rides.Chat", b =>
+            modelBuilder.Entity("Ridely.Domain.Rides.Chat", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -779,7 +779,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("Chat", "rds");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Rides.Payment", b =>
+            modelBuilder.Entity("Ridely.Domain.Rides.Payment", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -814,7 +814,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("Payment", "rds");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Rides.Ratings", b =>
+            modelBuilder.Entity("Ridely.Domain.Rides.Ratings", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -839,7 +839,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("Ratings", "rds");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Rides.Ride", b =>
+            modelBuilder.Entity("Ridely.Domain.Rides.Ride", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -929,7 +929,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("Ride", "rds");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Rides.RideLog", b =>
+            modelBuilder.Entity("Ridely.Domain.Rides.RideLog", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -953,7 +953,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("RideLog", "rds");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Transactions.TransactionLog", b =>
+            modelBuilder.Entity("Ridely.Domain.Transactions.TransactionLog", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -981,7 +981,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("TransactionLog", "trx");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Transactions.TransactionReferenceMap", b =>
+            modelBuilder.Entity("Ridely.Domain.Transactions.TransactionReferenceMap", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -1001,7 +1001,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("TransactionReferenceMap", "trx");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Users.Permission", b =>
+            modelBuilder.Entity("Ridely.Domain.Users.Permission", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -1024,7 +1024,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("Permission", "usr");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Users.Role", b =>
+            modelBuilder.Entity("Ridely.Domain.Users.Role", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -1047,7 +1047,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("Role", "usr");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Users.RolePermission", b =>
+            modelBuilder.Entity("Ridely.Domain.Users.RolePermission", b =>
                 {
                     b.Property<long>("RoleId")
                         .HasColumnType("bigint");
@@ -1065,7 +1065,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("RolePermission", "usr");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Users.User", b =>
+            modelBuilder.Entity("Ridely.Domain.Users.User", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -1134,7 +1134,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("User", "usr");
                 });
 
-            modelBuilder.Entity("Soloride.Infrastructure.Outbox.OutboxMessage", b =>
+            modelBuilder.Entity("Ridely.Infrastructure.Outbox.OutboxMessage", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -1164,24 +1164,24 @@ namespace Soloride.Infrastructure.Migrations
                     b.ToTable("OutboxMessages", "com");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Call.CallLog", b =>
+            modelBuilder.Entity("Ridely.Domain.Call.CallLog", b =>
                 {
-                    b.HasOne("Soloride.Domain.Rides.Ride", null)
+                    b.HasOne("Ridely.Domain.Rides.Ride", null)
                         .WithMany("CallLogs")
                         .HasForeignKey("RideId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Drivers.BankAccount", b =>
+            modelBuilder.Entity("Ridely.Domain.Drivers.BankAccount", b =>
                 {
-                    b.HasOne("Soloride.Domain.Common.Bank", "Bank")
+                    b.HasOne("Ridely.Domain.Common.Bank", "Bank")
                         .WithMany()
                         .HasForeignKey("BankId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Soloride.Domain.Drivers.Driver", null)
+                    b.HasOne("Ridely.Domain.Drivers.Driver", null)
                         .WithMany("BankAccounts")
                         .HasForeignKey("DriverId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1190,9 +1190,9 @@ namespace Soloride.Infrastructure.Migrations
                     b.Navigation("Bank");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Drivers.Driver", b =>
+            modelBuilder.Entity("Ridely.Domain.Drivers.Driver", b =>
                 {
-                    b.HasOne("Soloride.Domain.Drivers.Cab", "Cab")
+                    b.HasOne("Ridely.Domain.Drivers.Cab", "Cab")
                         .WithMany()
                         .HasForeignKey("CabId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1201,9 +1201,9 @@ namespace Soloride.Infrastructure.Migrations
                     b.Navigation("Cab");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Drivers.DriverReferrers", b =>
+            modelBuilder.Entity("Ridely.Domain.Drivers.DriverReferrers", b =>
                 {
-                    b.HasOne("Soloride.Domain.Drivers.Driver", "Driver")
+                    b.HasOne("Ridely.Domain.Drivers.Driver", "Driver")
                         .WithMany("DriverReferrers")
                         .HasForeignKey("DriverId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1212,9 +1212,9 @@ namespace Soloride.Infrastructure.Migrations
                     b.Navigation("Driver");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Riders.PaymentCard", b =>
+            modelBuilder.Entity("Ridely.Domain.Riders.PaymentCard", b =>
                 {
-                    b.HasOne("Soloride.Domain.Riders.Rider", "Rider")
+                    b.HasOne("Ridely.Domain.Riders.Rider", "Rider")
                         .WithMany("PaymentCards")
                         .HasForeignKey("RiderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1223,9 +1223,9 @@ namespace Soloride.Infrastructure.Migrations
                     b.Navigation("Rider");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Riders.RiderReferrers", b =>
+            modelBuilder.Entity("Ridely.Domain.Riders.RiderReferrers", b =>
                 {
-                    b.HasOne("Soloride.Domain.Riders.Rider", "Rider")
+                    b.HasOne("Ridely.Domain.Riders.Rider", "Rider")
                         .WithMany("Referrers")
                         .HasForeignKey("RiderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1234,9 +1234,9 @@ namespace Soloride.Infrastructure.Migrations
                     b.Navigation("Rider");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Riders.RiderTransactionHistory", b =>
+            modelBuilder.Entity("Ridely.Domain.Riders.RiderTransactionHistory", b =>
                 {
-                    b.HasOne("Soloride.Domain.Riders.Rider", "Rider")
+                    b.HasOne("Ridely.Domain.Riders.Rider", "Rider")
                         .WithMany()
                         .HasForeignKey("RiderId")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -1245,27 +1245,27 @@ namespace Soloride.Infrastructure.Migrations
                     b.Navigation("Rider");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Riders.SavedLocation", b =>
+            modelBuilder.Entity("Ridely.Domain.Riders.SavedLocation", b =>
                 {
-                    b.HasOne("Soloride.Domain.Riders.Rider", null)
+                    b.HasOne("Ridely.Domain.Riders.Rider", null)
                         .WithMany("SavedLocations")
                         .HasForeignKey("RiderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Rides.Chat", b =>
+            modelBuilder.Entity("Ridely.Domain.Rides.Chat", b =>
                 {
-                    b.HasOne("Soloride.Domain.Rides.Ride", null)
+                    b.HasOne("Ridely.Domain.Rides.Ride", null)
                         .WithMany("Chats")
                         .HasForeignKey("RideId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Rides.Ratings", b =>
+            modelBuilder.Entity("Ridely.Domain.Rides.Ratings", b =>
                 {
-                    b.HasOne("Soloride.Domain.Rides.Ride", "Ride")
+                    b.HasOne("Ridely.Domain.Rides.Ride", "Ride")
                         .WithMany()
                         .HasForeignKey("RideId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1274,24 +1274,24 @@ namespace Soloride.Infrastructure.Migrations
                     b.Navigation("Ride");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Rides.Ride", b =>
+            modelBuilder.Entity("Ridely.Domain.Rides.Ride", b =>
                 {
-                    b.HasOne("Soloride.Domain.Drivers.Driver", "Driver")
+                    b.HasOne("Ridely.Domain.Drivers.Driver", "Driver")
                         .WithMany()
                         .HasForeignKey("DriverId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("Soloride.Domain.Rides.Payment", "Payment")
+                    b.HasOne("Ridely.Domain.Rides.Payment", "Payment")
                         .WithMany()
                         .HasForeignKey("PaymentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Soloride.Domain.Rides.Ride", "ReassignFrom")
+                    b.HasOne("Ridely.Domain.Rides.Ride", "ReassignFrom")
                         .WithMany()
                         .HasForeignKey("ReassignFromId");
 
-                    b.HasOne("Soloride.Domain.Riders.Rider", "Rider")
+                    b.HasOne("Ridely.Domain.Riders.Rider", "Rider")
                         .WithMany()
                         .HasForeignKey("RiderId")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -1306,9 +1306,9 @@ namespace Soloride.Infrastructure.Migrations
                     b.Navigation("Rider");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Rides.RideLog", b =>
+            modelBuilder.Entity("Ridely.Domain.Rides.RideLog", b =>
                 {
-                    b.HasOne("Soloride.Domain.Rides.Ride", "Ride")
+                    b.HasOne("Ridely.Domain.Rides.Ride", "Ride")
                         .WithMany("RideLogs")
                         .HasForeignKey("RideId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1317,24 +1317,24 @@ namespace Soloride.Infrastructure.Migrations
                     b.Navigation("Ride");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Users.RolePermission", b =>
+            modelBuilder.Entity("Ridely.Domain.Users.RolePermission", b =>
                 {
-                    b.HasOne("Soloride.Domain.Users.Permission", null)
+                    b.HasOne("Ridely.Domain.Users.Permission", null)
                         .WithMany("RolePermissions")
                         .HasForeignKey("PermissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Soloride.Domain.Users.Role", null)
+                    b.HasOne("Ridely.Domain.Users.Role", null)
                         .WithMany("RolePermissions")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Users.User", b =>
+            modelBuilder.Entity("Ridely.Domain.Users.User", b =>
                 {
-                    b.HasOne("Soloride.Domain.Users.Role", "Role")
+                    b.HasOne("Ridely.Domain.Users.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1343,14 +1343,14 @@ namespace Soloride.Infrastructure.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Drivers.Driver", b =>
+            modelBuilder.Entity("Ridely.Domain.Drivers.Driver", b =>
                 {
                     b.Navigation("BankAccounts");
 
                     b.Navigation("DriverReferrers");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Riders.Rider", b =>
+            modelBuilder.Entity("Ridely.Domain.Riders.Rider", b =>
                 {
                     b.Navigation("PaymentCards");
 
@@ -1359,7 +1359,7 @@ namespace Soloride.Infrastructure.Migrations
                     b.Navigation("SavedLocations");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Rides.Ride", b =>
+            modelBuilder.Entity("Ridely.Domain.Rides.Ride", b =>
                 {
                     b.Navigation("CallLogs");
 
@@ -1368,12 +1368,12 @@ namespace Soloride.Infrastructure.Migrations
                     b.Navigation("RideLogs");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Users.Permission", b =>
+            modelBuilder.Entity("Ridely.Domain.Users.Permission", b =>
                 {
                     b.Navigation("RolePermissions");
                 });
 
-            modelBuilder.Entity("Soloride.Domain.Users.Role", b =>
+            modelBuilder.Entity("Ridely.Domain.Users.Role", b =>
                 {
                     b.Navigation("RolePermissions");
                 });

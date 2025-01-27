@@ -1,4 +1,4 @@
-﻿namespace SolorideAPI.WebSocket.Attributes;
+﻿namespace RidelyAPI.WebSocket.Attributes;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
 public class WebSocketRouteAttribute : Attribute

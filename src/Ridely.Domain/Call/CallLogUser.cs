@@ -1,4 +1,4 @@
-﻿namespace Soloride.Domain.Call
+﻿namespace Ridely.Domain.Call
 {
     public enum CallLogUser
     {

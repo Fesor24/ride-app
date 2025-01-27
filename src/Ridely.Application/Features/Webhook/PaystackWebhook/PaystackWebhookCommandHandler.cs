@@ -1,14 +1,14 @@
 ﻿using System.Data;
 using System.Text.Json;
 using Hangfire;
-using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Rides;
-using Soloride.Domain.Transactions;
+using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Rides;
+using Ridely.Domain.Transactions;
 
-namespace Soloride.Application.Features.Webhook.PaystackWebhook;
+namespace Ridely.Application.Features.Webhook.PaystackWebhook;
 internal sealed class PaystackWebhookCommandHandler :
     ICommandHandler<PaystackWebhookCommand>
 {

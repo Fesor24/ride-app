@@ -1,6 +1,6 @@
-﻿using Soloride.Application.Features.Accounts;
+﻿using Ridely.Application.Features.Accounts;
 
-namespace SolorideAPI.Controllers.User;
+namespace RidelyAPI.Controllers.User;
 
 public sealed class VerificationRequest
 {

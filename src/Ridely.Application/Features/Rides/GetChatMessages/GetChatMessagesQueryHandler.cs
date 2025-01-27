@@ -1,11 +1,11 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Extensions;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Models;
-using Soloride.Domain.Models.Rides;
-using Soloride.Domain.Rides;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Extensions;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Models;
+using Ridely.Domain.Models.Rides;
+using Ridely.Domain.Rides;
 
-namespace Soloride.Application.Features.Rides.GetChatMessages;
+namespace Ridely.Application.Features.Rides.GetChatMessages;
 internal sealed class GetChatMessagesQueryHandler(IChatRepository chatRepository) :
     IQueryHandler<GetChatMessagesQuery, PaginatedList<GetChatMessagesResponse>>
 {

@@ -1,5 +1,5 @@
-﻿using Soloride.Application.Abstractions.Messaging;
+﻿using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Users.UpdateDeviceToken;
+namespace Ridely.Application.Features.Users.UpdateDeviceToken;
 public sealed  record UpdateDeviceTokenCommand(string DeviceTokenId, long? RiderId, long? DriverId)
     : ICommand;

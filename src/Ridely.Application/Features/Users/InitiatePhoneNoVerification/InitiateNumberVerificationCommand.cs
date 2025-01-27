@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
-using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Features.Accounts;
+using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Features.Accounts;
 
-namespace Soloride.Application.Features.Users.InitiatePhoneNoVerification;
+namespace Ridely.Application.Features.Users.InitiatePhoneNoVerification;
 public sealed record InitiateNumberVerificationCommand(string PhoneNo, ApplicationInstance AppInstance) :
     ICommand<InitiateNumberResponse>;
 

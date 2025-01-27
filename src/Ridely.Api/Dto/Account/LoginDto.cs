@@ -1,6 +1,6 @@
-﻿using Soloride.Application.Features.Accounts;
+﻿using Ridely.Application.Features.Accounts;
 
-namespace SolorideAPI.Dto.Account;
+namespace RidelyAPI.Dto.Account;
 
 public class LoginDto
 {

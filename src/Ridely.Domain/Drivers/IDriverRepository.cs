@@ -1,8 +1,8 @@
-﻿using Soloride.Domain.Abstractions;
-using Soloride.Domain.Models;
-using Soloride.Domain.Models.Drivers;
+﻿using Ridely.Domain.Abstractions;
+using Ridely.Domain.Models;
+using Ridely.Domain.Models.Drivers;
 
-namespace Soloride.Domain.Drivers;
+namespace Ridely.Domain.Drivers;
 public interface IDriverRepository : IGenericRepository<Driver>
 {
     Task<Driver?> GetDetailsAsync(long driverId);

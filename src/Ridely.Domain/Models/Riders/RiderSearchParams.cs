@@ -1,4 +1,4 @@
-﻿namespace Soloride.Domain.Models.Riders;
+﻿namespace Ridely.Domain.Models.Riders;
 public class RiderSearchParams : SearchParams
 {
     public string? PhoneNo { get; set; }

@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Soloride.Infrastructure.Migrations
+namespace Ridely.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class _card_props_ : Migration

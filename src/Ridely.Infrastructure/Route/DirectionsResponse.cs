@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Soloride.Infrastructure.Route;
+namespace Ridely.Infrastructure.Route;
 // Mapbox
 public class DirectionsResponse
 {

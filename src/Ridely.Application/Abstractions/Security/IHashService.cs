@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Abstractions.Security;
+﻿namespace Ridely.Application.Abstractions.Security;
 public interface IHashService
 {
     string HashAndSaltValue(string value);

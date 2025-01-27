@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Models.Shared;
+﻿namespace Ridely.Application.Models.Shared;
 public record LocationResponse(
     double Latitude,
     double Longitude

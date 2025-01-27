@@ -1,9 +1,9 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Rides;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Rides;
 
-namespace Soloride.Application.Features.Rides.RideRating;
+namespace Ridely.Application.Features.Rides.RideRating;
 internal sealed class RideRatingCommandHandler:
     ICommandHandler<RideRatingCommand>
 {

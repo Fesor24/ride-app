@@ -1,6 +1,6 @@
-﻿using Soloride.Application.Abstractions.Messaging;
+﻿using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Rides.CancelRideRequest;
+namespace Ridely.Application.Features.Rides.CancelRideRequest;
 public sealed record CancelRideRequestCommand(long RideId, 
     string CancellationReason, bool? SystemInvoked = false) :
     ICommand;

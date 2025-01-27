@@ -1,5 +1,5 @@
-﻿using Soloride.Application.Abstractions.Messaging;
+﻿using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Admin.Driver.GetByPhoneNo;
+namespace Ridely.Application.Features.Admin.Driver.GetByPhoneNo;
 public sealed record GetDriverByPhoneNoQuery(string PhoneNo) :
     IQuery<GetDriverByPhoneNoResponse>;

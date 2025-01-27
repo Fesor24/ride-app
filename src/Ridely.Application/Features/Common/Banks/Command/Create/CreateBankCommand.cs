@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using MediatR;
-using Soloride.Domain.Abstractions;
+using Ridely.Domain.Abstractions;
 
-namespace Soloride.Application.Features.Common.Banks.Command.Create;
+namespace Ridely.Application.Features.Common.Banks.Command.Create;
 public record CreateBankCommand(
     string Name,
     string Code

@@ -1,4 +1,4 @@
-﻿namespace SolorideAPI.Controllers.Rides;
+﻿namespace RidelyAPI.Controllers.Rides;
 
 public class DriverArrivalRequest
 {

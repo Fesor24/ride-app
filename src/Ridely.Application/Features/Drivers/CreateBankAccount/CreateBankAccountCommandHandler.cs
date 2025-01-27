@@ -1,12 +1,12 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Abstractions.Payment;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Common;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Services;
-using Soloride.Shared.Helper.Keys;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Abstractions.Payment;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Common;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Services;
+using Ridely.Shared.Helper.Keys;
 
-namespace Soloride.Application.Features.Drivers.CreateBankAccount;
+namespace Ridely.Application.Features.Drivers.CreateBankAccount;
 internal sealed class CreateBankAccountCommandHandler :
     ICommandHandler<CreateBankAccountCommand>
 {

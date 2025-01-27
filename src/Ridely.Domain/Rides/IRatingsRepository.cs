@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Abstractions;
+﻿using Ridely.Domain.Abstractions;
 
-namespace Soloride.Domain.Rides;
+namespace Ridely.Domain.Rides;
 public interface IRatingsRepository : IGenericRepository<Ratings>
 {
     Task<Ratings?> GetByRideAsync(long rideId);

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Soloride.Domain.Abstractions;
+using Ridely.Domain.Abstractions;
 
-namespace Soloride.Domain.Drivers;
+namespace Ridely.Domain.Drivers;
 public sealed class DriverWallet : Entity
 {
     private DriverWallet()

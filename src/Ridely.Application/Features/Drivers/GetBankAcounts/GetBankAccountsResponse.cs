@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Features.Drivers.GetBankAcounts;
+﻿namespace Ridely.Application.Features.Drivers.GetBankAcounts;
 public sealed class GetBankAccountsResponse
 {
     public long Id { get; set; }

@@ -1,13 +1,13 @@
-﻿using Soloride.Application.Abstractions.Authentication;
-using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Extensions;
-using Soloride.Application.Features.Rides.EndRide;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Riders.Events;
-using RiderDomain = Soloride.Domain.Riders.Rider;
+﻿using Ridely.Application.Abstractions.Authentication;
+using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Extensions;
+using Ridely.Application.Features.Rides.EndRide;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Riders.Events;
+using RiderDomain = Ridely.Domain.Riders.Rider;
 
-namespace Soloride.Application.Features.Riders.RegisterRider;
+namespace Ridely.Application.Features.Riders.RegisterRider;
 internal sealed class RegisterRiderCommandHandler :
     ICommandHandler<RegisterRiderCommand, RegisterRiderResponse>
 {

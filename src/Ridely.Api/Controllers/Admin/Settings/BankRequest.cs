@@ -1,4 +1,4 @@
-﻿namespace SolorideAPI.Controllers.Admin.Settings;
+﻿namespace RidelyAPI.Controllers.Admin.Settings;
 
 public class BankRequest
 {

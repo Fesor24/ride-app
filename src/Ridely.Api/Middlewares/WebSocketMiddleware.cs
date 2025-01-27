@@ -2,13 +2,13 @@
 using Modules.ChatSystem.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Soloride.Application.Abstractions.Authentication;
-using Soloride.Application.Abstractions.Websocket;
-using Soloride.Shared.Constants;
-using Soloride.Shared.Helper.Keys;
-using SolorideAPI.WebSocket.Handler;
+using Ridely.Application.Abstractions.Authentication;
+using Ridely.Application.Abstractions.Websocket;
+using Ridely.Shared.Constants;
+using Ridely.Shared.Helper.Keys;
+using RidelyAPI.WebSocket.Handler;
 
-namespace SolorideAPI.Middlewares;
+namespace RidelyAPI.Middlewares;
 
 public class WebSocketMiddleware
 {

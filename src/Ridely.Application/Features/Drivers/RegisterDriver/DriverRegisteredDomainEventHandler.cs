@@ -1,15 +1,15 @@
 ﻿using MediatR;
-using Soloride.Application.Abstractions.Storage;
-using Soloride.Domain.Abstractions;
-using DriverEntity = Soloride.Domain.Drivers.Driver;
-using Soloride.Domain.Drivers.Events;
-using Soloride.Shared.Helper.Keys;
-using Soloride.Shared.Helper;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Riders;
+using Ridely.Application.Abstractions.Storage;
+using Ridely.Domain.Abstractions;
+using DriverEntity = Ridely.Domain.Drivers.Driver;
+using Ridely.Domain.Drivers.Events;
+using Ridely.Shared.Helper.Keys;
+using Ridely.Shared.Helper;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Riders;
 using Microsoft.Extensions.Logging;
 
-namespace Soloride.Application.Features.Drivers.RegisterDriver;
+namespace Ridely.Application.Features.Drivers.RegisterDriver;
 internal sealed class DriverRegisteredDomainEventHandler :
     INotificationHandler<DriverRegisteredDomainEvent>
 {

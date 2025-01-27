@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using Soloride.Domain.Abstractions;
+using Ridely.Domain.Abstractions;
 
-namespace Soloride.Application.Abstractions.Messaging;
+namespace Ridely.Application.Abstractions.Messaging;
 
 internal interface ICommand : IRequest<Result<bool>>, IBaseCommand;
 

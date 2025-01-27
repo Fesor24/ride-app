@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Features.Admin.Rides.GetById;
+﻿namespace Ridely.Application.Features.Admin.Rides.GetById;
 public sealed class GetRideResponse
 {
     public long RideId { get; set; }

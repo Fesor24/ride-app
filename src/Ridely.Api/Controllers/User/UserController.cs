@@ -1,18 +1,18 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Soloride.Application.Features.Users.Deactivate;
-using Soloride.Application.Features.Users.Delete;
-using Soloride.Application.Features.Users.GetUserStatus;
-using Soloride.Application.Features.Users.InitiatePhoneNoVerification;
-using Soloride.Application.Features.Users.PhoneNoVerification;
-using Soloride.Application.Features.Users.UpdateDeviceToken;
-using SolorideAPI.Controllers.Base;
-using SolorideAPI.Extensions;
-using SolorideAPI.Filter;
-using SolorideAPI.Shared;
+using Ridely.Application.Features.Users.Deactivate;
+using Ridely.Application.Features.Users.Delete;
+using Ridely.Application.Features.Users.GetUserStatus;
+using Ridely.Application.Features.Users.InitiatePhoneNoVerification;
+using Ridely.Application.Features.Users.PhoneNoVerification;
+using Ridely.Application.Features.Users.UpdateDeviceToken;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Extensions;
+using RidelyAPI.Filter;
+using RidelyAPI.Shared;
 
-namespace SolorideAPI.Controllers.User;
+namespace RidelyAPI.Controllers.User;
 
 [ApiVersion(ApiVersions.V1)]
 [ApiVersion(ApiVersions.V2)]

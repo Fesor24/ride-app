@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Common;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Common;
 
-namespace Soloride.Domain.Drivers;
+namespace Ridely.Domain.Drivers;
 public sealed class BankAccount : Entity
 {
     private BankAccount()

@@ -1,4 +1,4 @@
-﻿namespace Soloride.Domain.Abstractions;
+﻿namespace Ridely.Domain.Abstractions;
 public interface IGenericRepository<TEntity> where TEntity : class
 {
     Task<TEntity?> GetAsync(long id);

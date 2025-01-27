@@ -2,11 +2,11 @@
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Soloride.Application.Abstractions.Payment;
-using Soloride.Application.Models.Payment;
-using Soloride.Domain.Abstractions;
+using Ridely.Application.Abstractions.Payment;
+using Ridely.Application.Models.Payment;
+using Ridely.Domain.Abstractions;
 
-namespace Soloride.Infrastructure.Payments;
+namespace Ridely.Infrastructure.Payments;
 internal sealed class PaystackService : IPaystackService
 {
     private readonly string _payStackSecret;
@@ -46,7 +46,7 @@ internal sealed class PaystackService : IPaystackService
             email = initializePayment.Email,
             currency = "NGN",
             reference = initializePayment.Reference,
-            //callback_url = $"{_configuration["Soloride:BaseUrl"]}/api/payment/verify",
+            //callback_url = $"{_configuration["Ridely:BaseUrl"]}/api/payment/verify",
             channels = cardPayment ? cardChannel : defaultChannels
         };
 

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Soloride.Domain.Abstractions;
+using Ridely.Domain.Abstractions;
 
-namespace Soloride.Domain.Rides;
+namespace Ridely.Domain.Rides;
 public sealed class RideLog : Entity
 {
     private RideLog()

@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Abstractions;
+﻿using Ridely.Domain.Abstractions;
 
-namespace Soloride.Domain.Drivers;
+namespace Ridely.Domain.Drivers;
 public interface ICabRepository : IGenericRepository<Cab>
 {
 }

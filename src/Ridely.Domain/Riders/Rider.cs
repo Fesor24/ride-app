@@ -1,7 +1,7 @@
-﻿using Soloride.Domain.Abstractions;
-using Soloride.Domain.Shared;
+﻿using Ridely.Domain.Abstractions;
+using Ridely.Domain.Shared;
 
-namespace Soloride.Domain.Riders;
+namespace Ridely.Domain.Riders;
 public sealed class Rider : Entity
 {
     private Rider()

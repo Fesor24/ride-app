@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Rides;
+﻿using Ridely.Domain.Rides;
 
-namespace Soloride.Application.Features.Rides.StartRide;
+namespace Ridely.Application.Features.Rides.StartRide;
 public sealed class StartRideResponse
 {
     public RideLocation Source { get; set; }

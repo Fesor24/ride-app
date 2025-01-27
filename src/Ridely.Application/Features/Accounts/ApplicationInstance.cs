@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Features.Accounts;
+﻿namespace Ridely.Application.Features.Accounts;
 public enum ApplicationInstance
 {
     General = 0,

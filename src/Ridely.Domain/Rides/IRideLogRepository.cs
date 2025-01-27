@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Abstractions;
+﻿using Ridely.Domain.Abstractions;
 
-namespace Soloride.Domain.Rides;
+namespace Ridely.Domain.Rides;
 public interface IRideLogRepository : IGenericRepository<RideLog>
 {
     Task<IReadOnlyList<RideLog>> GetLogsByRide(long rideId);

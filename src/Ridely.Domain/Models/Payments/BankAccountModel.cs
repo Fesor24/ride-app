@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace Soloride.Domain.Models.Payments;
+namespace Ridely.Domain.Models.Payments;
 public class BankAccountModel
 {
     public string BankName { get; set; }

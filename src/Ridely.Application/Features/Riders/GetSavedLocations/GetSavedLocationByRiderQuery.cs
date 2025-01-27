@@ -1,5 +1,5 @@
-﻿using Soloride.Application.Abstractions.Messaging;
+﻿using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Riders.GetSavedLocations;
+namespace Ridely.Application.Features.Riders.GetSavedLocations;
 public sealed record GetSavedLocationByRiderQuery(long RiderId) :
     IQuery<List<GetSavedLocationResponse>>;

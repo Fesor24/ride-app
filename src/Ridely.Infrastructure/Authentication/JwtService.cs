@@ -4,13 +4,13 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
-using Soloride.Application.Abstractions.Authentication;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Users;
-using Soloride.Shared.Constants;
+using Ridely.Application.Abstractions.Authentication;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Users;
+using Ridely.Shared.Constants;
 
-namespace Soloride.Infrastructure.Authentication;
+namespace Ridely.Infrastructure.Authentication;
 internal sealed class JwtService : IJwtService
 {
     private readonly AuthenticationOptions _authenticationOptions;

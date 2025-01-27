@@ -1,7 +1,7 @@
-﻿using Soloride.Domain.Abstractions;
-using Soloride.Domain.Riders;
+﻿using Ridely.Domain.Abstractions;
+using Ridely.Domain.Riders;
 
-namespace Soloride.Domain.Transactions;
+namespace Ridely.Domain.Transactions;
 public interface IPaymentCardRepository : IGenericRepository<PaymentCard>
 {
     Task<IReadOnlyList<PaymentCard>> GetAllByRiderAsync(long riderId);

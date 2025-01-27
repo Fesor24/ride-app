@@ -1,7 +1,7 @@
-﻿using Soloride.Domain.Models;
-using Soloride.Domain.Riders;
+﻿using Ridely.Domain.Models;
+using Ridely.Domain.Riders;
 
-namespace SolorideAPI.Controllers.Rider;
+namespace RidelyAPI.Controllers.Rider;
 
 public class SavedLocationRequest
 {

@@ -1,5 +1,5 @@
-﻿using Soloride.Application.Models.Shared;
+﻿using Ridely.Application.Models.Shared;
 
-namespace Soloride.Application.Features.Rides.AcceptRejectRide;
+namespace Ridely.Application.Features.Rides.AcceptRejectRide;
 public sealed record AcceptRejectResponse(LocationResponse RiderLocation,
     bool Accepted, bool RideRequestCancelled);

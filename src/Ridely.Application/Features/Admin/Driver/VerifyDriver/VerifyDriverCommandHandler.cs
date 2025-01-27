@@ -1,8 +1,8 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
 
-namespace Soloride.Application.Features.Admin.Driver.VerifyDriver;
+namespace Ridely.Application.Features.Admin.Driver.VerifyDriver;
 internal sealed class VerifyDriverCommandHandler :
     ICommandHandler<VerifyDriverCommand>
 {

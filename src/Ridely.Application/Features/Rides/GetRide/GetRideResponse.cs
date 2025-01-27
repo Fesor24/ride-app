@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Features.Rides.GetRide;
+﻿namespace Ridely.Application.Features.Rides.GetRide;
 public sealed class GetRideResponse
 {
     public RideResponseDriverObj Driver { get; set; } = new();

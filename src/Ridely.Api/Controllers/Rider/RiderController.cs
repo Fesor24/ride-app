@@ -1,18 +1,18 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Soloride.Application.Features.Riders.AddSavedLocation;
-using Soloride.Application.Features.Riders.DeleteSavedLocation;
-using Soloride.Application.Features.Riders.Get;
-using Soloride.Application.Features.Riders.GetSavedLocations;
-using Soloride.Application.Features.Riders.RegisterRider;
-using Soloride.Application.Features.Riders.UpdateSavedLocation;
-using SolorideAPI.Controllers.Base;
-using SolorideAPI.Extensions;
-using SolorideAPI.Filter;
-using SolorideAPI.Shared;
+using Ridely.Application.Features.Riders.AddSavedLocation;
+using Ridely.Application.Features.Riders.DeleteSavedLocation;
+using Ridely.Application.Features.Riders.Get;
+using Ridely.Application.Features.Riders.GetSavedLocations;
+using Ridely.Application.Features.Riders.RegisterRider;
+using Ridely.Application.Features.Riders.UpdateSavedLocation;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Extensions;
+using RidelyAPI.Filter;
+using RidelyAPI.Shared;
 
-namespace SolorideAPI.Controllers.Rider;
+namespace RidelyAPI.Controllers.Rider;
 
 [ApiVersion(ApiVersions.V1)]
 [ApiVersion(ApiVersions.V2)]

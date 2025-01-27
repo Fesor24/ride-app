@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Rides;
+﻿using Ridely.Domain.Rides;
 
-namespace SolorideAPI.Controllers.Admin.Ride
+namespace RidelyAPI.Controllers.Admin.Ride
 {
     public class SearchRidesRequest : SearchRequest
     {

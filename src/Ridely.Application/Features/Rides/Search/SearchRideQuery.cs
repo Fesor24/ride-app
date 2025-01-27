@@ -1,8 +1,8 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Models;
-using Soloride.Domain.Rides;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Models;
+using Ridely.Domain.Rides;
 
-namespace Soloride.Application.Features.Rides.Search;
+namespace Ridely.Application.Features.Rides.Search;
 public sealed class SearchRideQuery : IQuery<PaginatedList<SearchRideResponse>>
 {
     public int PageNumber { get; set; }

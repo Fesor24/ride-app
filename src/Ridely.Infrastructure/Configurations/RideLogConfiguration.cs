@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Soloride.Domain.Rides;
+using Ridely.Domain.Rides;
 
-namespace Soloride.Infrastructure.Configurations;
+namespace Ridely.Infrastructure.Configurations;
 internal sealed class RideLogConfiguration : IEntityTypeConfiguration<RideLog>
 {
     public void Configure(EntityTypeBuilder<RideLog> builder)

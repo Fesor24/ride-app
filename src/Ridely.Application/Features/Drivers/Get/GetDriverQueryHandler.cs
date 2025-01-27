@@ -1,8 +1,8 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
 
-namespace Soloride.Application.Features.Drivers.Get;
+namespace Ridely.Application.Features.Drivers.Get;
 internal sealed class GetDriverQueryHandler :
     IQueryHandler<GetDriverQuery, GetDriverResponse>
 {

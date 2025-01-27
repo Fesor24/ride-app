@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Common;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Common;
 
-namespace Soloride.Application.Features.Admin.Settings.Query.GetSettings;
+namespace Ridely.Application.Features.Admin.Settings.Query.GetSettings;
 internal class GetSettingsQueryHandler(ISettingsRepository settingsRepository, IMapper mapper) : 
     IRequestHandler<GetSettingsQuery, Result<GetSettingsResponse>>
 {

@@ -1,4 +1,4 @@
-﻿using Soloride.Application.Abstractions.Notifications;
+﻿using Ridely.Application.Abstractions.Notifications;
 public sealed class TermiiOptions
 {
     public const string NAME = "Termii";

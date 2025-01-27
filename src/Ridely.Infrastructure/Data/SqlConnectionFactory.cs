@@ -1,8 +1,8 @@
 ﻿using System.Data;
 using Npgsql;
-using Soloride.Application.Abstractions.Data;
+using Ridely.Application.Abstractions.Data;
 
-namespace Soloride.Infrastructure.Data;
+namespace Ridely.Infrastructure.Data;
 internal sealed class SqlConnectionFactory : ISqlConnectionFactory
 {
     private readonly string _connectionString;

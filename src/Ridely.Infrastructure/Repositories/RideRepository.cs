@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Soloride.Application.Helper;
-using Soloride.Domain.Models;
-using Soloride.Domain.Models.Rides;
-using Soloride.Domain.Rides;
+using Ridely.Application.Helper;
+using Ridely.Domain.Models;
+using Ridely.Domain.Models.Rides;
+using Ridely.Domain.Rides;
 
-namespace Soloride.Infrastructure.Repositories;
+namespace Ridely.Infrastructure.Repositories;
 internal sealed class RideRepository(ApplicationDbContext context) :
     GenericRepository<Ride>(context), IRideRepository
 {

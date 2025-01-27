@@ -1,13 +1,13 @@
-﻿using Soloride.Domain.Call;
-using Soloride.Domain.Common;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Rides;
-using Soloride.Domain.Transactions;
-using Soloride.Domain.Users;
-using Soloride.Infrastructure.Repositories;
+﻿using Ridely.Domain.Call;
+using Ridely.Domain.Common;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Rides;
+using Ridely.Domain.Transactions;
+using Ridely.Domain.Users;
+using Ridely.Infrastructure.Repositories;
 
-namespace Soloride.Infrastructure;
+namespace Ridely.Infrastructure;
 internal sealed class UnitOfWork(ApplicationDbContext context)
 {
     #region Users

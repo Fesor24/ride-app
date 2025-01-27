@@ -1,10 +1,10 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.Extensions.Options;
-using Soloride.Domain.Abstractions;
-using Soloride.Shared.Helper;
+using Ridely.Domain.Abstractions;
+using Ridely.Shared.Helper;
 
-namespace Soloride.Infrastructure.Route;
+namespace Ridely.Infrastructure.Route;
 internal sealed class RouteService
 {
     private readonly HttpClient _httpClient;

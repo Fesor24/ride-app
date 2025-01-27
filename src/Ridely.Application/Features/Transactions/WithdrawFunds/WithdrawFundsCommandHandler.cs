@@ -1,14 +1,14 @@
 ﻿using System.Text.Json;
-using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Abstractions.Payment;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Services;
-using Soloride.Domain.Transactions;
-using Soloride.Shared.Helper;
-using Soloride.Shared.Helper.Keys;
+using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Abstractions.Payment;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Services;
+using Ridely.Domain.Transactions;
+using Ridely.Shared.Helper;
+using Ridely.Shared.Helper.Keys;
 
-namespace Soloride.Application.Features.Transactions.WithdrawFunds;
+namespace Ridely.Application.Features.Transactions.WithdrawFunds;
 internal sealed class WithdrawFundsCommandHandler :
     ICommandHandler<WithdrawFundsCommand>
 {

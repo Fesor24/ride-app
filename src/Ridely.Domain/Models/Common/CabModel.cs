@@ -1,4 +1,4 @@
-﻿namespace Soloride.Domain.Models.Common;
+﻿namespace Ridely.Domain.Models.Common;
 public class CabModel
 {
     public string Name { get; set; }

@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Features.Admin.Settings.Query.GetSettings;
+﻿namespace Ridely.Application.Features.Admin.Settings.Query.GetSettings;
 public class GetSettingsResponse
 {
     public decimal BaseFare { get; set; }

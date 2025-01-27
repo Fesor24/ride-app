@@ -1,8 +1,8 @@
 ﻿using FirebaseAdmin.Messaging;
 using Microsoft.Extensions.Logging;
-using Soloride.Application.Abstractions.Notifications;
+using Ridely.Application.Abstractions.Notifications;
 
-namespace Soloride.Infrastructure.Notifications;
+namespace Ridely.Infrastructure.Notifications;
 internal sealed class DeviceNotificationService : IDeviceNotificationService
 {
     private readonly ILogger<DeviceNotificationService> _logger;

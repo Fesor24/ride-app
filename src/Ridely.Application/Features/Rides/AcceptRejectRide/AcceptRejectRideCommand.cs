@@ -1,6 +1,6 @@
-﻿using Soloride.Application.Abstractions.Messaging;
+﻿using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Rides.AcceptRejectRide;
+namespace Ridely.Application.Features.Rides.AcceptRejectRide;
 public sealed record AcceptRejectRideCommand(
     long RideId,
     long DriverId,

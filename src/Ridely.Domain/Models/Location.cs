@@ -1,4 +1,4 @@
-﻿namespace Soloride.Domain.Models;
+﻿namespace Ridely.Domain.Models;
 public class Location
 {
     public double Latitude { get; set; }

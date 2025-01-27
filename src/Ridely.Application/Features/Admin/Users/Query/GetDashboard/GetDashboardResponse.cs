@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Features.Admin.Users.Query.GetDashboard;
+﻿namespace Ridely.Application.Features.Admin.Users.Query.GetDashboard;
 public class GetDashboardResponse
 {
     public DashboardUserResponse User { get; set; } = new();

@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Abstractions;
+﻿using Ridely.Domain.Abstractions;
 
-namespace Soloride.Domain.Drivers.Events;
+namespace Ridely.Domain.Drivers.Events;
 public sealed record DriverRegisteredDomainEvent(
     string PhoneNo,
     string RefferedBy,

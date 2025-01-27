@@ -1,7 +1,7 @@
 ﻿
-using Soloride.Domain.Transactions;
+using Ridely.Domain.Transactions;
 
-namespace Soloride.Domain.Models.Riders;
+namespace Ridely.Domain.Models.Riders;
 public sealed class RiderTransactionModel
 {
     public string Reference { get; set; }

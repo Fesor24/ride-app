@@ -1,7 +1,7 @@
-﻿using Soloride.Domain.Drivers;
-using Soloride.Domain.Shared;
+﻿using Ridely.Domain.Drivers;
+using Ridely.Domain.Shared;
 
-namespace Soloride.Domain.Models.Drivers;
+namespace Ridely.Domain.Models.Drivers;
 public class RegisterDriverModel
 {
     public Driver DriverInfo { get; set; } = new();

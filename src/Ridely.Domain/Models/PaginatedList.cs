@@ -1,4 +1,4 @@
-﻿namespace Soloride.Domain.Models;
+﻿namespace Ridely.Domain.Models;
 public class PaginatedList<T>
 {
     public int TotalItems { get; set; }

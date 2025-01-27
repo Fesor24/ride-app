@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Soloride.Domain.Drivers;
-using Soloride.Infrastructure.Converter;
+using Ridely.Domain.Drivers;
+using Ridely.Infrastructure.Converter;
 
-namespace Soloride.Infrastructure.Configurations;
+namespace Ridely.Infrastructure.Configurations;
 internal sealed class DriverTransactionHistoryConfiguration : IEntityTypeConfiguration<DriverTransactionHistory>
 {
     public void Configure(EntityTypeBuilder<DriverTransactionHistory> builder)

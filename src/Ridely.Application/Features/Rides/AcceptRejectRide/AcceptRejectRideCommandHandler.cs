@@ -1,27 +1,27 @@
 ﻿using System.Text.Json;
 using Hangfire;
 using MediatR;
-using Soloride.Application.Abstractions.Location;
-using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Abstractions.Notifications;
-using Soloride.Application.Abstractions.Payment;
-using Soloride.Application.Abstractions.Websocket;
-using Soloride.Application.Features.Rides.CancelRideRequest;
-using Soloride.Application.Models.Shared;
-using Soloride.Application.Models.WebSocket;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Models;
-using Soloride.Domain.Models.Cache;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Rides;
-using Soloride.Domain.Services;
-using Soloride.Shared.Constants;
-using Soloride.Shared.Helper;
-using Soloride.Shared.Helper.Keys;
-using DriverDomain = Soloride.Domain.Drivers.Driver;
+using Ridely.Application.Abstractions.Location;
+using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Abstractions.Notifications;
+using Ridely.Application.Abstractions.Payment;
+using Ridely.Application.Abstractions.Websocket;
+using Ridely.Application.Features.Rides.CancelRideRequest;
+using Ridely.Application.Models.Shared;
+using Ridely.Application.Models.WebSocket;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Models;
+using Ridely.Domain.Models.Cache;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Rides;
+using Ridely.Domain.Services;
+using Ridely.Shared.Constants;
+using Ridely.Shared.Helper;
+using Ridely.Shared.Helper.Keys;
+using DriverDomain = Ridely.Domain.Drivers.Driver;
 
-namespace Soloride.Application.Features.Rides.AcceptRejectRide;
+namespace Ridely.Application.Features.Rides.AcceptRejectRide;
 internal sealed class AcceptRejectRideCommandHandler : 
     ICommandHandler<AcceptRejectRideCommand, AcceptRejectResponse>
 {

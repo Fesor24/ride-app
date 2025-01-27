@@ -1,7 +1,7 @@
-﻿using Soloride.Domain.Drivers;
-using Soloride.Domain.Transactions;
+﻿using Ridely.Domain.Drivers;
+using Ridely.Domain.Transactions;
 
-namespace Soloride.Application.Features.Drivers.Transactions;
+namespace Ridely.Application.Features.Drivers.Transactions;
 public sealed class SearchDriverTransactionsResponse
 {
     public decimal Amount { get; set; }

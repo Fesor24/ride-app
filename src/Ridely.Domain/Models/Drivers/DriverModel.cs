@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Models.Common;
+﻿using Ridely.Domain.Models.Common;
 
-namespace Soloride.Domain.Models.Drivers;
+namespace Ridely.Domain.Models.Drivers;
 public class DriverModel : BaseModel
 {
     public string FirstName { get; set; }

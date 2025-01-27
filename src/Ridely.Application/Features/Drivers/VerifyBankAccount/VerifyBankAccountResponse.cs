@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Features.Drivers.VerifyBankAccount;
+﻿namespace Ridely.Application.Features.Drivers.VerifyBankAccount;
 public sealed class VerifyBankAccountResponse
 {
     public string AccountNo { get; set; } = string.Empty;

@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Soloride.Domain.Abstractions;
-using SolorideAPI.Shared;
+using Ridely.Domain.Abstractions;
+using RidelyAPI.Shared;
 
-namespace SolorideAPI.Filter;
+namespace RidelyAPI.Filter;
 
 [AttributeUsage(AttributeTargets.All)]
 public class ResourceAuthorizationFilterAttribute : Attribute, IAuthorizationFilter
@@ -21,7 +21,7 @@ public class ResourceAuthorizationFilterAttribute : Attribute, IAuthorizationFil
         if (string.IsNullOrWhiteSpace(headerApiKey))
             context.Result = failureResult;
 
-        string apiKey = config["Soloride:ApiKey"];
+        string apiKey = config["Ridely:ApiKey"];
 
         if (string.IsNullOrWhiteSpace(apiKey))
             throw new ArgumentNullException(nameof(apiKey), "Api key not found");

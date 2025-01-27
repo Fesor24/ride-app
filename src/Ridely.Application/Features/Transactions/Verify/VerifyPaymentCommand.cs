@@ -1,4 +1,4 @@
-﻿using Soloride.Application.Abstractions.Messaging;
+﻿using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Transactions.Verify;
+namespace Ridely.Application.Features.Transactions.Verify;
 public sealed record VerifyPaymentCommand(string Reference) : ICommand;

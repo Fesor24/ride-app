@@ -1,29 +1,29 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Soloride.Application.Features.Rides.AcceptRejectRide;
-using Soloride.Application.Features.Rides.CancelRideRequest;
-using Soloride.Application.Features.Rides.DriverSourceArrival;
-using Soloride.Application.Features.Rides.EndRide;
-using Soloride.Application.Features.Rides.GetChatMessages;
-using Soloride.Application.Features.Rides.GetFareEstimate;
-using Soloride.Application.Features.Rides.GetRide;
-using Soloride.Application.Features.Rides.Reassign;
-using Soloride.Application.Features.Rides.Reroute;
-using Soloride.Application.Features.Rides.RideRating;
-using Soloride.Application.Features.Rides.RideRequest;
-using Soloride.Application.Features.Rides.Search;
-using Soloride.Application.Features.Rides.StartRide;
-using Soloride.Application.Features.Rides.UpdatePaymentMethod;
-using Soloride.Application.Models.Shared;
-using Soloride.Domain.Models;
-using Soloride.Domain.Rides;
-using SolorideAPI.Controllers.Base;
-using SolorideAPI.Extensions;
-using SolorideAPI.Filter;
-using SolorideAPI.Shared;
+using Ridely.Application.Features.Rides.AcceptRejectRide;
+using Ridely.Application.Features.Rides.CancelRideRequest;
+using Ridely.Application.Features.Rides.DriverSourceArrival;
+using Ridely.Application.Features.Rides.EndRide;
+using Ridely.Application.Features.Rides.GetChatMessages;
+using Ridely.Application.Features.Rides.GetFareEstimate;
+using Ridely.Application.Features.Rides.GetRide;
+using Ridely.Application.Features.Rides.Reassign;
+using Ridely.Application.Features.Rides.Reroute;
+using Ridely.Application.Features.Rides.RideRating;
+using Ridely.Application.Features.Rides.RideRequest;
+using Ridely.Application.Features.Rides.Search;
+using Ridely.Application.Features.Rides.StartRide;
+using Ridely.Application.Features.Rides.UpdatePaymentMethod;
+using Ridely.Application.Models.Shared;
+using Ridely.Domain.Models;
+using Ridely.Domain.Rides;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Extensions;
+using RidelyAPI.Filter;
+using RidelyAPI.Shared;
 
-namespace SolorideAPI.Controllers.Rides;
+namespace RidelyAPI.Controllers.Rides;
 
 [ApiVersion(ApiVersions.V1)]
 [ApiVersion(ApiVersions.V2)]

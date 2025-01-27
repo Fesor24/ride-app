@@ -1,18 +1,18 @@
 ﻿using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Soloride.Application.Abstractions.Notifications;
-using Soloride.Application.Abstractions.Websocket;
-using Soloride.Application.Models.WebSocket;
-using Soloride.Contracts.Events;
-using Soloride.Contracts.Models;
-using Soloride.Domain.Riders;
-using Soloride.Shared.Constants;
-using Soloride.Shared.Helper;
-using Soloride.Shared.Helper.Keys;
+using Ridely.Application.Abstractions.Notifications;
+using Ridely.Application.Abstractions.Websocket;
+using Ridely.Application.Models.WebSocket;
+using Ridely.Contracts.Events;
+using Ridely.Contracts.Models;
+using Ridely.Domain.Riders;
+using Ridely.Shared.Constants;
+using Ridely.Shared.Helper;
+using Ridely.Shared.Helper.Keys;
 using StackExchange.Redis;
 
-namespace Soloride.Infrastructure.Consumers;
+namespace Ridely.Infrastructure.Consumers;
 internal sealed class RideRequestedConsumer : IConsumer<RideRequestedEvent>
 {
     private readonly IWebSocketManager _webSocketManager;

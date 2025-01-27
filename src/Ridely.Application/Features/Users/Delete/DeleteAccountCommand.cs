@@ -1,5 +1,5 @@
-﻿using Soloride.Application.Abstractions.Messaging;
+﻿using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Users.Delete;
+namespace Ridely.Application.Features.Users.Delete;
 public sealed record DeleteAccountCommand(long? RiderId, long? DriverId) :
     ICommand;

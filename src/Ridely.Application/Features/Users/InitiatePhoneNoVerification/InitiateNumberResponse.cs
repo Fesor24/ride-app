@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Features.Users.InitiatePhoneNoVerification;
+﻿namespace Ridely.Application.Features.Users.InitiatePhoneNoVerification;
 public sealed class InitiateNumberResponse
 {
     public string Code { get; set; }

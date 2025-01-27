@@ -1,4 +1,4 @@
-﻿namespace Soloride.Infrastructure.Authentication;
+﻿namespace Ridely.Infrastructure.Authentication;
 public sealed class AuthenticationOptions
 {
     public string Audience { get; init; }

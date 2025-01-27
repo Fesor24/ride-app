@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Soloride.Application.Abstractions.Messaging;
+using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Common.UploadImage;
+namespace Ridely.Application.Features.Common.UploadImage;
 public sealed record UploadImageCommand(IFormFile File, FileType FileType, long Identifier) :
     ICommand;
 

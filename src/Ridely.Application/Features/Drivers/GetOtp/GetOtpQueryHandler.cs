@@ -1,14 +1,14 @@
 ﻿using Microsoft.Extensions.Hosting;
-using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Abstractions.Notifications;
-using Soloride.Application.Models.Shared;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Services;
-using Soloride.Shared.Helper;
-using Soloride.Shared.Helper.Keys;
+using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Abstractions.Notifications;
+using Ridely.Application.Models.Shared;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Services;
+using Ridely.Shared.Helper;
+using Ridely.Shared.Helper.Keys;
 
-namespace Soloride.Application.Features.Drivers.GetOtp;
+namespace Ridely.Application.Features.Drivers.GetOtp;
 
 internal sealed class GetOtpQueryHandler(IDriverRepository driverRepository, IHostEnvironment env,
     ICacheService cacheService, ISmsService smsService) : IQueryHandler<GetOtpQuery>

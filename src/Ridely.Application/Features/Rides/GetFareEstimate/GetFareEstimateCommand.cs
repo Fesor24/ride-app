@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
-using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Models.Shared;
+using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Models.Shared;
 
-namespace Soloride.Application.Features.Rides.GetFareEstimate;
+namespace Ridely.Application.Features.Rides.GetFareEstimate;
 public sealed record GetFareEstimateCommand(
     LocationRequest Source,
     LocationRequest Destination,

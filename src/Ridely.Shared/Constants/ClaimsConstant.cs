@@ -1,4 +1,4 @@
-﻿namespace Soloride.Shared.Constants;
+﻿namespace Ridely.Shared.Constants;
 public class ClaimsConstant
 {
     public const string Driver = "driver";

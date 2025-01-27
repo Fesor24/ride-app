@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Rides;
+﻿using Ridely.Domain.Rides;
 
-namespace SolorideAPI.Controllers.Rides;
+namespace RidelyAPI.Controllers.Rides;
 
 public class RideRequest
 {

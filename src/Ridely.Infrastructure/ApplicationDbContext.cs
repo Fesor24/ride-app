@@ -1,10 +1,10 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using Soloride.Domain.Abstractions;
-using Soloride.Infrastructure.Outbox;
+using Ridely.Domain.Abstractions;
+using Ridely.Infrastructure.Outbox;
 
-namespace Soloride.Infrastructure;
+namespace Ridely.Infrastructure;
 internal sealed class ApplicationDbContext(DbContextOptions options) : DbContext(options), IUnitOfWork
 {
     internal const string User = "usr";

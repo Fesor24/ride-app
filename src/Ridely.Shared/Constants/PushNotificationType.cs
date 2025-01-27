@@ -1,4 +1,4 @@
-﻿namespace Soloride.Shared.Constants
+﻿namespace Ridely.Shared.Constants
 {
     public static class PushNotificationType
     {

@@ -1,4 +1,4 @@
-﻿namespace Soloride.Domain.Rides;
+﻿namespace Ridely.Domain.Rides;
 public enum PaymentStatus
 {
     Pending = 0,

@@ -1,8 +1,8 @@
-﻿using Soloride.Domain.Abstractions;
-using Soloride.Domain.Models.Drivers;
-using Soloride.Domain.Models;
+﻿using Ridely.Domain.Abstractions;
+using Ridely.Domain.Models.Drivers;
+using Ridely.Domain.Models;
 
-namespace Soloride.Domain.Drivers;
+namespace Ridely.Domain.Drivers;
 public interface IDriverTransactionHistoryRepository : IGenericRepository<DriverTransactionHistory>
 {
     Task<DriverTransactionHistory?> GetByReferenceAsync(Ulid reference);

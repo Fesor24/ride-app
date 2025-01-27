@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Users;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Users;
 
-namespace Soloride.Application.Features.Admin.Users.Query.GetProfile;
+namespace Ridely.Application.Features.Admin.Users.Query.GetProfile;
 internal class GetProfileQueryHandler(IUserRepository userRepository) : IRequestHandler<GetProfileQuery, Result<GetProfileResponse>>
 {
     public async Task<Result<GetProfileResponse>> Handle(GetProfileQuery request, CancellationToken cancellationToken)

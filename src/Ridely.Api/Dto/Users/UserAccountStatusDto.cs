@@ -1,4 +1,4 @@
-﻿namespace SolorideAPI.Dto.Users;
+﻿namespace RidelyAPI.Dto.Users;
 
 public class UserAccountStatusDto
 {

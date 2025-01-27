@@ -1,4 +1,4 @@
-﻿namespace Soloride.Domain.Models.Common;
+﻿namespace Ridely.Domain.Models.Common;
 public class SavedLocationModel : BaseModel
 {
     public string Address { get; set; }

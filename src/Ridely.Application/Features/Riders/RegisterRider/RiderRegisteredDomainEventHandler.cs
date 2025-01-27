@@ -1,11 +1,11 @@
 ﻿using MediatR;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Riders.Events;
-using Soloride.Shared.Helper;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Riders.Events;
+using Ridely.Shared.Helper;
 
-namespace Soloride.Application.Features.Riders.RegisterRider;
+namespace Ridely.Application.Features.Riders.RegisterRider;
 internal sealed class RiderRegisteredDomainEventHandler : INotificationHandler<RiderRegisteredDomainEvent>
 {
     private readonly IUnitOfWork _unitOfWork;

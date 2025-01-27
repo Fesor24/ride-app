@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Riders;
+﻿using Ridely.Domain.Riders;
 
-namespace Soloride.Domain.Models.Riders;
+namespace Ridely.Domain.Models.Riders;
 public class RiderModel : BaseModel
 {
     public string FirstName { get; set; }

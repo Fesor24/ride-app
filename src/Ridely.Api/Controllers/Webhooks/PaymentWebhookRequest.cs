@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace SolorideAPI.Controllers.Webhooks;
+namespace RidelyAPI.Controllers.Webhooks;
 
 public class PaymentWebhookRequest
 {

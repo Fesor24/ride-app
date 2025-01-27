@@ -1,9 +1,9 @@
-﻿using Soloride.Contracts.Models;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Rides;
+﻿using Ridely.Contracts.Models;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Rides;
 
-namespace Soloride.Application.Abstractions.Rides;
+namespace Ridely.Application.Abstractions.Rides;
 public interface IRideService
 {
     Task<bool> SendRequestToDriversAsync(Domain.Models.Location ridersLocation,

@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
-using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Shared;
+using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Shared;
 
-namespace Soloride.Application.Features.Riders.RegisterRider;
+namespace Ridely.Application.Features.Riders.RegisterRider;
 public sealed record RegisterRiderCommand(
     string FirstName,
     string LastName,

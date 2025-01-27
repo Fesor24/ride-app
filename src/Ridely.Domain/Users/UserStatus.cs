@@ -1,4 +1,4 @@
-﻿namespace Soloride.Domain.Users;
+﻿namespace Ridely.Domain.Users;
 public enum UserStatus
 {
     Unknown = 0,

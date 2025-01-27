@@ -1,6 +1,6 @@
-﻿using Soloride.Application.Abstractions.Notifications;
+﻿using Ridely.Application.Abstractions.Notifications;
 
-namespace Soloride.Infrastructure.Notifications;
+namespace Ridely.Infrastructure.Notifications;
 internal sealed class SmsService : ISmsService
 {
     private readonly TermiiService _termiiService;

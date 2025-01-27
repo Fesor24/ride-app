@@ -1,8 +1,8 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
-using Soloride.Application.Abstractions.Security;
+using Ridely.Application.Abstractions.Security;
 
-namespace Soloride.Infrastructure.Security;
+namespace Ridely.Infrastructure.Security;
 internal sealed class HashService : IHashService
 {
     public string GenerateSalt()

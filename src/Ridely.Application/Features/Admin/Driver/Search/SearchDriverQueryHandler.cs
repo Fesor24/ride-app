@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Models;
-using Soloride.Domain.Models.Drivers;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Models;
+using Ridely.Domain.Models.Drivers;
 
-namespace Soloride.Application.Features.Admin.Driver.Search;
+namespace Ridely.Application.Features.Admin.Driver.Search;
 internal class SearchDriverQueryHandler(IDriverRepository driverRepository, IMapper mapper) :
     IRequestHandler<SearchDriverQuery, Result<PaginatedList<SearchDriverResponse>>>
 {

@@ -1,4 +1,4 @@
-﻿namespace SolorideAPI.Dto.Account;
+﻿namespace RidelyAPI.Dto.Account;
 
 public class TokenDto
 {

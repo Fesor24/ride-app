@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Soloride.Domain.Abstractions;
+using Ridely.Domain.Abstractions;
 
-namespace Soloride.Infrastructure.Repositories;
+namespace Ridely.Infrastructure.Repositories;
 internal abstract class GenericRepository<TEntity>(ApplicationDbContext context) :
     IGenericRepository<TEntity> where TEntity : class
 {

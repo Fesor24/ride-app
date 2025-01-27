@@ -1,11 +1,11 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Extensions;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Models;
-using Soloride.Domain.Models.Drivers;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Extensions;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Models;
+using Ridely.Domain.Models.Drivers;
 
-namespace Soloride.Application.Features.Drivers.Transactions;
+namespace Ridely.Application.Features.Drivers.Transactions;
 internal sealed class SearchDriverTransactionsQueryHandler : IQueryHandler<SearchDriverTransactionsQuery,
     PaginatedList<SearchDriverTransactionsResponse>>
 {

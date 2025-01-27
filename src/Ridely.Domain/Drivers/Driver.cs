@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Shared;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Shared;
 
-namespace Soloride.Domain.Drivers;
+namespace Ridely.Domain.Drivers;
 public sealed class Driver : Entity
 {
     private Driver()

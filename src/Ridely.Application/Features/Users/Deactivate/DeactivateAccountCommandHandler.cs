@@ -1,9 +1,9 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Riders;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Riders;
 
-namespace Soloride.Application.Features.Users.Deactivate;
+namespace Ridely.Application.Features.Users.Deactivate;
 internal sealed class DeactivateAccountCommandHandler :
     ICommandHandler<DeactivateAccountCommand>
 {

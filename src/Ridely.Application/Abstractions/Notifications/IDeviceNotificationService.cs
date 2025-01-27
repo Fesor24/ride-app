@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Abstractions.Notifications;
+﻿namespace Ridely.Application.Abstractions.Notifications;
 public interface IDeviceNotificationService
 {
     Task<bool> PushAsync(string deviceTokenId, string title, string body);

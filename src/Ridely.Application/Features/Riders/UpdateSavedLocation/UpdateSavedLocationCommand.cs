@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
-using Soloride.Application.Abstractions.Messaging;
-using Soloride.Domain.Models;
+using Ridely.Application.Abstractions.Messaging;
+using Ridely.Domain.Models;
 
-namespace Soloride.Application.Features.Riders.UpdateSavedLocation;
+namespace Ridely.Application.Features.Riders.UpdateSavedLocation;
 public sealed record UpdateSavedLocationCommand(long SavedLocationId, string Address,
     Location Coordinates) :
     ICommand;

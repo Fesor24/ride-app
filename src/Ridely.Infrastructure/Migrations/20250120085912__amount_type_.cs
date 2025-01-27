@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Soloride.Infrastructure.Migrations
+namespace Ridely.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class _amount_type_ : Migration

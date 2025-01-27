@@ -1,4 +1,4 @@
-﻿namespace Soloride.Domain.Abstractions;
+﻿namespace Ridely.Domain.Abstractions;
 public abstract class AuditableEntity : Entity
 {
     public long? CreatedBy { get; set; }

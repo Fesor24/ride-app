@@ -1,4 +1,4 @@
-﻿namespace Soloride.Domain.Services;
+﻿namespace Ridely.Domain.Services;
 public interface ICacheService
 {
     Task<TObject?> GetAsync<TObject>(string key);

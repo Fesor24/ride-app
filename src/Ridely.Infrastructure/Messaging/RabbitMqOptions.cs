@@ -1,4 +1,4 @@
-﻿namespace Soloride.Infrastructure.Messaging;
+﻿namespace Ridely.Infrastructure.Messaging;
 public sealed class RabbitMqOptions
 {
     public string Host { get; init; }

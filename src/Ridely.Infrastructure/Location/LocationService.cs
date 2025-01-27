@@ -1,16 +1,16 @@
 ﻿using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
-using Soloride.Application.Abstractions.Location;
-using Soloride.Application.Abstractions.Websocket;
-using Soloride.Application.Features.Rides.CancelRideRequest;
-using Soloride.Application.Models.WebSocket;
-using Soloride.Domain.Drivers;
-using Soloride.Shared.Constants;
-using Soloride.Shared.Helper;
-using Soloride.Shared.Helper.Keys;
+using Ridely.Application.Abstractions.Location;
+using Ridely.Application.Abstractions.Websocket;
+using Ridely.Application.Features.Rides.CancelRideRequest;
+using Ridely.Application.Models.WebSocket;
+using Ridely.Domain.Drivers;
+using Ridely.Shared.Constants;
+using Ridely.Shared.Helper;
+using Ridely.Shared.Helper.Keys;
 using StackExchange.Redis;
 
-namespace Soloride.Infrastructure.Location;
+namespace Ridely.Infrastructure.Location;
 internal sealed class LocationService : ILocationService
 {
     private readonly IDatabase _database;

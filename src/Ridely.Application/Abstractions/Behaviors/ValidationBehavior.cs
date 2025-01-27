@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using MediatR;
-using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Exceptions;
+using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Exceptions;
 
-namespace Soloride.Application.Abstractions.Behaviors;
+namespace Ridely.Application.Abstractions.Behaviors;
 public sealed class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators) :
     IPipelineBehavior<TRequest, TResponse>
     where TRequest : IBaseCommand

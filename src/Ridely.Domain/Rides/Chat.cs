@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Soloride.Domain.Abstractions;
+using Ridely.Domain.Abstractions;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Soloride.Domain.Rides;
+namespace Ridely.Domain.Rides;
 public sealed class Chat : Entity
 {
     private Chat()

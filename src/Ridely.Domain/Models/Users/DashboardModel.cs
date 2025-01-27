@@ -1,4 +1,4 @@
-﻿namespace Soloride.Domain.Models.Users;
+﻿namespace Ridely.Domain.Models.Users;
 public class DashboardModel
 {
     public int Riders { get; set; }

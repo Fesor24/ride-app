@@ -1,15 +1,15 @@
-﻿using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Abstractions.Rides;
-using Soloride.Application.Abstractions.Websocket;
-using Soloride.Application.Models.WebSocket;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Rides;
-using Soloride.Shared.Constants;
-using Soloride.Shared.Helper;
-using Soloride.Shared.Helper.Keys;
+﻿using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Abstractions.Rides;
+using Ridely.Application.Abstractions.Websocket;
+using Ridely.Application.Models.WebSocket;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Rides;
+using Ridely.Shared.Constants;
+using Ridely.Shared.Helper;
+using Ridely.Shared.Helper.Keys;
 
-namespace Soloride.Application.Features.Rides.Reroute;
+namespace Ridely.Application.Features.Rides.Reroute;
 internal sealed class RerouteRideCommandHandler :
     ICommandHandler<RerouteRideCommand, RerouteRideResponse>
 {

@@ -1,4 +1,4 @@
-﻿using Soloride.Application.Abstractions.Messaging;
+﻿using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Admin.Users.Query.GetDashboard;
+namespace Ridely.Application.Features.Admin.Users.Query.GetDashboard;
 public sealed record GetDashboardQuery(long RoleId) : IQuery<GetDashboardResponse>;

@@ -1,4 +1,4 @@
-﻿namespace Soloride.Domain.Rides;
+﻿namespace Ridely.Domain.Rides;
 public class PricingService
 {
     public long FormatPrice(decimal amount)

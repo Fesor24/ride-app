@@ -2,10 +2,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Soloride.Application.Features.Webhook.PaystackWebhook;
-using SolorideAPI.Extensions;
+using Ridely.Application.Features.Webhook.PaystackWebhook;
+using RidelyAPI.Extensions;
 
-namespace SolorideAPI.Controllers.Webhooks
+namespace RidelyAPI.Controllers.Webhooks
 {
     [Route("api/webhook")]
     [AllowAnonymous]

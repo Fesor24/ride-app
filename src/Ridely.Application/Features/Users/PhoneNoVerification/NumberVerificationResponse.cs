@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Features.Users.PhoneNoVerification;
+﻿namespace Ridely.Application.Features.Users.PhoneNoVerification;
 public sealed class NumberVerificationResponse
 {
     public bool CodeVerificationStatus { get; set; }

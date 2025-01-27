@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Extensions;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Rides;
+using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Extensions;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Rides;
 
-namespace Soloride.Application.Features.Admin.Rides.GetRideLogs;
+namespace Ridely.Application.Features.Admin.Rides.GetRideLogs;
 internal sealed class GetRideLogsQueryHandler : IQueryHandler<GetRideLogsQuery, IReadOnlyList<GetRideLogsResponse>>
 {
     private readonly IRideLogRepository _rideLogRepository;

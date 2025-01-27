@@ -1,8 +1,8 @@
-﻿using Soloride.Domain.Abstractions;
-using Soloride.Domain.Drivers;
-using Soloride.Domain.Rides;
+﻿using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
+using Ridely.Domain.Rides;
 
-namespace Soloride.Application.Abstractions.Payment;
+namespace Ridely.Application.Abstractions.Payment;
 public interface IPaymentService
 {
     Task<Result> ProcessCardTripPaymentAsync(Ride ride,

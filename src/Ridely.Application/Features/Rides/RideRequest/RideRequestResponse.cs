@@ -1,6 +1,6 @@
-﻿using Soloride.Application.Models.Shared;
+﻿using Ridely.Application.Models.Shared;
 
-namespace Soloride.Application.Features.Rides.RideRequest;
+namespace Ridely.Application.Features.Rides.RideRequest;
 public sealed record RideRequestResponse(
     bool DriversAvailable
     );

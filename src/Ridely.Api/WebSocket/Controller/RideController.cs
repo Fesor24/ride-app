@@ -1,9 +1,9 @@
-﻿using Soloride.Application.Abstractions.Rides;
-using Soloride.Application.Models.WebSocket;
-using Soloride.Domain.Rides;
-using SolorideAPI.WebSocket.Attributes;
+﻿using Ridely.Application.Abstractions.Rides;
+using Ridely.Application.Models.WebSocket;
+using Ridely.Domain.Rides;
+using RidelyAPI.WebSocket.Attributes;
 
-namespace SolorideAPI.WebSocket.Controller;
+namespace RidelyAPI.WebSocket.Controller;
 
 [WebSocketRoute("RIDE")]
 public class RideController(IRideService rideService) : WebSocketControllerBase

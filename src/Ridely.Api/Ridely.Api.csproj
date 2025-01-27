@@ -35,7 +35,6 @@
 
   <ItemGroup>
     <Folder Include="Modules\WSSystem\Docs\" />
-    <Folder Include="Static\Identification\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -1033,23 +1032,6 @@
     <None Include="wwwroot\assets\img\background-pro-yellow.jpg" />
     <None Include="wwwroot\assets\img\background-pro.jpg" />
     <None Include="wwwroot\assets\img\full.jpg" />
-    <None Include="wwwroot\css\ads.css" />
-    <None Include="wwwroot\css\ads.css.map" />
-    <None Include="wwwroot\css\ads.min.css" />
-    <None Include="wwwroot\css\ads.min.css.map" />
-    <None Include="wwwroot\css\examples.css" />
-    <None Include="wwwroot\css\examples.css.map" />
-    <None Include="wwwroot\css\examples.min.css" />
-    <None Include="wwwroot\css\examples.min.css.map" />
-    <None Include="wwwroot\css\style.css" />
-    <None Include="wwwroot\css\style.css.map" />
-    <None Include="wwwroot\css\style.min.css" />
-    <None Include="wwwroot\css\style.min.css.map" />
-    <None Include="wwwroot\css\vendors\simplebar.css" />
-    <None Include="wwwroot\css\vendors\simplebar.css.map" />
-    <None Include="wwwroot\icons\coreui-icons-brand.html" />
-    <None Include="wwwroot\icons\coreui-icons-flag.html" />
-    <None Include="wwwroot\icons\coreui-icons-free.html" />
     <None Include="wwwroot\js\charts.js" />
     <None Include="wwwroot\js\charts.js.map" />
     <None Include="wwwroot\js\color-modes.js" />
@@ -1303,15 +1285,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="soloride-app-firebase-adminsdk-o64ak-05a4f56e1e.json">
+    <Content Update="ridely-app-firebase-adminsdk-o64ak-05a4f56e1e.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Update="soloride-app-firebase-adminsdk-o64ak-07f1c56b3e.json">
+    <Content Update="ridely-app-firebase-adminsdk-o64ak-07f1c56b3e.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\icons\Plane.svg">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Plane.cs</LastGenOutput>
     </Content>
   </ItemGroup>
 

@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Soloride.Application.Features.Admin.Settings.Command.UpdateRideSettings;
-using Soloride.Application.Features.Admin.Settings.Query.GetSettings;
-using Soloride.Application.Features.Common.Banks.Command.CreateMany;
-using SolorideAPI.Controllers.Base;
-using SolorideAPI.Extensions;
-using SolorideAPI.Shared;
+using Ridely.Application.Features.Admin.Settings.Command.UpdateRideSettings;
+using Ridely.Application.Features.Admin.Settings.Query.GetSettings;
+using Ridely.Application.Features.Common.Banks.Command.CreateMany;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Extensions;
+using RidelyAPI.Shared;
 
-namespace SolorideAPI.Controllers.Admin.Settings;
+namespace RidelyAPI.Controllers.Admin.Settings;
 
 [Route("api/settings")]
 public class SettingsController : AdminBaseController<SettingsController>

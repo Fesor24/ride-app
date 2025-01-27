@@ -1,4 +1,4 @@
-﻿namespace Soloride.Application.Features.Admin.Driver.Search;
+﻿namespace Ridely.Application.Features.Admin.Driver.Search;
 public class SearchDriverResponse
 {
     public int Id { get; set; }

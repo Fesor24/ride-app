@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Soloride.Domain.Transactions;
-using Soloride.Infrastructure.Converter;
+using Ridely.Domain.Transactions;
+using Ridely.Infrastructure.Converter;
 
-namespace Soloride.Infrastructure.Configurations;
+namespace Ridely.Infrastructure.Configurations;
 internal sealed class TransactionReferenceMapConfiguration : IEntityTypeConfiguration<TransactionReferenceMap>
 {
     public void Configure(EntityTypeBuilder<TransactionReferenceMap> builder)

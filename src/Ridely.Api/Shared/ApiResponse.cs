@@ -1,6 +1,6 @@
-﻿using Soloride.Domain.Abstractions;
+﻿using Ridely.Domain.Abstractions;
 
-namespace SolorideAPI.Shared;
+namespace RidelyAPI.Shared;
 public class ApiResponse
 {
     public ApiResponse()

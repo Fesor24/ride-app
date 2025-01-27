@@ -1,18 +1,18 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Soloride.Application.Features.Transactions.AddPaymentCard;
-using Soloride.Application.Features.Transactions.FundWallet;
-using Soloride.Application.Features.Transactions.RemovePaymentCard;
-using Soloride.Application.Features.Transactions.Verify;
-using Soloride.Application.Features.Transactions.WithdrawFunds;
-using Soloride.Domain.Abstractions;
-using SolorideAPI.Controllers.Base;
-using SolorideAPI.Extensions;
-using SolorideAPI.Filter;
-using SolorideAPI.Shared;
+using Ridely.Application.Features.Transactions.AddPaymentCard;
+using Ridely.Application.Features.Transactions.FundWallet;
+using Ridely.Application.Features.Transactions.RemovePaymentCard;
+using Ridely.Application.Features.Transactions.Verify;
+using Ridely.Application.Features.Transactions.WithdrawFunds;
+using Ridely.Domain.Abstractions;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Extensions;
+using RidelyAPI.Filter;
+using RidelyAPI.Shared;
 
-namespace SolorideAPI.Controllers.Transaction;
+namespace RidelyAPI.Controllers.Transaction;
 
 [ApiVersion(ApiVersions.V1)]
 [ApiVersion(ApiVersions.V2)]

@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Soloride.Domain.Riders;
-using Soloride.Domain.Transactions;
+using Ridely.Domain.Riders;
+using Ridely.Domain.Transactions;
 
-namespace Soloride.Infrastructure.Repositories;
+namespace Ridely.Infrastructure.Repositories;
 internal sealed class PaymentCardRepository(ApplicationDbContext context)
     : GenericRepository<PaymentCard>(context), IPaymentCardRepository
 {

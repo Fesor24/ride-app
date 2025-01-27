@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Soloride.Domain.Models;
-using Soloride.Domain.Models.Rides;
-using Soloride.Domain.Rides;
+using Ridely.Domain.Models;
+using Ridely.Domain.Models.Rides;
+using Ridely.Domain.Rides;
 
-namespace Soloride.Infrastructure.Repositories;
+namespace Ridely.Infrastructure.Repositories;
 internal sealed class ChatRepository(ApplicationDbContext context) :
     GenericRepository<Chat>(context), IChatRepository
 {

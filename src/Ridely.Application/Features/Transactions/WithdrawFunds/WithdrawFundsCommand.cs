@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using Soloride.Application.Abstractions.Messaging;
+using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.Transactions.WithdrawFunds;
+namespace Ridely.Application.Features.Transactions.WithdrawFunds;
 public sealed record WithdrawFundsCommand(long DriverId, int Amount,
     long BankAccountId, string Otp) : 
     ICommand;

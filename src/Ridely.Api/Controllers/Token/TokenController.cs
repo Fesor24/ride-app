@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Soloride.Application.Features.Accounts.Login;
-using Soloride.Application.Features.Accounts.Token;
-using SolorideAPI.Controllers.Base;
-using SolorideAPI.Dto.Account;
-using SolorideAPI.Extensions;
-using SolorideAPI.Filter;
-using SolorideAPI.Shared;
+using Ridely.Application.Features.Accounts.Login;
+using Ridely.Application.Features.Accounts.Token;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Dto.Account;
+using RidelyAPI.Extensions;
+using RidelyAPI.Filter;
+using RidelyAPI.Shared;
 
-namespace SolorideAPI.Controllers.Token;
+namespace RidelyAPI.Controllers.Token;
 
 [ResourceAuthorizationFilter]
 public class TokenController : BaseController<TokenController>

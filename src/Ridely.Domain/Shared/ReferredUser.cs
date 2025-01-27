@@ -1,4 +1,4 @@
-﻿namespace Soloride.Domain.Shared;
+﻿namespace Ridely.Domain.Shared;
 public enum ReferredUser
 {
     None = 0,

@@ -1,15 +1,15 @@
 ﻿using System.Text.Json;
-using Soloride.Application.Abstractions.Messaging;
-using Soloride.Application.Abstractions.Payment;
-using Soloride.Application.Abstractions.Websocket;
-using Soloride.Application.Models.Payment;
-using Soloride.Application.Models.WebSocket;
-using Soloride.Domain.Abstractions;
-using Soloride.Domain.Transactions;
-using Soloride.Shared.Helper;
-using Soloride.Shared.Helper.Keys;
+using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Abstractions.Payment;
+using Ridely.Application.Abstractions.Websocket;
+using Ridely.Application.Models.Payment;
+using Ridely.Application.Models.WebSocket;
+using Ridely.Domain.Abstractions;
+using Ridely.Domain.Transactions;
+using Ridely.Shared.Helper;
+using Ridely.Shared.Helper.Keys;
 
-namespace Soloride.Application.Features.Transactions.Verify;
+namespace Ridely.Application.Features.Transactions.Verify;
 internal sealed class VerifyPaymentCommandHandler(IPaystackService paystackService,
     IUnitOfWork unitOfWork, IWebSocketManager webSocketManager) :
     ICommandHandler<VerifyPaymentCommand>

@@ -1,6 +1,6 @@
-﻿using Soloride.Application.Abstractions.Messaging;
+﻿using Ridely.Application.Abstractions.Messaging;
 
-namespace Soloride.Application.Features.VoiceCall.NotifyRecipient
+namespace Ridely.Application.Features.VoiceCall.NotifyRecipient
 {
     public sealed record NotifyRecipientCommand(long RideId, long? DriverId, long? RiderId) :
         ICommand;

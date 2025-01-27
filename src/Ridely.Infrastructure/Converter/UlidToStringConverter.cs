@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Soloride.Infrastructure.Converter;
+namespace Ridely.Infrastructure.Converter;
 public class UlidToStringConverter : ValueConverter<Ulid, string>
 {
     private static readonly ConverterMappingHints _defaultHints = new ConverterMappingHints(size: 26);
