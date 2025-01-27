@@ -25,8 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Soloride.Application\Soloride.Application.csproj" />
-    <ProjectReference Include="..\Soloride.Contracts\Soloride.Contracts.csproj" />
+    <ProjectReference Include="..\Ridely.Application\Ridely.Application.csproj" />
   </ItemGroup>
 
 </Project>

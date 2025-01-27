@@ -1299,9 +1299,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Soloride.Application\Soloride.Application.csproj" />
-    <ProjectReference Include="..\Soloride.Contracts\Soloride.Contracts.csproj" />
-    <ProjectReference Include="..\Soloride.Infrastructure\Soloride.Infrastructure.csproj" />
+    <ProjectReference Include="..\Ridely.Infrastructure\Ridely.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
