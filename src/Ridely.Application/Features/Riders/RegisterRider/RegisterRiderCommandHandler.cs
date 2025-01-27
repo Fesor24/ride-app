@@ -1,0 +1,73 @@
+﻿using Soloride.Application.Abstractions.Authentication;
+using Soloride.Application.Abstractions.Messaging;
+using Soloride.Application.Extensions;
+using Soloride.Application.Features.Rides.EndRide;
+using Soloride.Domain.Abstractions;
+using Soloride.Domain.Riders;
+using Soloride.Domain.Riders.Events;
+using RiderDomain = Soloride.Domain.Riders.Rider;
+
+namespace Soloride.Application.Features.Riders.RegisterRider;
+internal sealed class RegisterRiderCommandHandler :
+    ICommandHandler<RegisterRiderCommand, RegisterRiderResponse>
+{
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IJwtService _tokenService;
+    private readonly IRiderRepository _riderRepository;
+    private readonly IRiderWalletRepository _riderWalletRepository;
+
+    public RegisterRiderCommandHandler(IUnitOfWork unitOfWork, IJwtService tokenService,
+        IRiderRepository riderRepository, IRiderWalletRepository riderWalletRepository)
+    {
+        _unitOfWork = unitOfWork;
+        _tokenService = tokenService;
+        _riderRepository = riderRepository;
+        _riderWalletRepository = riderWalletRepository;
+    }
+
+    public async Task<Result<RegisterRiderResponse>> Handle(RegisterRiderCommand request, CancellationToken cancellationToken)
+    {
+        string phoneNo = request.PhoneNo.ToPhoneNumber();
+
+        bool riderWithPhoneNoExist = await _riderRepository
+            .GetByPhoneNoAsync(phoneNo) != null;
+
+        if (riderWithPhoneNoExist) return Error.BadRequest("phoneno.exist", "User with phone no exist");
+
+        string email = request.Email
+            .Replace(" ", "")
+            .Trim()
+            .ToLowerInvariant();
+
+        bool riderWithEmailExist = await _riderRepository
+            .GetByEmailAsync(email) != null;
+
+        if (riderWithEmailExist) return Error.BadRequest("email.exist", "User with email exist");
+
+        RiderDomain rider = RiderDomain.Create(
+            request.FirstName,
+            request.LastName,
+            request.Email,
+            phoneNo,
+            request.Gender,
+            request.ReferrerCode ?? "",
+            null
+            );
+
+        await _riderRepository.AddAsync(rider);
+
+        rider.RaiseDomainEvent(new RiderRegisteredDomainEvent(phoneNo, request.ReferrerCode ?? ""));
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        RiderWallet wallet = new(rider.Id);
+
+        await _riderWalletRepository.AddAsync(wallet);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        (string accessToken, string refreshToken) = await _tokenService.GenerateToken(rider);
+
+        return new RegisterRiderResponse(accessToken, refreshToken);
+    }
+}

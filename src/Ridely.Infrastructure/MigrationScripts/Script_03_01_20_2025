@@ -1,0 +1,29 @@
+START TRANSACTION;
+
+DROP INDEX rdr."IX_RiderTransactionHistory_Reference";
+
+DROP INDEX drv."IX_DriverTransactionHistory_Reference";
+
+ALTER TABLE rdr."RiderTransactionHistory" DROP COLUMN "RideId";
+
+ALTER TABLE rds."Payment" DROP COLUMN "FromRidePaymentOption";
+
+ALTER TABLE rds."Payment" DROP COLUMN "FromWallet";
+
+ALTER TABLE rds."Ride" ALTER COLUMN "EstimatedFare" TYPE bigint;
+
+ALTER TABLE rds."Ride" ADD "EstimatedDeliveryFare" bigint NOT NULL DEFAULT 0;
+
+ALTER TABLE rds."Ride" ADD "EstimatedDurationInSeconds" integer NOT NULL DEFAULT 0;
+
+ALTER TABLE rds."Payment" ALTER COLUMN "Amount" TYPE bigint;
+
+CREATE INDEX "IX_RiderTransactionHistory_Reference" ON rdr."RiderTransactionHistory" ("Reference");
+
+CREATE INDEX "IX_DriverTransactionHistory_Reference" ON drv."DriverTransactionHistory" ("Reference");
+
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20250120085912__amount_type_', '8.0.8');
+
+COMMIT;
+

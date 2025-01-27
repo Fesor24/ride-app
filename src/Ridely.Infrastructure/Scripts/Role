@@ -1,0 +1,31 @@
+DO $$
+BEGIN
+   IF NOT EXISTS (SELECT 1 FROM usr."Role" WHERE "Code" = 'User') THEN
+      INSERT INTO usr."Role"("Name", "Code")
+      VALUES ('User', 'User');
+   END IF;
+END $$;
+
+DO $$
+BEGIN
+   IF NOT EXISTS (SELECT 1 FROM usr."Role" WHERE "Code" = 'Rider') THEN
+      INSERT INTO usr."Role"("Name", "Code")
+      VALUES ('Rider', 'Rider');
+   END IF;
+END $$;
+
+DO $$
+BEGIN
+   IF NOT EXISTS (SELECT 1 FROM usr."Role" WHERE "Code" = 'Driver') THEN
+      INSERT INTO usr."Role"("Name", "Code")
+      VALUES ('Driver', 'Driver');
+   END IF;
+END $$;
+
+DO $$
+BEGIN
+   IF NOT EXISTS (SELECT 1 FROM usr."Role" WHERE "Code" = 'Admin') THEN
+      INSERT INTO usr."Role"("Name", "Code")
+      VALUES ('Admin', 'Admin');
+   END IF;
+END $$;

@@ -1,0 +1,41 @@
+{
+    "family": "soloride",
+    "taskRoleArn": "arn:aws:iam::011528294550:role/ecsTaskExecutionRole",
+    "executionRoleArn": "arn:aws:iam::011528294550:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "containerDefinitions": [
+        {
+            "name": "soloride",
+            "image": "011528294550.dkr.ecr.us-east-1.amazonaws.com/soloride:latest",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "containerPort": 8080,
+                    "hostPort": 8080,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
+            "environment": [],
+            "environmentFiles": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/soloride",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
+        }
+    ],
+    "cpu": "1024",
+    "memory": "2048",
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    }
+}

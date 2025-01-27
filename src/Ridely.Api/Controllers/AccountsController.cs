@@ -1,0 +1,24 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Soloride.Application.Features.Accounts.Login;
+using SolorideAPI.Controllers.Base;
+using SolorideAPI.Dto.Account;
+using SolorideAPI.Extensions;
+using SolorideAPI.Filter;
+using SolorideAPI.Shared;
+
+namespace SolorideAPI.Controllers;
+
+[ResourceAuthorizationFilter]
+public class AccountsController : BaseController<AccountsController>
+{
+    [HttpPost("api/login")]
+    [ProducesResponseType(200, Type = typeof(ApiResponse<LoginResponse>))]
+    [ProducesResponseType(400, Type = typeof(ApiResponse))]
+    public async Task<IActionResult> Login(LoginDto loginDto)
+    {
+        var response = await Sender.Send(new LoginCommand(
+            loginDto.Email, loginDto.Password));
+
+        return response.Match(value => Ok(new ApiResponse<LoginResponse>(value)), this.HandleErrorResult);
+    }
+}

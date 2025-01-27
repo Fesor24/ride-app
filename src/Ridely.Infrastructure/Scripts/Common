@@ -1,0 +1,5 @@
+INSERT INTO com."Settings"(
+	"BaseFare", "RatePerKilometer", "DeliveryRatePerKilometer", 
+	"DriverCommissionFromRide", "RatePerMinute", "SupportEmails", 
+	"SupportPhoneNo", "EmergencyLines", "PremiumCab")
+	VALUES (300, 400, 200, 95, 300, '', '', '', 200);

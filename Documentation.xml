@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SolorideAPI</name>
+    </assembly>
+    <members>
+        <member name="M:DotnetAuthBoilerPlate.Controllers.Auth.RegisterUser(DotnetAuthBoilerPlate.Models.DTO.AuthDTO.RegisterDto)">
+            <summary>
+            Sends OTP after Registration Complete
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Controllers.Auth.RegisterDriver(DotnetAuthBoilerPlate.Models.DTO.AuthDTO.RegisterDto)">
+            <summary>
+            Sends OTP after Registration Complete
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DotnetAuthBoilerPlate.Migrations.init">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.init.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.init.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.init.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:DotnetAuthBoilerPlate.Migrations.usersUpdate">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.usersUpdate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.usersUpdate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.usersUpdate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:DotnetAuthBoilerPlate.Migrations.update">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.update.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.update.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.update.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:DotnetAuthBoilerPlate.Migrations.updateUsers">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.updateUsers.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.updateUsers.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.updateUsers.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:DotnetAuthBoilerPlate.Migrations.Trips">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.Trips.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.Trips.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.Trips.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:DotnetAuthBoilerPlate.Migrations.Transactions">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.Transactions.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.Transactions.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.Transactions.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:DotnetAuthBoilerPlate.Migrations.CurrentTripECT">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.CurrentTripECT.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.CurrentTripECT.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.CurrentTripECT.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:DotnetAuthBoilerPlate.Migrations.CurrentTripEdit">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.CurrentTripEdit.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.CurrentTripEdit.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DotnetAuthBoilerPlate.Migrations.CurrentTripEdit.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Modules.ChatSystem.WebsocketRouteAttribute">
+            <summary>
+             Attribute Marks Routes for Events in The Web Socket
+            </summary>
+        </member>
+        <member name="T:Modules.ChatSystem.WebsocketEventNameAttribute">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>

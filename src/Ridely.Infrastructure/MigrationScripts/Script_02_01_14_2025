@@ -1,0 +1,11 @@
+START TRANSACTION;
+
+ALTER TABLE rdr."PaymentCard" ADD "Email" character varying(200) NOT NULL DEFAULT '';
+
+ALTER TABLE rdr."PaymentCard" ADD "Signature" character varying(250) NOT NULL DEFAULT '';
+
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20250114080126__card_props_', '8.0.8');
+
+COMMIT;
+
