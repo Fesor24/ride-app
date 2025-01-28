@@ -1,13 +1,10 @@
-using FirebaseAdmin;
-using Google.Apis.Auth.OAuth2;
 using Hangfire;
-using Microsoft.Extensions.FileProviders;
-using Serilog;
 using Ridely.Application;
 using Ridely.Infrastructure;
 using RidelyAPI.Extensions;
 using RidelyAPI.Middlewares;
 using RidelyAPI.OpenApi;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,11 +16,11 @@ Log.Logger = logger;
 
 builder.Host.UseSerilog();
 
-FirebaseApp.Create(new AppOptions()
-{
-    Credential = GoogleCredential.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-    "ridely-app-firebase-adminsdk-o64ak-05a4f56e1e.json"))
-});
+//FirebaseApp.Create(new AppOptions()
+//{
+//    Credential = GoogleCredential.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+//    "ridely-app-firebase-adminsdk-o64ak-05a4f56e1e.json"))
+//});
 
 builder.Services
     .RegisterServices(builder.Configuration)
@@ -53,12 +50,12 @@ app.UseCustomMiddleware();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 // Static Files
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(
-           Path.Combine(builder.Environment.ContentRootPath, "Static")),
-    RequestPath = "/Static"
-});
+//app.UseStaticFiles(new StaticFileOptions
+//{
+//    FileProvider = new PhysicalFileProvider(
+//           Path.Combine(builder.Environment.ContentRootPath, "Static")),
+//    RequestPath = "/Static"
+//});
 
 app.UseHttpsRedirection();
 

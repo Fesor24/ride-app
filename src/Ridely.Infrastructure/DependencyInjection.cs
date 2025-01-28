@@ -43,6 +43,8 @@ using Ridely.Infrastructure.Security;
 using Ridely.Infrastructure.Services;
 using Ridely.Infrastructure.Store;
 using Ridely.Infrastructure.VoiceCall;
+using Ridely.Infrastructure.WebSockets;
+using Ridely.Infrastructure.WebSockets.Handlers;
 using StackExchange.Redis;
 
 namespace Ridely.Infrastructure;
@@ -80,7 +82,15 @@ public static class DependencyInjection
 
         AddMassTransit(services, config);
 
+        AddWebSocketEventHandlers(services);
+
         return services;
+    }
+
+    private static void AddWebSocketEventHandlers(IServiceCollection services)
+    {
+        services.AddSingleton<WebSocketEventHandler>();
+        services.AddScoped<TestHandler>();
     }
 
     private static void AddMassTransit(IServiceCollection services, IConfiguration config)

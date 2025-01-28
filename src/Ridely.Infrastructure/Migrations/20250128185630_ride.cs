@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Ridely.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class _init_ : Migration
+    public partial class ride : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -67,28 +67,6 @@ namespace Ridely.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DriverTransactionHistory",
-                schema: "drv",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Reference = table.Column<string>(type: "character varying(26)", nullable: false),
-                    DriverId = table.Column<long>(type: "bigint", nullable: false),
-                    Amount = table.Column<decimal>(type: "numeric", nullable: false),
-                    Error = table.Column<string>(type: "text", nullable: true),
-                    BankAccountDetails = table.Column<string>(type: "jsonb", nullable: true),
-                    Status = table.Column<int>(type: "integer", nullable: false),
-                    Type = table.Column<int>(type: "integer", nullable: false),
-                    CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DriverTransactionHistory", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "DriverWallet",
                 schema: "drv",
                 columns: table => new
@@ -134,9 +112,7 @@ namespace Ridely.Infrastructure.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Reference = table.Column<string>(type: "character varying(26)", nullable: false),
-                    Amount = table.Column<decimal>(type: "numeric(20,0)", nullable: false),
-                    FromWallet = table.Column<decimal>(type: "numeric(20,0)", nullable: false),
-                    FromRidePaymentOption = table.Column<decimal>(type: "numeric(20,0)", nullable: false),
+                    Amount = table.Column<long>(type: "bigint", nullable: false),
                     Method = table.Column<int>(type: "integer", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
                     CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -355,6 +331,8 @@ namespace Ridely.Infrastructure.Migrations
                     Last4Digits = table.Column<string>(type: "character varying(6)", maxLength: 6, nullable: false),
                     Bank = table.Column<string>(type: "character varying(70)", maxLength: 70, nullable: false),
                     CardType = table.Column<int>(type: "integer", nullable: false),
+                    Email = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Signature = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
                     ExpiryMonth = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
                     ExpiryYear = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false)
                 },
@@ -404,7 +382,6 @@ namespace Ridely.Infrastructure.Migrations
                     RiderId = table.Column<long>(type: "bigint", nullable: false),
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
                     Error = table.Column<string>(type: "text", nullable: true),
-                    RideId = table.Column<int>(type: "integer", nullable: true),
                     Status = table.Column<int>(type: "integer", nullable: false),
                     Type = table.Column<int>(type: "integer", nullable: false),
                     CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -564,6 +541,34 @@ namespace Ridely.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DriverTransactionHistory",
+                schema: "drv",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Reference = table.Column<string>(type: "character varying(26)", nullable: false),
+                    DriverId = table.Column<long>(type: "bigint", nullable: false),
+                    Amount = table.Column<decimal>(type: "numeric", nullable: false),
+                    Error = table.Column<string>(type: "text", nullable: true),
+                    BankAccountDetails = table.Column<string>(type: "jsonb", nullable: true),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    Type = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DriverTransactionHistory", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DriverTransactionHistory_Driver_DriverId",
+                        column: x => x.DriverId,
+                        principalSchema: "drv",
+                        principalTable: "Driver",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Ride",
                 schema: "rds",
                 columns: table => new
@@ -576,7 +581,8 @@ namespace Ridely.Infrastructure.Migrations
                     Status = table.Column<int>(type: "integer", nullable: false),
                     MusicGenre = table.Column<int>(type: "integer", nullable: false),
                     PaymentId = table.Column<long>(type: "bigint", nullable: false),
-                    EstimatedFare = table.Column<decimal>(type: "numeric(20,0)", nullable: false),
+                    EstimatedFare = table.Column<long>(type: "bigint", nullable: false),
+                    EstimatedDeliveryFare = table.Column<long>(type: "bigint", nullable: false),
                     SourceAddress = table.Column<string>(type: "text", nullable: false),
                     WayPointAddresses = table.Column<string>(type: "text", nullable: false),
                     DestinationAddress = table.Column<string>(type: "text", nullable: false),
@@ -584,6 +590,7 @@ namespace Ridely.Infrastructure.Migrations
                     WaypointCordinates = table.Column<string>(type: "text", nullable: false),
                     DestinationCordinates = table.Column<string>(type: "text", nullable: false),
                     DistanceInMeters = table.Column<double>(type: "double precision", nullable: false),
+                    EstimatedDurationInSeconds = table.Column<int>(type: "integer", nullable: false),
                     ReassignFromId = table.Column<long>(type: "bigint", nullable: true),
                     Category = table.Column<int>(type: "integer", nullable: false),
                     CancellationReason = table.Column<string>(type: "text", nullable: true),
@@ -776,11 +783,16 @@ namespace Ridely.Infrastructure.Migrations
                 column: "DriverId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DriverTransactionHistory_DriverId",
+                schema: "drv",
+                table: "DriverTransactionHistory",
+                column: "DriverId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DriverTransactionHistory_Reference",
                 schema: "drv",
                 table: "DriverTransactionHistory",
-                column: "Reference",
-                unique: true);
+                column: "Reference");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PaymentCard_RiderId",
@@ -853,8 +865,7 @@ namespace Ridely.Infrastructure.Migrations
                 name: "IX_RiderTransactionHistory_Reference",
                 schema: "rdr",
                 table: "RiderTransactionHistory",
-                column: "Reference",
-                unique: true);
+                column: "Reference");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RiderTransactionHistory_RiderId",

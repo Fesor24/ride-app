@@ -12,8 +12,8 @@ using Ridely.Infrastructure;
 namespace Ridely.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250113132203__init_")]
-    partial class _init_
+    [Migration("20250128185630_ride")]
+    partial class ride
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -418,8 +418,9 @@ namespace Ridely.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Reference")
-                        .IsUnique();
+                    b.HasIndex("DriverId");
+
+                    b.HasIndex("Reference");
 
                     b.ToTable("DriverTransactionHistory", "drv");
                 });
@@ -479,6 +480,11 @@ namespace Ridely.Infrastructure.Migrations
                     b.Property<int>("CardType")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
                     b.Property<string>("ExpiryMonth")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -496,6 +502,11 @@ namespace Ridely.Infrastructure.Migrations
 
                     b.Property<long>("RiderId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("Signature")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
 
                     b.HasKey("Id");
 
@@ -647,9 +658,6 @@ namespace Ridely.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("character varying(26)");
 
-                    b.Property<int?>("RideId")
-                        .HasColumnType("integer");
-
                     b.Property<long>("RiderId")
                         .HasColumnType("bigint");
 
@@ -664,8 +672,7 @@ namespace Ridely.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Reference")
-                        .IsUnique();
+                    b.HasIndex("Reference");
 
                     b.HasIndex("RiderId");
 
@@ -785,20 +792,14 @@ namespace Ridely.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("numeric(20,0)");
+                    b.Property<long>("Amount")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Error")
                         .HasColumnType("jsonb");
-
-                    b.Property<decimal>("FromRidePaymentOption")
-                        .HasColumnType("numeric(20,0)");
-
-                    b.Property<decimal>("FromWallet")
-                        .HasColumnType("numeric(20,0)");
 
                     b.Property<int>("Method")
                         .HasColumnType("integer");
@@ -874,8 +875,14 @@ namespace Ridely.Infrastructure.Migrations
                     b.Property<long?>("DriverId")
                         .HasColumnType("bigint");
 
-                    b.Property<decimal>("EstimatedFare")
-                        .HasColumnType("numeric(20,0)");
+                    b.Property<long>("EstimatedDeliveryFare")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("EstimatedDurationInSeconds")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("EstimatedFare")
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("HaveConversation")
                         .HasColumnType("boolean");
@@ -1205,6 +1212,17 @@ namespace Ridely.Infrastructure.Migrations
                         .WithMany("DriverReferrers")
                         .HasForeignKey("DriverId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Driver");
+                });
+
+            modelBuilder.Entity("Ridely.Domain.Drivers.DriverTransactionHistory", b =>
+                {
+                    b.HasOne("Ridely.Domain.Drivers.Driver", "Driver")
+                        .WithMany()
+                        .HasForeignKey("DriverId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Driver");

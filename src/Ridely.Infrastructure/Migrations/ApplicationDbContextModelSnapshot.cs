@@ -415,6 +415,8 @@ namespace Ridely.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DriverId");
+
                     b.HasIndex("Reference");
 
                     b.ToTable("DriverTransactionHistory", "drv");
@@ -1207,6 +1209,17 @@ namespace Ridely.Infrastructure.Migrations
                         .WithMany("DriverReferrers")
                         .HasForeignKey("DriverId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Driver");
+                });
+
+            modelBuilder.Entity("Ridely.Domain.Drivers.DriverTransactionHistory", b =>
+                {
+                    b.HasOne("Ridely.Domain.Drivers.Driver", "Driver")
+                        .WithMany()
+                        .HasForeignKey("DriverId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Driver");

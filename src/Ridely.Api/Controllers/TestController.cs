@@ -9,6 +9,7 @@ using Ridely.Application.Abstractions.Payment;
 using Ridely.Application.Abstractions.Storage;
 using Ridely.Application.Abstractions.VoiceCall;
 using Ridely.Contracts.Events;
+using Ridely.Infrastructure.WebSockets.Handlers;
 using RidelyAPI.Controllers.Base;
 using StackExchange.Redis;
 
@@ -17,7 +18,7 @@ namespace RidelyAPI.Controllers;
 public class TestController(ISmsService smsService, IDeviceNotificationService deviceNotificationService, 
     IConnectionMultiplexer connectionMultiplexer, 
     IVoiceService voiceService, IObjectStoreService objectStoreService, IPaystackService paystackService,
-    IPublishEndpoint publishEndpoint) : 
+    IPublishEndpoint publishEndpoint, TestHandler testHandler) : 
     BaseController<TestController>
 {
     private readonly StackExchange.Redis.IDatabase _db = connectionMultiplexer.GetDatabase();
@@ -41,11 +42,7 @@ public class TestController(ISmsService smsService, IDeviceNotificationService d
     [HttpGet("api/hello")]
     public async Task<IActionResult> Hello()
     {
-        await publishEndpoint.Publish(new RideRequestedEvent
-        {
-            AvailableDriverProfile = []
-        });
-
+        testHandler.Hello("Wale");
 
         return Ok("Hello world!!");
     }
