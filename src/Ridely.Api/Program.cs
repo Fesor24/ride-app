@@ -1,6 +1,7 @@
 using Hangfire;
 using Ridely.Application;
 using Ridely.Infrastructure;
+using Ridely.Infrastructure.WebSockets.Hub;
 using RidelyAPI.Extensions;
 using RidelyAPI.Middlewares;
 using RidelyAPI.OpenApi;
@@ -57,7 +58,7 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 //    RequestPath = "/Static"
 //});
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
@@ -100,6 +101,8 @@ app.MapControllers();
 app.UseHangfireDashboard();
 
 app.AddBackgroundJobs();
+
+app.MapWebPubSubHub<MainApplicationHub>("/websocket/eventhandler");
 
 app.Run();
 

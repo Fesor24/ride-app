@@ -10,13 +10,13 @@ using Ridely.Shared.Helper;
 using Ridely.Shared.Helper.Keys;
 using StackExchange.Redis;
 
-namespace Ridely.Infrastructure.Location;
+namespace Ridely.Infrastructure.Locations;
 internal sealed class LocationService : ILocationService
 {
     private readonly IDatabase _database;
     private readonly IWebSocketManager _webSocketManager;
     private readonly ApplicationDbContext _context;
-    public LocationService(IConnectionMultiplexer connectionMultiplexer, 
+    public LocationService(IConnectionMultiplexer connectionMultiplexer,
         IWebSocketManager webSocketManager,
         ApplicationDbContext context)
     {
@@ -80,7 +80,7 @@ internal sealed class LocationService : ILocationService
         {
             driver.SetStatusAndUpdateLocation(location.Value.Latitude, location.Value.Longitude, driver.Status);
         }
-        else if(location.HasValue && !driver.CurrentRideId.HasValue)
+        else if (location.HasValue && !driver.CurrentRideId.HasValue)
         {
             driver.SetStatusAndUpdateLocation(location.Value.Latitude, location.Value.Longitude, DriverStatus.Offline);
 
@@ -98,7 +98,7 @@ internal sealed class LocationService : ILocationService
         await _context.SaveChangesAsync();
     }
 
-    public async Task<int> GetAvailableDriversCountInLocationAsync(Domain.Models.Location location, 
+    public async Task<int> GetAvailableDriversCountInLocationAsync(Domain.Models.Location location,
         List<long> excludeDrivers, long riderId, CabType? cabType, DriverService? driverService)
     {
         int radius = 3000;

@@ -1,6 +1,11 @@
 ﻿namespace Ridely.Infrastructure.WebSockets;
-internal sealed class WebSocketEvent
+public sealed class WebSocketEvent
 {
-    public string EventName { get; set; }
-    public Dictionary<string, object> Payload { get; set; }
+    public WebSocketEvent(string eventName)
+    {
+        EventName = eventName;
+    }
+
+    public string EventName { get; init; }
+    public Dictionary<string, object> Payload { get; set; } = new();
 }

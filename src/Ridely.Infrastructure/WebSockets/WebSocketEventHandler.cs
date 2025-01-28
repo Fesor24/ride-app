@@ -11,6 +11,8 @@ public sealed class WebSocketEventHandler
 
     public WebSocketEventHandler(IServiceProvider serviceProvider)
     {
+        Console.WriteLine("Constructor called");
+
         _eventMapper = new();
 
         var handlerTypes = Assembly.GetExecutingAssembly()
@@ -41,10 +43,10 @@ public sealed class WebSocketEventHandler
         _serviceProvider = serviceProvider;
     }
 
-    internal async ValueTask DispatchAsync(WebSocketEvent webSocketEvent)
+    public async ValueTask DispatchAsync(WebSocketEvent webSocketEvent)
     {
         if (!_eventMapper.TryGetValue(webSocketEvent.EventName, out var value))
-            throw new ArgumentNullException("Websocket not found");
+            throw new ArgumentNullException("Websocket event not found");
 
         using var scope = _serviceProvider.CreateScope();
 

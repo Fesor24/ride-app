@@ -4,6 +4,7 @@ using Hangfire;
 using Hangfire.PostgreSql;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Azure.WebPubSub.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,7 +31,7 @@ using Ridely.Domain.Users;
 using Ridely.Infrastructure.Authentication;
 using Ridely.Infrastructure.Consumers;
 using Ridely.Infrastructure.Data;
-using Ridely.Infrastructure.Location;
+using Ridely.Infrastructure.Locations;
 using Ridely.Infrastructure.Messaging;
 using Ridely.Infrastructure.Notifications;
 using Ridely.Infrastructure.Outbox;
@@ -45,6 +46,7 @@ using Ridely.Infrastructure.Store;
 using Ridely.Infrastructure.VoiceCall;
 using Ridely.Infrastructure.WebSockets;
 using Ridely.Infrastructure.WebSockets.Handlers;
+using Ridely.Infrastructure.WebSockets.Hub;
 using StackExchange.Redis;
 
 namespace Ridely.Infrastructure;
@@ -89,6 +91,20 @@ public static class DependencyInjection
 
     private static void AddWebSocketEventHandlers(IServiceCollection services)
     {
+        var handlers = Assembly.GetExecutingAssembly()
+            .GetTypes()
+            .Where(x => x.IsAssignableTo(typeof(IWebSocketEventHandlerMarker)) && !x.IsAbstract && !x.IsInterface);
+
+        foreach (var handler in handlers)
+            services.AddScoped(handler);
+
+        string connectionString = "Endpoint=https://wale-pubsub.webpubsub.azure.com;AccessKey=8jnyJxfTJ71SsjLfwVAqfSQreE00FH9JCCdx8xjYBcV7tj6u2lW4JQQJ99BAAC5RqLJXJ3w3AAAAAWPSKMVU;Version=1.0;";
+
+        services.AddWebPubSub(options =>
+        {
+            options.ServiceEndpoint = new WebPubSubServiceEndpoint(connectionString);
+        }).AddWebPubSubServiceClient<MainApplicationHub>();
+
         services.AddSingleton<WebSocketEventHandler>();
         services.AddScoped<TestHandler>();
     }

@@ -9,6 +9,7 @@ using Ridely.Application.Abstractions.Payment;
 using Ridely.Application.Abstractions.Storage;
 using Ridely.Application.Abstractions.VoiceCall;
 using Ridely.Contracts.Events;
+using Ridely.Infrastructure.WebSockets;
 using Ridely.Infrastructure.WebSockets.Handlers;
 using RidelyAPI.Controllers.Base;
 using StackExchange.Redis;
@@ -18,10 +19,11 @@ namespace RidelyAPI.Controllers;
 public class TestController(ISmsService smsService, IDeviceNotificationService deviceNotificationService, 
     IConnectionMultiplexer connectionMultiplexer, 
     IVoiceService voiceService, IObjectStoreService objectStoreService, IPaystackService paystackService,
-    IPublishEndpoint publishEndpoint, TestHandler testHandler) : 
+    IPublishEndpoint publishEndpoint, WebSocketEventHandler webSocketEventHandler) : 
     BaseController<TestController>
 {
     private readonly StackExchange.Redis.IDatabase _db = connectionMultiplexer.GetDatabase();
+    private readonly WebSocketEventHandler _webSocketEventHandler = webSocketEventHandler;
 
     [HttpGet("api/sms")]
     public async Task<IActionResult> SendSms(string phoneNo)
@@ -42,7 +44,15 @@ public class TestController(ISmsService smsService, IDeviceNotificationService d
     [HttpGet("api/hello")]
     public async Task<IActionResult> Hello()
     {
-        testHandler.Hello("Wale");
+        var wsEvent = new WebSocketEvent("TEST.HELLO")
+        {
+            Payload =
+            {
+                {"name", "Fesor"}
+            }
+        };
+
+        await _webSocketEventHandler.DispatchAsync(wsEvent);
 
         return Ok("Hello world!!");
     }

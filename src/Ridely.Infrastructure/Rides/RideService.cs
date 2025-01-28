@@ -17,7 +17,7 @@ using Ridely.Domain.Models.Cache;
 using Ridely.Domain.Models.Rides;
 using Ridely.Domain.Riders;
 using Ridely.Domain.Rides;
-using Ridely.Infrastructure.Location;
+using Ridely.Infrastructure.Locations;
 using Ridely.Infrastructure.Route;
 using Ridely.Shared.Constants;
 using Ridely.Shared.Helper;
