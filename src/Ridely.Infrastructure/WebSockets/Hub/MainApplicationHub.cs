@@ -33,6 +33,8 @@ public sealed class MainApplicationHub : WebPubSubHub
 
             Console.WriteLine(webSocketEvent.EventName);
 
+            webSocketEvent.EventArgs.Add("userId", request.ConnectionContext.UserId);
+
             await _webSocketEventHandler.DispatchAsync(webSocketEvent);
 
             await Task.CompletedTask;

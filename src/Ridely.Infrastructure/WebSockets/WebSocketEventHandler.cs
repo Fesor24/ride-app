@@ -63,7 +63,7 @@ public sealed class WebSocketEventHandler
         {
             var parameterInfo = parameterInfos[i];
 
-            if (webSocketEvent.Payload.TryGetValue(parameterInfo.Name, out var parameterValue))
+            if (webSocketEvent.EventArgs.TryGetValue(parameterInfo.Name, out var parameterValue))
             {
                 arguments[i] = JsonSerializer.Deserialize(JsonSerializer.Serialize(parameterValue), parameterInfo.ParameterType);
             }

@@ -151,7 +151,7 @@ internal sealed class RideService : IRideService
         return true;
     }
 
-    public async Task SendChatMessageAsync(ChatUserType sender, string message, string identifier, long rideId)
+    public async Task SendChatMessageAsync(string message, long rideId, bool isDriver)
     {
         long riderId = 0;
         long driverId = 0;
@@ -190,22 +190,14 @@ internal sealed class RideService : IRideService
 
         if (riderId == default || driverId == default) return;
 
-        if (sender == ChatUserType.Rider)
-        {
-            Chat chat = new(rideId, ChatUserType.Rider, ChatUserType.Rider, message);
+        Chat chat = new(rideId, ChatUserType.Rider, ChatUserType.Driver, message);
 
-            await _context.Set<Chat>().AddAsync(chat);
+        if (isDriver)
+            chat.SetChatUsers(ChatUserType.Driver, ChatUserType.Rider);
 
-            await _context.SaveChangesAsync();
-        }
-        else if (sender == ChatUserType.Driver)
-        {
-            Chat chat = new(rideId, ChatUserType.Driver, ChatUserType.Rider, message);
+        await _context.Set<Chat>().AddAsync(chat);
 
-            await _context.Set<Chat>().AddAsync(chat);
-
-            await _context.SaveChangesAsync();
-        }
+        await _context.SaveChangesAsync();
 
         string riderWebSocketKey = WebSocketKeys.Rider.Key(riderId.ToString());
 

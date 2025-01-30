@@ -7,5 +7,6 @@ public sealed class WebSocketEvent
     }
 
     public string EventName { get; init; }
-    public Dictionary<string, object> Payload { get; set; } = new();
+    public Dictionary<string, object> EventArgs { get; set; } = new();
+    public string? UserId {  get; set; }   
 }

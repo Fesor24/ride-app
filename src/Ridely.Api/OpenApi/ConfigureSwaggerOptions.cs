@@ -1,10 +1,10 @@
 ﻿using Asp.Versioning.ApiExplorer;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using RidelyAPI.Controllers;
+using Ridely.Api.Controllers;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace RidelyAPI.OpenApi
+namespace Ridely.Api.OpenApi
 {
     public sealed class ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider) : 
         IConfigureNamedOptions<SwaggerGenOptions>

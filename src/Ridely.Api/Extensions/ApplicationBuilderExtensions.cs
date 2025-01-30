@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Ridely.Infrastructure.Outbox;
-using RidelyAPI.Middlewares;
+using Ridely.Api.Middlewares;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace RidelyAPI.Extensions;
+namespace Ridely.Api.Extensions;
 
 public static class ApplicationBuilderExtensions
 {

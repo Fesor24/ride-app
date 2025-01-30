@@ -12,5 +12,5 @@ public interface IRideService
         bool increaseSearchRadius = false);
     Task<Result<EstimatedFareResponse>> ComputeEstimatedFare(Domain.Models.Location source,
         Domain.Models.Location destination);
-    Task SendChatMessageAsync(ChatUserType sender, string message, string identifier, long riderId);
+    Task SendChatMessageAsync(string message, long riderId, bool isDriver);
 }

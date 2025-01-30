@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using RidelyAPI.Filter;
+using Ridely.Api.Filter;
 
-namespace RidelyAPI.Controllers.Base
+namespace Ridely.Api.Controllers.Base
 {
     [ApiExplorerSettings(GroupName = SwaggerGroupNames.Admin)]
     [ApiController]

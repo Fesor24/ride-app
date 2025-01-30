@@ -15,7 +15,7 @@ internal sealed class DriverWebSocketEventHandler : IWebSocketEventHandlerMarker
     }
 
     [WebSocketMethod("LOCATION")]
-    public async Task UpdateLocationAsync(double latitude, double longitude)
+    public async Task UpdateLocationAsync(double latitude, double longitude, string userId)
     {
         Console.WriteLine("Location updated");
 
@@ -23,6 +23,6 @@ internal sealed class DriverWebSocketEventHandler : IWebSocketEventHandlerMarker
         {
             Latitude = latitude,
             Longitude = longitude
-        }, "DRIVER-5");
+        }, userId);
     }
 }

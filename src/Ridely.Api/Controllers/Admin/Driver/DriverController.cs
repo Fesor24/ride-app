@@ -4,11 +4,11 @@ using Ridely.Application.Features.Admin.Driver.Search;
 using Ridely.Application.Features.Admin.Driver.SearchTransactions;
 using Ridely.Application.Features.Admin.Driver.VerifyDriver;
 using Ridely.Domain.Models;
-using RidelyAPI.Controllers.Base;
-using RidelyAPI.Extensions;
-using RidelyAPI.Shared;
+using Ridely.Api.Controllers.Base;
+using Ridely.Api.Extensions;
+using Ridely.Api.Shared;
 
-namespace RidelyAPI.Controllers.Admin.Driver;
+namespace Ridely.Api.Controllers.Admin.Driver;
 
 [Route("api/drivers")]
 public class DriverController : AdminBaseController<DriverController>

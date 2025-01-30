@@ -18,12 +18,12 @@ using Ridely.Application.Features.Rides.UpdatePaymentMethod;
 using Ridely.Application.Models.Shared;
 using Ridely.Domain.Models;
 using Ridely.Domain.Rides;
-using RidelyAPI.Controllers.Base;
-using RidelyAPI.Extensions;
-using RidelyAPI.Filter;
-using RidelyAPI.Shared;
+using Ridely.Api.Controllers.Base;
+using Ridely.Api.Extensions;
+using Ridely.Api.Filter;
+using Ridely.Api.Shared;
 
-namespace RidelyAPI.Controllers.Rides;
+namespace Ridely.Api.Controllers.Rides;
 
 [ApiVersion(ApiVersions.V1)]
 [ApiVersion(ApiVersions.V2)]

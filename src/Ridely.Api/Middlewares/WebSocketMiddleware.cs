@@ -6,9 +6,9 @@ using Ridely.Application.Abstractions.Authentication;
 using Ridely.Application.Abstractions.Websocket;
 using Ridely.Shared.Constants;
 using Ridely.Shared.Helper.Keys;
-using RidelyAPI.WebSocket.Handler;
+using Ridely.Api.WebSocket.Handler;
 
-namespace RidelyAPI.Middlewares;
+namespace Ridely.Api.Middlewares;
 
 public class WebSocketMiddleware
 {

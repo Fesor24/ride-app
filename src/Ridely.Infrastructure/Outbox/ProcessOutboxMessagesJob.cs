@@ -35,6 +35,8 @@ public sealed class ProcessOutboxMessagesJob
     {
         _logger.LogInformation("Processing outbox messages start");
 
+        return;
+
         using var connection = _sqlConnectionFactory.CreateConnection();
         var transaction = connection.BeginTransaction();
 

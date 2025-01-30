@@ -1,4 +1,4 @@
-﻿namespace RidelyAPI.WebSocket.Controller;
+﻿namespace Ridely.Api.WebSocket.Controller;
 
 public class WebSocketControllerBase
 {

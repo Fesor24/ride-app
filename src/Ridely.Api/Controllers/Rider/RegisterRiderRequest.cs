@@ -1,6 +1,6 @@
 ﻿using Ridely.Domain.Shared;
 
-namespace RidelyAPI.Controllers.Rider;
+namespace Ridely.Api.Controllers.Rider;
 
 public sealed record RegisterRiderRequest(
     string? ReferrerCode,

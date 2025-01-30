@@ -1,4 +1,4 @@
-﻿namespace RidelyAPI.Controllers.Admin.Settings;
+﻿namespace Ridely.Api.Controllers.Admin.Settings;
 
 public class BankRequest
 {

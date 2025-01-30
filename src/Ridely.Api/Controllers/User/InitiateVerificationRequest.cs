@@ -1,6 +1,6 @@
 ﻿using Ridely.Application.Features.Accounts;
 
-namespace RidelyAPI.Controllers.User;
+namespace Ridely.Api.Controllers.User;
 
 public sealed class InitiateVerificationRequest
 {

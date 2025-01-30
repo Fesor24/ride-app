@@ -11,10 +11,10 @@ using Ridely.Application.Abstractions.VoiceCall;
 using Ridely.Contracts.Events;
 using Ridely.Infrastructure.WebSockets;
 using Ridely.Infrastructure.WebSockets.Handlers;
-using RidelyAPI.Controllers.Base;
+using Ridely.Api.Controllers.Base;
 using StackExchange.Redis;
 
-namespace RidelyAPI.Controllers;
+namespace Ridely.Api.Controllers;
 
 public class TestController(ISmsService smsService, IDeviceNotificationService deviceNotificationService, 
     IConnectionMultiplexer connectionMultiplexer, 
@@ -46,7 +46,7 @@ public class TestController(ISmsService smsService, IDeviceNotificationService d
     {
         var wsEvent = new WebSocketEvent("TEST.HELLO")
         {
-            Payload =
+            EventArgs =
             {
                 {"name", "Fesor"}
             }
@@ -109,25 +109,4 @@ public class ImageUploadTest
 {
     public string Profile { get; set; }
     public string DriversLicense { get; set; }
-}
-
-public class TestTermii
-{
-    [JsonPropertyName("api_key")]
-    public string ApiKey { get; set; } = "TLNUyxGmICQZHVQGBdVcXpRWRSDtUkckxzNzJhvLxjxianBHoAnCahqeCRlCZi";
-
-    [JsonPropertyName("to")]
-    public string To { get; set; } = "2349033016038";
-
-    [JsonPropertyName("from")]
-    public string From { get; set; } = "N-Alert";
-
-    [JsonPropertyName("channel")]
-    public string Channel { get; set; } = "dnd";
-
-    [JsonPropertyName("type")]
-    public string Type { get; set; } = "plain";
-
-    [JsonPropertyName("sms")]
-    public string Sms { get; set; } = "Your (Ridely) Verification Pin is 2002. Valid for 5 minutes, one-time use only.(Ridely)";
 }

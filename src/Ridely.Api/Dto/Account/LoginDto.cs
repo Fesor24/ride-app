@@ -1,6 +1,6 @@
 ﻿using Ridely.Application.Features.Accounts;
 
-namespace RidelyAPI.Dto.Account;
+namespace Ridely.Api.Dto.Account;
 
 public class LoginDto
 {

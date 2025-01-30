@@ -1,4 +1,4 @@
-﻿namespace RidelyAPI.Controllers.User;
+﻿namespace Ridely.Api.Controllers.User;
 
 public class UpdateDeviceTokenRequest
 {

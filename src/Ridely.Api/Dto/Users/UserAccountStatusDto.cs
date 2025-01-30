@@ -1,4 +1,4 @@
-﻿namespace RidelyAPI.Dto.Users;
+﻿namespace Ridely.Api.Dto.Users;
 
 public class UserAccountStatusDto
 {

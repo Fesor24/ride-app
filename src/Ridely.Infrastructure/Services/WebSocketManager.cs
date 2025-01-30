@@ -1,6 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Azure.Core;
+using Microsoft.Azure.WebPubSub.AspNetCore;
+using Microsoft.Extensions.Logging;
 using Ridely.Application.Abstractions.Websocket;
 using Ridely.Application.Models.WebSocket;
+using Ridely.Infrastructure.WebSockets.Hub;
 using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text;
@@ -12,10 +15,12 @@ internal class WebSocketManager : IWebSocketManager
     private readonly ConcurrentDictionary<string, WebSocket> _sockets = new();
 
     private readonly ILogger<WebSocketManager> _logger;
+    private readonly WebPubSubServiceClient<MainApplicationHub> _webPubSubServiceClient;
 
-    public WebSocketManager(ILogger<WebSocketManager> logger)
+    public WebSocketManager(ILogger<WebSocketManager> logger, WebPubSubServiceClient<MainApplicationHub> webPubSubServiceClient)
     {
         _logger = logger;
+        _webPubSubServiceClient = webPubSubServiceClient;
     }
 
     public WebSocket AddWebSocket(string userKey, WebSocket socket)
@@ -65,26 +70,30 @@ internal class WebSocketManager : IWebSocketManager
 
     public async Task<bool> SendMessageAsync(string userKey, string message)
     {
-        WebSocket? webSocket = GetWebSocket(userKey);
+        //WebSocket? webSocket = GetWebSocket(userKey);
 
-        if (webSocket is null) return false;
+        //if (webSocket is null) return false;
 
-        if(webSocket.State == WebSocketState.Open)
-        {
-            byte[] messageBytes = Encoding.UTF8.GetBytes(message);
+        //if(webSocket.State == WebSocketState.Open)
+        //{
+        //    byte[] messageBytes = Encoding.UTF8.GetBytes(message);
 
-            await webSocket.SendAsync(messageBytes, WebSocketMessageType.Text, true, CancellationToken.None);
+        //    await webSocket.SendAsync(messageBytes, WebSocketMessageType.Text, true, CancellationToken.None);
 
-            Console.WriteLine("<---- Message sent ---->");
+        //    Console.WriteLine("<---- Message sent ---->");
 
-            return true;
-        }
-        else
-        {
-            await RemoveWebSocket(userKey);
+        //    return true;
+        //}
+        //else
+        //{
+        //    await RemoveWebSocket(userKey);
 
-            return false;
-        }
+        //    return false;
+        //}
+
+        await _webPubSubServiceClient.SendToUserAsync(userKey, message, ContentType.ApplicationJson);
+
+        return true;
     }
 
     public async Task SendToMultipleAsync(List<string> userKeys, string message)

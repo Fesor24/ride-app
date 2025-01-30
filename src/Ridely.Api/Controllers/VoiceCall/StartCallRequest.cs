@@ -1,4 +1,4 @@
-﻿namespace RidelyAPI.Controllers.VoiceCall
+﻿namespace Ridely.Api.Controllers.VoiceCall
 {
     public sealed class StartCallRequest
     {

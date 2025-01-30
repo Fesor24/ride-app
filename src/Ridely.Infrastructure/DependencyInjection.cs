@@ -84,12 +84,12 @@ public static class DependencyInjection
 
         AddMassTransit(services, config);
 
-        AddWebSocketEventHandlers(services);
+        AddWebSocketEventHandlers(services, config);
 
         return services;
     }
 
-    private static void AddWebSocketEventHandlers(IServiceCollection services)
+    private static void AddWebSocketEventHandlers(IServiceCollection services, IConfiguration config)
     {
         var handlers = Assembly.GetExecutingAssembly()
             .GetTypes()
@@ -98,7 +98,7 @@ public static class DependencyInjection
         foreach (var handler in handlers)
             services.AddScoped(handler);
 
-        string connectionString = "Endpoint=https://wale-pubsub.webpubsub.azure.com;AccessKey=8jnyJxfTJ71SsjLfwVAqfSQreE00FH9JCCdx8xjYBcV7tj6u2lW4JQQJ99BAAC5RqLJXJ3w3AAAAAWPSKMVU;Version=1.0;";
+        string connectionString = config.GetConnectionString("AzureWebPubSub") ?? "";
 
         services.AddWebPubSub(options =>
         {
@@ -106,12 +106,13 @@ public static class DependencyInjection
         }).AddWebPubSubServiceClient<MainApplicationHub>();
 
         services.AddSingleton<WebSocketEventHandler>();
-        services.AddScoped<TestHandler>();
     }
 
     private static void AddMassTransit(IServiceCollection services, IConfiguration config)
     {
         var rabbitMqOptions = config.GetSection("RabbitMq").Get<RabbitMqOptions>();
+
+        string connectionString = config.GetConnectionString("AzureServiceBus") ?? "";
 
         services.AddMassTransit(config =>
         {
@@ -120,16 +121,23 @@ public static class DependencyInjection
             // main api...
             config.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("main", false));
 
-            config.UsingRabbitMq((ctx, cfg) =>
+            config.UsingAzureServiceBus((ctx, cfg) =>
             {
-                cfg.Host(rabbitMqOptions.Host, "/", hst =>
-                {
-                    hst.Username(rabbitMqOptions.Username);
-                    hst.Password(rabbitMqOptions.Password);
-                });
+                cfg.Host(connectionString);
 
                 cfg.ConfigureEndpoints(ctx);
             });
+
+            //config.UsingRabbitMq((ctx, cfg) =>
+            //{
+            //    cfg.Host(rabbitMqOptions.Host, "/", hst =>
+            //    {
+            //        hst.Username(rabbitMqOptions.Username);
+            //        hst.Password(rabbitMqOptions.Password);
+            //    });
+
+            //    cfg.ConfigureEndpoints(ctx);
+            //});
         });
     }
 

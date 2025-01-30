@@ -12,12 +12,12 @@ using Ridely.Application.Features.Drivers.UpdateStatus;
 using Ridely.Application.Features.Drivers.VerifyBankAccount;
 using Ridely.Application.Models.Shared;
 using Ridely.Domain.Models;
-using RidelyAPI.Controllers.Base;
-using RidelyAPI.Extensions;
-using RidelyAPI.Filter;
-using RidelyAPI.Shared;
+using Ridely.Api.Controllers.Base;
+using Ridely.Api.Extensions;
+using Ridely.Api.Filter;
+using Ridely.Api.Shared;
 
-namespace RidelyAPI.Controllers.Driver;
+namespace Ridely.Api.Controllers.Driver;
 
 [ApiVersion(ApiVersions.V1)]
 [ApiVersion(ApiVersions.V2)]

@@ -1,7 +1,7 @@
 ﻿using Ridely.Domain.Drivers;
 using Ridely.Domain.Shared;
 
-namespace RidelyAPI.Controllers.Driver;
+namespace Ridely.Api.Controllers.Driver;
 
 public sealed record RegisterDriverRequest(
     string? ReferrerCode,

@@ -1,9 +1,9 @@
 ﻿using Hangfire;
 using Ridely.Application.Abstractions.Location;
 using Ridely.Domain.Models;
-using RidelyAPI.WebSocket.Attributes;
+using Ridely.Api.WebSocket.Attributes;
 
-namespace RidelyAPI.WebSocket.Controller;
+namespace Ridely.Api.WebSocket.Controller;
 
 [WebSocketRoute("DRIVER")]
 public class DriverController(ILocationService locationService) : WebSocketControllerBase

@@ -2,9 +2,9 @@ using Hangfire;
 using Ridely.Application;
 using Ridely.Infrastructure;
 using Ridely.Infrastructure.WebSockets.Hub;
-using RidelyAPI.Extensions;
-using RidelyAPI.Middlewares;
-using RidelyAPI.OpenApi;
+using Ridely.Api.Extensions;
+using Ridely.Api.Middlewares;
+using Ridely.Api.OpenApi;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -7,12 +7,12 @@ using Ridely.Application.Features.Users.GetUserStatus;
 using Ridely.Application.Features.Users.InitiatePhoneNoVerification;
 using Ridely.Application.Features.Users.PhoneNoVerification;
 using Ridely.Application.Features.Users.UpdateDeviceToken;
-using RidelyAPI.Controllers.Base;
-using RidelyAPI.Extensions;
-using RidelyAPI.Filter;
-using RidelyAPI.Shared;
+using Ridely.Api.Controllers.Base;
+using Ridely.Api.Extensions;
+using Ridely.Api.Filter;
+using Ridely.Api.Shared;
 
-namespace RidelyAPI.Controllers.User;
+namespace Ridely.Api.Controllers.User;
 
 [ApiVersion(ApiVersions.V1)]
 [ApiVersion(ApiVersions.V2)]

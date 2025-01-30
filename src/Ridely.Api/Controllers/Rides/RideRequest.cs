@@ -1,6 +1,6 @@
 ﻿using Ridely.Domain.Rides;
 
-namespace RidelyAPI.Controllers.Rides;
+namespace Ridely.Api.Controllers.Rides;
 
 public class RideRequest
 {

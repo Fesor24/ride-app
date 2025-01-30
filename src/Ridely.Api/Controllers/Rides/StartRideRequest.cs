@@ -1,4 +1,4 @@
-﻿namespace RidelyAPI.Controllers.Rides;
+﻿namespace Ridely.Api.Controllers.Rides;
 
 public sealed class StartRideRequest
 {

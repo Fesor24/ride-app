@@ -3,13 +3,15 @@ using Microsoft.Azure.WebPubSub.AspNetCore;
 using Ridely.Application.Features.Accounts.Login;
 using Ridely.Application.Features.Accounts.Token;
 using Ridely.Infrastructure.WebSockets.Hub;
-using RidelyAPI.Controllers.Base;
-using RidelyAPI.Dto.Account;
-using RidelyAPI.Extensions;
-using RidelyAPI.Filter;
-using RidelyAPI.Shared;
+using Ridely.Api.Controllers.Base;
+using Ridely.Api.Dto.Account;
+using Ridely.Api.Extensions;
+using Ridely.Api.Filter;
+using Ridely.Api.Shared;
+using Microsoft.AspNetCore.Authorization;
+using Ridely.Shared.Helper.Keys;
 
-namespace RidelyAPI.Controllers.Token;
+namespace Ridely.Api.Controllers.Token;
 
 [ResourceAuthorizationFilter]
 public class TokenController : BaseController<TokenController>
@@ -31,10 +33,20 @@ public class TokenController : BaseController<TokenController>
         return response.Match(value => Ok(value), this.HandleErrorResult);
     }
     // rename to negotiate
-    [HttpGet("api/ws-token")]
+    [HttpGet("api/negotiate")]
+    [Authorize]
     public async Task<IActionResult> GetWebSocketToken()
     {
-        var userId = "DR-5";
+        var driverId = GetDriverId();
+        var riderId = GetRiderId();
+
+        string userId = "";
+
+        if(driverId.HasValue)
+            userId = WebSocketKeys.Driver.Key(driverId.Value.ToString());
+
+        else if(riderId.HasValue)
+            userId = WebSocketKeys.Rider.Key(riderId.Value.ToString());
 
         var accessUri = _webPubSubServiceClient.GetClientAccessUri(userId: userId);
 

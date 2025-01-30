@@ -5,11 +5,11 @@ using Ridely.Application.Features.VoiceCall.AccessToken;
 using Ridely.Application.Features.VoiceCall.EndCall;
 using Ridely.Application.Features.VoiceCall.NotifyRecipient;
 using Ridely.Application.Features.VoiceCall.StartCall;
-using RidelyAPI.Controllers.Base;
-using RidelyAPI.Extensions;
-using RidelyAPI.Shared;
+using Ridely.Api.Controllers.Base;
+using Ridely.Api.Extensions;
+using Ridely.Api.Shared;
 
-namespace RidelyAPI.Controllers.VoiceCall
+namespace Ridely.Api.Controllers.VoiceCall
 {
     [ApiVersion(ApiVersions.V1)]
     [ApiVersion(ApiVersions.V2)]

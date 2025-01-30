@@ -38,4 +38,10 @@ public sealed class Chat : Entity
     public string Message { get; private set; }
     public bool IsRead { get; private set; }
     public DateTime CreatedAtUtc { get; private set; }
+
+    public void SetChatUsers(ChatUserType sender, ChatUserType recipient)
+    {
+        Sender = sender;
+        Recipient = recipient;
+    }
 }

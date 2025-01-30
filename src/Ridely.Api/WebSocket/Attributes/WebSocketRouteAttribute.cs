@@ -1,4 +1,4 @@
-﻿namespace RidelyAPI.WebSocket.Attributes;
+﻿namespace Ridely.Api.WebSocket.Attributes;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
 public class WebSocketRouteAttribute : Attribute

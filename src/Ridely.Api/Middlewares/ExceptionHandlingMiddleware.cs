@@ -4,10 +4,10 @@ using Ridely.Application.Exceptions;
 using Ridely.Domain.Abstractions;
 using Ridely.Shared.Exceptions;
 using Ridely.Shared.Helper;
-using RidelyAPI.Shared;
+using Ridely.Api.Shared;
 using ValidationError = Ridely.Domain.Abstractions.ValidationError;
 
-namespace RidelyAPI.Middlewares;
+namespace Ridely.Api.Middlewares;
 
 public class ExceptionHandlingMiddleware(
     RequestDelegate next,
