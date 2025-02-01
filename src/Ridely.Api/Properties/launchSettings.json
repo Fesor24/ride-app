@@ -30,12 +30,24 @@
       }
     },
     "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+        "commandName": "IISExpress",
+        "launchBrowser": true,
+        "launchUrl": "swagger",
+        "environmentVariables": {
+            "ASPNETCORE_ENVIRONMENT": "Development"
+        }
+    },
+    "Container (Dockerfile)": {
+        "commandName": "Docker",
+        "launchBrowser": true,
+        "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger/index.html",
+        "environmentVariables": {
+            "ASPNETCORE_ENVIRONMENT": "Docker",
+            "ASPNETCORE_HTTP_PORTS": "8080",
+            "ASPNETCORE_HTTPS_PORTS": "8081"
+        },
+        "publishAllPorts": true,
+        "useSSL": true
     }
   }
 }

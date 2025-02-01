@@ -40,6 +40,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ridely.Infrastructure\Ridely.Infrastructure.csproj" />
+    <ProjectReference Include="..\Ridely.ServiceDefaults\Ridely.ServiceDefaults.csproj" />
   </ItemGroup>
 
 	<PropertyGroup>

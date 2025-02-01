@@ -6,8 +6,11 @@ using Ridely.Api.Extensions;
 using Ridely.Api.Middlewares;
 using Ridely.Api.OpenApi;
 using Serilog;
+using Ridely.ServiceDefaults;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 Serilog.ILogger logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
@@ -45,6 +48,8 @@ builder.Services.AddCors(opt =>
 });
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 app.UseCustomMiddleware();
 

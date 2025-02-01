@@ -114,19 +114,38 @@ public static class DependencyInjection
 
         string connectionString = config.GetConnectionString("AzureServiceBus") ?? "";
 
+        string env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
+
         services.AddMassTransit(config =>
         {
             config.AddConsumer<RideRequestedConsumer>();
 
             // main api...
             config.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("main", false));
-
-            config.UsingAzureServiceBus((ctx, cfg) =>
+            
+            // todo: use azure service bus image...
+            if(env == "Docker" || env == "Development")
             {
-                cfg.Host(connectionString);
+                config.UsingRabbitMq((ctx, cfg) =>
+                {
+                    cfg.Host(rabbitMqOptions.Host, "/", hst =>
+                    {
+                        hst.Username(rabbitMqOptions.Username);
+                        hst.Password(rabbitMqOptions.Password);
+                    });
 
-                cfg.ConfigureEndpoints(ctx);
-            });
+                    cfg.ConfigureEndpoints(ctx);
+                });
+            }
+            else
+            {
+                config.UsingAzureServiceBus((ctx, cfg) =>
+                {
+                    cfg.Host(connectionString);
+
+                    cfg.ConfigureEndpoints(ctx);
+                });
+            }
 
             //config.UsingRabbitMq((ctx, cfg) =>
             //{
