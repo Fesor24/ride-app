@@ -15,6 +15,7 @@ COPY ["src/Ridely.Shared", "Ridely.Shared"]
 COPY ["src/Ridely.Application", "Ridely.Application"]
 COPY ["src/Ridely.Infrastructure", "Ridely.Infrastructure"]
 COPY ["src/Ridely.Contracts", "Ridely.Contracts"]
+COPY ["src/Ridely.ServiceDefaults", "Ridely.ServiceDefaults"]
 WORKDIR "/src/Ridely.Api"
 RUN dotnet build "Ridely.Api.csproj" -c $BUILD_CONFIGURATION -o /src/build
 

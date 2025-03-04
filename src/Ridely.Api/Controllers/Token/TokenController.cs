@@ -1,27 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebPubSub.AspNetCore;
-using Ridely.Application.Features.Accounts.Login;
-using Ridely.Application.Features.Accounts.Token;
-using Ridely.Infrastructure.WebSockets.Hub;
 using Ridely.Api.Controllers.Base;
 using Ridely.Api.Dto.Account;
 using Ridely.Api.Extensions;
 using Ridely.Api.Filter;
 using Ridely.Api.Shared;
-using Microsoft.AspNetCore.Authorization;
-using Ridely.Shared.Helper.Keys;
+using Ridely.Application.Features.Accounts.Login;
+using Ridely.Application.Features.Accounts.Token;
 
 namespace Ridely.Api.Controllers.Token;
 
 [ResourceAuthorizationFilter]
 public class TokenController : BaseController<TokenController>
 {
-    private readonly WebPubSubServiceClient<MainApplicationHub> _webPubSubServiceClient;
-
-    public TokenController(WebPubSubServiceClient<MainApplicationHub> webPubSubServiceClient)
-    {
-        _webPubSubServiceClient = webPubSubServiceClient;
-    }
+    //private readonly WebPubSubServiceClient<MainApplicationHub> _webPubSubServiceClient;
 
     [HttpPost("api/token")]
     [ProducesResponseType(200, Type = typeof(ApiResponse<LoginResponse>))]
@@ -32,27 +23,27 @@ public class TokenController : BaseController<TokenController>
 
         return response.Match(value => Ok(value), this.HandleErrorResult);
     }
-    // rename to negotiate
-    [HttpGet("api/negotiate")]
-    [Authorize]
-    public async Task<IActionResult> GetWebSocketToken()
-    {
-        var driverId = GetDriverId();
-        var riderId = GetRiderId();
+    
+    //[HttpGet("api/negotiate")]
+    //[Authorize]
+    //public async Task<IActionResult> GetWebSocketToken()
+    //{
+    //    var driverId = GetDriverId();
+    //    var riderId = GetRiderId();
 
-        string userId = "";
+    //    string userId = "";
 
-        if(driverId.HasValue)
-            userId = WebSocketKeys.Driver.Key(driverId.Value.ToString());
+    //    if(driverId.HasValue)
+    //        userId = WebSocketKeys.Driver.Key(driverId.Value.ToString());
 
-        else if(riderId.HasValue)
-            userId = WebSocketKeys.Rider.Key(riderId.Value.ToString());
+    //    else if(riderId.HasValue)
+    //        userId = WebSocketKeys.Rider.Key(riderId.Value.ToString());
 
-        var accessUri = _webPubSubServiceClient.GetClientAccessUri(userId: userId);
+    //    var accessUri = _webPubSubServiceClient.GetClientAccessUri(userId: userId);
 
-        return Ok(new
-        {
-            Uri = await Task.FromResult(accessUri),
-        });
-    }
+    //    return Ok(new
+    //    {
+    //        Uri = await Task.FromResult(accessUri),
+    //    });
+    //}
 }

@@ -1,12 +1,11 @@
 using Hangfire;
-using Ridely.Application;
-using Ridely.Infrastructure;
-using Ridely.Infrastructure.WebSockets.Hub;
 using Ridely.Api.Extensions;
 using Ridely.Api.Middlewares;
 using Ridely.Api.OpenApi;
-using Serilog;
+using Ridely.Application;
+using Ridely.Infrastructure;
 using Ridely.ServiceDefaults;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,7 +62,8 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 //    RequestPath = "/Static"
 //});
 
-//app.UseHttpsRedirection();
+// comment if using ngrok to test locally...
+app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
@@ -107,7 +107,7 @@ app.UseHangfireDashboard();
 
 app.AddBackgroundJobs();
 
-app.MapWebPubSubHub<MainApplicationHub>("/websocket/eventhandler");
+//app.MapWebPubSubHub<MainApplicationHub>("/websocket/eventhandler");
 
 app.Run();
 
