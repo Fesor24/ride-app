@@ -185,6 +185,9 @@ public sealed class Driver : Entity
         Driver driver = new (firstName, lastName, email, phoneNo, gender,
             licenseNo, service, cabId, identityType, identityNo);
 
+        // todo: to be removed...
+        driver.IdentityValidated = true;
+
         return driver;
     }
 }

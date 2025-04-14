@@ -18,9 +18,9 @@ public class DirectionsResponse
         [JsonPropertyName("weight")]
         public double Weight { get; set; }
         [JsonPropertyName("duration")]
-        public double Duration { get; set; }
+        public decimal Duration { get; set; }
         [JsonPropertyName("distance")]
-        public double Distance { get; set; }
+        public decimal Distance { get; set; }
         [JsonPropertyName("geometry")]
         public RouteGeometry Geometry { get; set; }
 
@@ -46,7 +46,7 @@ public class DirectionsResponse
 }
 
 // Google
-public class RouteResponse
+public class GoogleRouteResponse
 {
     public List<RouteResponseBody> Routes { get; set; } = [];
 

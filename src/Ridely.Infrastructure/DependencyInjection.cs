@@ -279,6 +279,8 @@ public static class DependencyInjection
 
         services.Configure<GoogleRouteOptions>(
             configuration.GetSection("GoogleRoute"));
+        
+        services.Configure<MapboxOptions>(configuration.GetSection("Mapbox"));
     }
 
     private static void AddNotificationService(IServiceCollection services, IConfiguration configuration)

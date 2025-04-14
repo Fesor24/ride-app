@@ -260,55 +260,69 @@ internal sealed class RideService : IRideService
         Domain.Models.Location source, Domain.Models.Location destination,
         Domain.Models.Location? waypoint)
     {
-        var request = new RouteRequest
+        // used with google route api
+        // var request = new RouteRequest
+        // {
+        //     Origin = new RouteRequest.RouteRequestLocation
+        //     {
+        //         Location = new RouteRequest.RouteRequestLocation.RequestLocation
+        //         {
+        //             LatLng = new RouteRequest.RouteRequestLocation.RequestLocation.Coordinates
+        //             {
+        //                 Latitude = source.Latitude,
+        //                 Longitude = source.Longitude
+        //             }
+        //         }
+        //     },
+        //     Destination = new RouteRequest.RouteRequestLocation
+        //     {
+        //         Location = new RouteRequest.RouteRequestLocation.RequestLocation
+        //         {
+        //             LatLng = new RouteRequest.RouteRequestLocation.RequestLocation.Coordinates
+        //             {
+        //                 Latitude = destination.Latitude,
+        //                 Longitude = destination.Longitude
+        //             }
+        //         }
+        //     }
+        // };
+        //
+        // if(waypoint is not null)
+        // {
+        //     request.Intermediates = new()
+        //     {
+        //         new RouteRequest.RouteRequestLocation
+        //         {
+        //             Location = new RouteRequest.RouteRequestLocation.RequestLocation
+        //             {
+        //                 LatLng = new RouteRequest.RouteRequestLocation.RequestLocation.Coordinates
+        //                 {
+        //                     Latitude = waypoint.Latitude,
+        //                     Longitude = waypoint.Longitude
+        //                 }
+        //             }
+        //         }
+        //     };
+        // }
+
+        DirectionsRequest request = new()
         {
-            Origin = new RouteRequest.RouteRequestLocation
+            Origin = new DirectionsRequest.DirectionOrigin()
             {
-                Location = new RouteRequest.RouteRequestLocation.RequestLocation
-                {
-                    LatLng = new RouteRequest.RouteRequestLocation.RequestLocation.Coordinates
-                    {
-                        Latitude = source.Latitude,
-                        Longitude = source.Longitude
-                    }
-                }
+                Long = source.Longitude,
+                Lat = source.Latitude,
             },
-            Destination = new RouteRequest.RouteRequestLocation
+            Destination = new DirectionsRequest.DirectionDestination()
             {
-                Location = new RouteRequest.RouteRequestLocation.RequestLocation
-                {
-                    LatLng = new RouteRequest.RouteRequestLocation.RequestLocation.Coordinates
-                    {
-                        Latitude = destination.Latitude,
-                        Longitude = destination.Longitude
-                    }
-                }
+                Long = destination.Longitude,
+                Lat = destination.Latitude,
             }
         };
-
-        if(waypoint is not null)
-        {
-            request.Intermediates = new()
-            {
-                new RouteRequest.RouteRequestLocation
-                {
-                    Location = new RouteRequest.RouteRequestLocation.RequestLocation
-                    {
-                        LatLng = new RouteRequest.RouteRequestLocation.RequestLocation.Coordinates
-                        {
-                            Latitude = waypoint.Latitude,
-                            Longitude = waypoint.Longitude
-                        }
-                    }
-                }
-            };
-        }
 
         var response = await _routeService.GetDistanceAndDurationAsync(request);
 
         if (response.IsFailure) return response.Error;
-
-        // todo: cache settings...
+        
         var settings = await _context.Set<Settings>()
             .ToListAsync();
 
@@ -324,146 +338,20 @@ internal sealed class RideService : IRideService
 
         var route = response.Value;
 
-        int duration = int.Parse(route.Duration.Replace("s", ""));
+        // relevant to google directions api...
+        //int duration = int.Parse(route.Duration.Replace("s", ""));
 
-        decimal distancePrice = baseFare + ((decimal)(route.DistanceMeters / 1000) * ratePerKilometer);
+        decimal distancePrice = baseFare + ((route.DistanceInMeters / 1000) * ratePerKilometer);
 
-        decimal timePrice = (decimal)(duration / 60) * ratePerMinute;
+        decimal timePrice = (route.DurationInMinutes / 60) * ratePerMinute;
 
         long estimatedFare = (long)(distancePrice + timePrice);
 
-        long deliveryFare = (long)(deliveryRatePerKm * (route.DistanceMeters / 1000));
+        long deliveryFare = (long)(deliveryRatePerKm * (route.DistanceInMeters / 1000));
 
-        return new EstimatedFareResponse(estimatedFare, deliveryFare, duration, route.DistanceMeters);
+        return new EstimatedFareResponse(estimatedFare, deliveryFare, 
+            (int)route.DurationInMinutes, (int)route.DistanceInMeters);
     }
-
-    //[Queue("high")]
-    //public async Task SendRideRequestToAvailableDrivers(
-    //    List<DriverProfile> availableDriverProfiles,
-    //    RideObject ride, RiderProfile rider)
-    //{
-    //    string rideNotMatchedKey = RideKeys.RideNotMatched(ride.Id);
-
-    //    string rideCancelledKey = RideKeys.RideCancelled(ride.Id.ToString());
-
-    //    var lastDriver = availableDriverProfiles.Last();
-
-    //    foreach (var driverProfile in availableDriverProfiles)
-    //    {
-    //        int responseTime = ApplicationConstant.DRIVER_RESPONSETIME_INSECONDS;
-
-    //        var rideNotMatchedvalue = await _database.StringGetAsync(rideNotMatchedKey);
-    //        if (rideNotMatchedvalue.IsNull) break;
-
-    //        var matchCancelledValue = await _database.StringGetAsync(rideCancelledKey);
-    //        if (matchCancelledValue.HasValue)
-    //        {
-    //            await _database.KeyDeleteAsync(rideCancelledKey);
-    //            break;
-    //        }
-
-    //        string driverRideRequestKey = RideKeys.RideRequestToDriver(driverProfile.Id.ToString());
-    //        var driverRideRequestvalue = await _database.StringGetAsync(driverRideRequestKey);
-
-    //        // If value exist, request has been sent to driver
-    //        if (driverRideRequestvalue.HasValue) continue;
-
-    //        await _database.StringSetAsync(driverRideRequestKey, 1,
-    //            expiry: TimeSpan.FromSeconds(responseTime + 1));
-
-    //        string driverWebSocketKey = WebSocketKeys.Driver.Key(driverProfile.Id.ToString());
-    //        var driverRideRequestMessage = WebSocketMessage<object>.Create(
-    //            SocketEventConstants.RIDE_REQUEST,
-    //            new
-    //            {
-    //                source = ride.SourceAddress,
-    //                destination = ride.DestinationAddress,
-    //                rideId = ride.Id,
-    //                musicGenre = ride.MusicGenre,
-    //                conversation = ride.HaveConversation,
-    //                estimatedFare = ride.EstimatedFare,
-    //                paymentMethod = ride.PaymentMethod,
-    //                responseTime,
-    //                rider = new
-    //                {
-    //                    firstName = rider.FirstName,
-    //                    lastName = rider.LastName,
-    //                    profileImage = rider.ProfileImageUrl,
-    //                    phoneNo = rider.PhoneNo
-    //                }
-    //            });
-
-    //        // Send request message to driver
-    //        await _webSocketManager.SendMessageAsync(driverWebSocketKey, driverRideRequestMessage);
-
-    //        if (!string.IsNullOrWhiteSpace(driverProfile.DeviceTokenId))
-    //        {
-    //            Dictionary<string, string> data = new()
-    //            {
-    //                {"rideId", ride.Id.ToString()},
-    //                {"responseTime", responseTime.ToString()}
-    //            };
-
-    //            await _deviceNotificationService.PushAsync(
-    //                driverProfile.DeviceTokenId,
-    //                "Ride request",
-    //                "New ride request. Click to view details.",
-    //                data, PushNotificationType.RideRequest);
-    //        }
-
-    //        // Communicate to rider
-    //        var riderRideRequestMessage = WebSocketMessage<object>.Create(
-    //            SocketEventConstants.RIDER_NOTIFIED_DRIVERPOTENTIAL,
-    //            new
-    //            {
-    //                driver = new
-    //                {
-    //                    name = driverProfile.FirstName + " " + driverProfile.LastName,
-    //                    imageUrl = driverProfile.ProfileImageUrl
-    //                }
-    //            });
-
-    //        string riderWebSocketKey = WebSocketKeys.Rider.Key(rider.Id.ToString());
-    //        await _webSocketManager.SendMessageAsync(riderWebSocketKey, riderRideRequestMessage);
-
-    //        // Add .5 second 
-    //        await Task.Delay((responseTime * 1000) + 500);
-
-    //        // if driver is last driver
-    //        // after the delay, we see if ride was accepted
-    //        if (driverProfile.Id == lastDriver.Id)
-    //        {
-    //            string ridePendingKey = RideKeys.RideNotMatched(ride.Id);
-
-    //            var ridePendingValue = await _database.StringGetAsync(ridePendingKey);
-
-    //            // if there's a value, then ride match is still pending and request sent to all available drivers
-    //            if (ridePendingValue.HasValue)
-    //            {
-    //                // communicate to rider
-    //                var noMatchMessage = WebSocketMessage<object>.Create(
-    //                    SocketEventConstants.RIDE_NOMATCH,
-    //                    new
-    //                    {
-    //                        match = false
-    //                    });
-
-    //                await _webSocketManager.SendMessageAsync(riderWebSocketKey, noMatchMessage);
-
-    //                // todo: possible refactor??
-    //                var riderDomain = await _context.Set<Rider>().FirstOrDefaultAsync(rider => rider.Id == rider.Id);
-
-    //                if (riderDomain is null) return;
-
-    //                riderDomain.UpdateStatus(RiderStatus.Online, null);
-
-    //                _context.Set<Rider>().Update(riderDomain);
-
-    //                await _context.SaveChangesAsync();
-    //            }
-    //        }
-    //    }
-    //}
     private async Task<List<long>> GetCancelledDrivers(string riderId)
     {
         string key = RideKeys.DriversCancelled(riderId);
