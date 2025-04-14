@@ -14,6 +14,8 @@ internal sealed class PushNotificationService : IPushNotificationService
 
     public async Task<bool> PushAsync(string deviceTokenId, string title, string body)
     {
+        return await Task.FromResult(true);
+        
         try
         {
             var message = new Message()
@@ -22,7 +24,7 @@ internal sealed class PushNotificationService : IPushNotificationService
                 {
                     Title = title,
                     Body = body,
-                    ImageUrl = "https://soloride-public.s3.eu-west-2.amazonaws.com/images/soloride-pushnot-icon.png"
+                    ImageUrl = ""
                 },
                 Token = deviceTokenId
             };
@@ -42,6 +44,8 @@ internal sealed class PushNotificationService : IPushNotificationService
     public async Task<bool> PushAsync(string deviceTokenId, string title, string body,
         Dictionary<string, string> data, string type)
     {
+        return await Task.FromResult(true);
+        
         try
         {
             data.Add("type", type);

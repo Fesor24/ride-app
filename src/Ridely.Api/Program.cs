@@ -23,11 +23,11 @@ Log.Logger = logger;
 
 builder.Host.UseSerilog();
 
-FirebaseApp.Create(new AppOptions()
+/*FirebaseApp.Create(new AppOptions()
 {
     Credential = GoogleCredential.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
     "soloride-app-firebase-adminsdk-o64ak-05a4f56e1e.json"))
-});
+});*/
 
 builder.Services
     .RegisterServices(builder.Configuration)
@@ -57,15 +57,17 @@ var app = builder.Build();
 
 app.UseCustomMiddleware();
 
+app.ApplyMigrations();
+
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 // Static Files
-app.UseStaticFiles(new StaticFileOptions
+/*app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
            Path.Combine(builder.Environment.ContentRootPath, "Static")),
     RequestPath = "/Static"
-});
+});*/
 
 app.UseHttpsRedirection();
 
