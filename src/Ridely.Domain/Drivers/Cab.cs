@@ -9,7 +9,7 @@ public class Cab : Entity
     }
 
     public Cab(string name, string manufacturer, string color, string model
-        , string licensePlateNo, string year)
+        ,string licensePlateNo, string year)
     {
         Name = name;
         Manufacturer = manufacturer;
@@ -17,7 +17,7 @@ public class Cab : Entity
         Model = model;
         LicensePlateNo = licensePlateNo;
         Year = year;
-        CabType = CabType.Economy; // todo: endpoint to update a car to premium
+        CabType = CabType.Economy;
     }
 
     public string Name { get; private set; }
@@ -27,4 +27,9 @@ public class Cab : Entity
     public string LicensePlateNo { get; private set; }
     public string Year { get; private set; }
     public CabType CabType { get; private set; }
+
+    public void UpgradeToPremium()
+    {
+        CabType = CabType.Premium;
+    }
 }

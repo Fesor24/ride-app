@@ -3,11 +3,11 @@ using Ridely.Application.Features.Admin.Rides.GetById;
 using Ridely.Application.Features.Admin.Rides.GetRideLogs;
 using Ridely.Application.Features.Admin.Rides.Search;
 using Ridely.Domain.Models;
-using Ridely.Api.Controllers.Base;
-using Ridely.Api.Extensions;
-using Ridely.Api.Shared;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Extensions;
+using RidelyAPI.Shared;
 
-namespace Ridely.Api.Controllers.Admin.Ride;
+namespace RidelyAPI.Controllers.Admin.Ride;
 
 [Route("api/rides")]
 public class RideController : AdminBaseController<RideController>

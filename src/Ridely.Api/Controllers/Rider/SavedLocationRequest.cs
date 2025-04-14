@@ -1,7 +1,7 @@
 ﻿using Ridely.Domain.Models;
 using Ridely.Domain.Riders;
 
-namespace Ridely.Api.Controllers.Rider;
+namespace RidelyAPI.Controllers.Rider;
 
 public class SavedLocationRequest
 {

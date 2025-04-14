@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Ridely.Domain.Rides;
-using Ridely.Infrastructure.Converter;
 
 namespace Ridely.Infrastructure.Configurations;
 internal sealed class PaymentConfiguration : IEntityTypeConfiguration<Payment>
@@ -12,7 +11,7 @@ internal sealed class PaymentConfiguration : IEntityTypeConfiguration<Payment>
         builder.HasKey(payment => payment.Id);
         builder.Property(payment => payment.Error)
             .HasColumnType("jsonb");
-        builder.Property(payment => payment.Reference)
-            .HasConversion<UlidToStringConverter>();
+        //builder.Property(payment => payment.Reference)
+        //    .HasConversion<UlidToStringConverter>();
     }
 }

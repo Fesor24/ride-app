@@ -1,12 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Ridely.Application.Features.Common.Calls.Command;
-using Ridely.Api.Controllers.Base;
+using RidelyAPI.Controllers.Base;
 using Twilio.AspNet.Core;
 using Twilio.TwiML;
 using Twilio.TwiML.Voice;
 
-namespace Ridely.Api.Controllers;
+namespace RidelyAPI.Controllers;
 
 //public class WebhookController(IVoiceService voiceService) : BaseController<WebhookController>
 //{

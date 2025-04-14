@@ -2,5 +2,6 @@
 public interface ISmsService
 {
     Task SendAsync(string phoneNumber, string message);
-    Task<bool> SendVerificationCodeAsync(string phoneNo, string otp, string expiryDurationInMinutes);
+    Task<bool> SendVerificationCodeAsync(string phoneNo, string otp, 
+        string expiryDurationInMinutes, MessageMedium messageMedium);
 }

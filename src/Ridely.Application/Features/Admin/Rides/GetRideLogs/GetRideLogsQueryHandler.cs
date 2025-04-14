@@ -24,7 +24,7 @@ internal sealed class GetRideLogsQueryHandler : IQueryHandler<GetRideLogsQuery, 
         var rideLogs = await _rideLogRepository.GetLogsByRide(request.RideId);
 
         return rideLogs.Select(log => new GetRideLogsResponse(
-            log.Status.ToString(),
+            log.Event.ToString(),
             log.CreatedAtUtc.ToCustomDateString()
             )).ToList();
     }

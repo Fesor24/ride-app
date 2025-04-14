@@ -1,17 +1,11 @@
-﻿using System.Text.Json;
-using Ridely.Application.Abstractions.Messaging;
+﻿using Ridely.Application.Abstractions.Messaging;
 using Ridely.Application.Abstractions.Payment;
 using Ridely.Application.Abstractions.Websocket;
-using Ridely.Application.Models.Payment;
-using Ridely.Application.Models.WebSocket;
 using Ridely.Domain.Abstractions;
-using Ridely.Domain.Transactions;
-using Ridely.Shared.Helper;
-using Ridely.Shared.Helper.Keys;
 
 namespace Ridely.Application.Features.Transactions.Verify;
 internal sealed class VerifyPaymentCommandHandler(IPaystackService paystackService,
-    IUnitOfWork unitOfWork, IWebSocketManager webSocketManager) :
+    IUnitOfWork unitOfWork) :
     ICommandHandler<VerifyPaymentCommand>
 {
     public async Task<Result<bool>> Handle(VerifyPaymentCommand request, CancellationToken cancellationToken)

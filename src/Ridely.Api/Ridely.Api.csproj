@@ -17,6 +17,7 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.6" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql.NetTopologySuite" Version="8.0.2" />
+	 <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="8.0.13" />
     <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
     <PackageReference Include="Serilog.Enrichers.Process" Version="3.0.0" />
     <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
@@ -40,7 +41,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ridely.Infrastructure\Ridely.Infrastructure.csproj" />
-    <ProjectReference Include="..\Ridely.ServiceDefaults\Ridely.ServiceDefaults.csproj" />
   </ItemGroup>
 
 	<PropertyGroup>

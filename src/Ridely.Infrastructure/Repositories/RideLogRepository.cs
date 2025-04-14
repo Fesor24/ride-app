@@ -12,4 +12,12 @@ internal sealed class RideLogRepository(ApplicationDbContext context) :
             .Where(log => log.RideId == rideId)
             .ToListAsync();
     }
+
+    public async Task<IReadOnlyList<RideLog>> GetLogsByStatuses(IEnumerable<RideLogEvent> rideEvents)
+    {
+        return await _context.Set<RideLog>()
+            .Where(log => rideEvents.Contains(log.Event))
+            .AsNoTracking()
+            .ToListAsync();
+    }
 }

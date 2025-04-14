@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Ridely.Domain.Abstractions;
-using Ridely.Api.Shared;
+using RidelyAPI.Shared;
 
-namespace Ridely.Api.Filter;
+namespace RidelyAPI.Filter;
 
 [AttributeUsage(AttributeTargets.All)]
 public class ResourceAuthorizationFilterAttribute : Attribute, IAuthorizationFilter

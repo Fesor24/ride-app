@@ -1,32 +1,34 @@
 ﻿using System.Text.Json;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Ridely.Application.Abstractions.Location;
-using Ridely.Application.Abstractions.Websocket;
 using Ridely.Application.Features.Rides.CancelRideRequest;
-using Ridely.Application.Models.WebSocket;
+using Ridely.Application.Hubs;
 using Ridely.Domain.Drivers;
 using Ridely.Shared.Constants;
-using Ridely.Shared.Helper;
 using Ridely.Shared.Helper.Keys;
+using Ridely.Shared.SignalRCommunication;
 using StackExchange.Redis;
 
 namespace Ridely.Infrastructure.Locations;
 internal sealed class LocationService : ILocationService
 {
     private readonly IDatabase _database;
-    private readonly IWebSocketManager _webSocketManager;
     private readonly ApplicationDbContext _context;
+    private readonly IHubContext<RideHub> _rideHubContext;
+
     public LocationService(IConnectionMultiplexer connectionMultiplexer,
-        IWebSocketManager webSocketManager,
-        ApplicationDbContext context)
+        ApplicationDbContext context, IHubContext<RideHub> rideHubContext)
     {
         _database = connectionMultiplexer.GetDatabase();
-        _webSocketManager = webSocketManager;
         _context = context;
+        _rideHubContext = rideHubContext;
     }
 
-    public async Task UpdateDriverLocationAsync(Domain.Models.Location location, string driverUserKey)
+    public async Task UpdateDriverLocationAsync(Domain.Models.Location location,
+        string driverUserKey)
     {
+        // add driver to group, then rider, then publish to group
         if (!driverUserKey.StartsWith("DRIVER")) return;
 
         var driverKeySplit = driverUserKey.Split('-');
@@ -35,32 +37,59 @@ internal sealed class LocationService : ILocationService
 
         string driverId = driverKeySplit[1];
 
+        string driverMatchedKey = RideKeys.Matched(driverId);
+
+        var driverMatched = await _database.StringGetAsync(driverMatchedKey);
+
+        string driverLocationSubscribersKey = DriverKey.LocationSubscribers(long.Parse(driverId));
+
+        var riderSubscribers = await _database.StringGetAsync(driverLocationSubscribersKey);
+
+        // todo: review...this was been hit despite the driver not been on a ride...
+        if (riderSubscribers.HasValue)
+        {
+            string[] riderIdentifiers = riderSubscribers.ToString().Split(".");
+
+            if (riderIdentifiers.Length > 0)
+            {
+                await _rideHubContext.Clients.Users(riderIdentifiers)
+                    .SendAsync(SignalRSubscription.ReceiveNearbyDrivers, new
+                    {
+                        DriverKey = RideKeys.DriverLocation(driverId),
+                        location.Latitude,
+                        location.Longitude,
+                    });
+            }
+        }
+
         string driverLocationUpdateKey = RideKeys.DriverLocation(driverId);
 
         await _database.GeoAddAsync(ApplicationConstant.REDIS_LOCATIONKEY,
             location.Longitude, location.Latitude, driverLocationUpdateKey);
 
-        string driverMatchedKey = RideKeys.Matched(driverId);
-
-        var driverMatched = await _database.StringGetAsync(driverMatchedKey);
-
-        if (!driverMatched.HasValue) return;
-
-        string riderWebSocketKey = WebSocketKeys.Rider.Key(driverMatched!);
-
-        var driverLocation = new WebSocketResponse<object>
+        if (driverMatched.HasValue)
         {
-            Event = SocketEventConstants.RIDER_DRIVERLOCATION_UPDATE,
-            Payload = new
-            {
-                latitude = location.Latitude,
-                longitude = location.Longitude
-            }
-        };
+            await _rideHubContext.Clients.User(RiderKey.CustomNameIdentifier(long.Parse(driverMatched!)))
+               .SendAsync(SignalRSubscription.ReceiveLocationUpdate, new
+               {
+                   location.Latitude,
+                   location.Longitude
+               });
+        }
 
-        string driverLocationMessage = Serialize.Object(driverLocation);
+        //string riderWebSocketKey = WebSocketKeys.Rider.Key(driverMatched!);
 
-        await _webSocketManager.SendMessageAsync(riderWebSocketKey, driverLocationMessage);
+        //var driverLocationMessage = WebSocketMessage<object>.Create(
+        //    SocketEventConstants.RIDER_DRIVERLOCATION_UPDATE,
+        //    new
+        //    {
+        //        latitude = location.Latitude,
+        //        longitude = location.Longitude
+        //    });
+
+
+
+        //await _webSocketManager.SendMessageAsync(riderWebSocketKey, driverLocationMessage);
     }
 
     public async Task DisconnectDriverAsync(long driverId)
@@ -69,6 +98,10 @@ internal sealed class LocationService : ILocationService
             .FirstOrDefaultAsync(x => x.Id == driverId);
 
         if (driver is null) return;
+
+        string riderLocationSubscribersKey = DriverKey.LocationSubscribers(driverId);
+
+        await _database.KeyDeleteAsync(riderLocationSubscribersKey);
 
         string sortedSetKey = ApplicationConstant.REDIS_LOCATIONKEY;
 
@@ -96,6 +129,15 @@ internal sealed class LocationService : ILocationService
         _context.Set<Driver>().Update(driver);
 
         await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteLocationRecordAsync(long driverId)
+    {
+        string sortedSetKey = ApplicationConstant.REDIS_LOCATIONKEY;
+
+        string memberName = RideKeys.DriverLocation(driverId.ToString());
+
+        await _database.SortedSetRemoveAsync(sortedSetKey, memberName);
     }
 
     public async Task<int> GetAvailableDriversCountInLocationAsync(Domain.Models.Location location,
@@ -131,14 +173,74 @@ internal sealed class LocationService : ILocationService
             .CountAsync();
     }
 
-    public async Task<(double Lat, double Long)> GetDriverCoordinatesAsync(string driverLocationKey)
+    // should be called every 2 minute...
+    public async Task<List<string>> GetNearbyDriversAndStreamDataAsync(Domain.Models.Location location,
+        string riderIdentifier)
     {
+        int radius = 1000;
+
+        var result = await _database.GeoSearchAsync(ApplicationConstant.REDIS_LOCATIONKEY,
+            location.Longitude, location.Latitude, new GeoSearchCircle(radius, GeoUnit.Meters),
+            order: Order.Ascending, options: GeoRadiusOptions.WithDistance);
+
+        // x.Member.ToString sample --> DRIVER.LOCATION-2
+        var drivers = result.Select(x => new DriversAvailable(
+            x.Member.ToString(),
+            x.Distance,
+            x.Member.ToString().Split('-').Length > 1 ? x.Member.ToString().Split('-')[1] : "0"
+            ));
+
+        long[] availableDriversIds = drivers
+            .Select(x => long.Parse(x.DriverId))
+            .Take(10)
+            .ToArray();
+
+        foreach (var driverId in availableDriversIds)
+        {
+            var (latitude, longitude, driverLocationKey) = await GetDriverCoordinatesAsync(driverId);
+
+            await _rideHubContext.Clients.User(riderIdentifier)
+                .SendAsync(SignalRSubscription.ReceiveNearbyDrivers, new
+                {
+                    DriverKey = driverLocationKey,
+                    Latitude = latitude,
+                    Longitude = longitude
+                });
+
+            string driverLocationSubscribersKey = DriverKey.LocationSubscribers(driverId);
+
+            // get riders subscribed to a driver
+            var riderSubscribers = await _database.StringGetAsync(driverLocationSubscribersKey);
+
+            if (riderSubscribers.HasValue)
+            {
+                string[] subscribers = riderSubscribers.ToString().Split(".");
+                if (!subscribers.Contains(riderIdentifier))
+                {
+                    string newSubscribers = riderSubscribers.ToString() + "." + riderIdentifier;
+                    await _database.StringSetAsync(driverLocationSubscribersKey, newSubscribers);
+                }
+            }
+            else
+            {
+                await _database.StringSetAsync(driverLocationSubscribersKey, riderIdentifier);
+            }
+        }
+
+        return availableDriversIds.Select(driverId => DriverKey.CustomNameIdentifier(driverId))
+            .ToList();
+    }
+
+    public async Task<(double Lat, double Long, string LocationKey)> GetDriverCoordinatesAsync(long driverId)
+    {
+        string driverLocationKey = RideKeys.DriverLocation(driverId.ToString());
+
         var geoPosition = await _database.GeoPositionAsync(ApplicationConstant.REDIS_LOCATIONKEY, driverLocationKey);
 
         if (geoPosition.HasValue)
-            return (geoPosition.Value.Latitude, geoPosition.Value.Longitude);
+            return (geoPosition.Value.Latitude, geoPosition.Value.Longitude, driverLocationKey);
 
-        return (0, 0);
+        return (0, 0, driverLocationKey);
     }
 
     private async Task<List<long>> GetCancelledDrivers(string riderId)

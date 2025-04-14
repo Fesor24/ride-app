@@ -38,11 +38,21 @@ internal sealed class GetFareEstimateCommandHandler :
     public async Task<Result<GetFareEstimateResponse>> Handle(GetFareEstimateCommand request,
         CancellationToken cancellationToken)
     {
-        // todo: cache source and destination as key, then res.value as value
         Domain.Riders.Rider? rider = await _riderRepository.GetAsync(request.RiderId);
 
         if (rider is null)
             return Error.NotFound("rider.notfound", "Rider not found");
+
+        Domain.Models.Location? waypoint = null;
+
+        if(request.Waypoint is not null)
+        {
+            waypoint = new()
+            {
+                Latitude = request.Waypoint.Latitude,
+                Longitude = request.Waypoint.Longitude
+            };
+        }
 
         var res = await _rideService.ComputeEstimatedFare(new Domain.Models.Location
         {
@@ -52,22 +62,23 @@ internal sealed class GetFareEstimateCommandHandler :
         {
             Latitude = request.Destination.Latitude,
             Longitude = request.Destination.Longitude
-        });
+        }, waypoint);
 
         if (res.IsFailure) return res.Error;
 
-        string origin = request.SourceAddress, destination = request.DestinationAddress;        
+        string origin = request.SourceAddress, destination = request.DestinationAddress;
 
-        long estimatedFare = _pricingService.FormatPrice(res.Value.EstimatedFare);
+        decimal discountInPercent = await GetUserAvailableDiscount();
 
-        long estimatedDeliveryFare = _pricingService.FormatPrice(res.Value.DeliveryFare);
+        long estimatedFare = _pricingService.ConvertPriceInDecimalToLong(res.Value.EstimatedFare);
 
+        long estimatedFareDiscounted = _pricingService.ConvertPriceInDecimalToLong(res.Value.EstimatedFare, discountInPercent);
+
+        long estimatedDeliveryFare = _pricingService.ConvertPriceInDecimalToLong(res.Value.DeliveryFare);
+
+        // default payment to cash
         Payment ridePayment = new(
-            estimatedFare,
-            Ulid.NewUlid(),
-            PaymentMethod.Unknown,
-            null
-            );
+            PaymentMethod.Cash);
 
         await _paymentRepository.AddAsync(ridePayment);
 
@@ -87,6 +98,12 @@ internal sealed class GetFareEstimateCommandHandler :
             request.DestinationAddress,
             res.Value.DurationInSeconds
             );
+
+        if(request.Waypoint is not null)
+        {
+            ride.UpdateWaypointCoordinates(request.Waypoint.Latitude, request.Waypoint.Longitude);
+            ride.UpdateWaypointAddresses(request.WayPointAddress ?? "");
+        }
 
         await _rideRepository.AddAsync(ride);
 
@@ -131,6 +148,7 @@ internal sealed class GetFareEstimateCommandHandler :
             Source = origin,
             Destination = destination,
             DurationInSeconds = res.Value.DurationInSeconds,
+            DiscountInPercent = discountInPercent,
             RideCategoryEstimates =
             [
                 new RideCategoryFareEstimate
@@ -138,6 +156,7 @@ internal sealed class GetFareEstimateCommandHandler :
                     RideCategory  = RideCategory.CabEconomy,
                     DriversCount = economyCabs,
                     EstimatedFare = estimatedFare,
+                    DiscountedEstimatedFare = estimatedFareDiscounted,
                     PassengerCapacity = 4
                 },
                 new RideCategoryFareEstimate
@@ -145,6 +164,7 @@ internal sealed class GetFareEstimateCommandHandler :
                     RideCategory = RideCategory.CabPremium,
                     DriversCount = premiumCabs,
                     EstimatedFare = premiumCabPrice + estimatedFare,
+                    DiscountedEstimatedFare = estimatedFareDiscounted,
                     PassengerCapacity = 4
                 },
                 new RideCategoryFareEstimate
@@ -156,5 +176,10 @@ internal sealed class GetFareEstimateCommandHandler :
                 }
             ]
         };
+    }
+
+    private Task<decimal> GetUserAvailableDiscount()
+    {
+        return Task.FromResult(5.0m);
     }
 }

@@ -7,4 +7,5 @@ public sealed class SearchRideResponse
     public decimal Amount { get; set; }
     public string CreatedAt { get; set; }
     public string PaymentMethod { get; set; }
+    public string Status { get; set; }
 }

@@ -34,6 +34,7 @@ internal sealed class GetRiderQueryHandler :
             LastName = rider.LastName,
             ProfileImage = rider.ProfileImageUrl,
             Status = rider.Status,
+            EmailVerified = rider.EmailVerified,
         };
 
         var referredUsers = await _riderReferrersRepository

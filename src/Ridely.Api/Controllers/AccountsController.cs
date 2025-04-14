@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Ridely.Application.Features.Accounts.Login;
-using Ridely.Api.Controllers.Base;
-using Ridely.Api.Dto.Account;
-using Ridely.Api.Extensions;
-using Ridely.Api.Filter;
-using Ridely.Api.Shared;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Dto.Account;
+using RidelyAPI.Extensions;
+using RidelyAPI.Filter;
+using RidelyAPI.Shared;
 
-namespace Ridely.Api.Controllers;
+namespace RidelyAPI.Controllers;
 
 [ResourceAuthorizationFilter]
 public class AccountsController : BaseController<AccountsController>

@@ -42,10 +42,10 @@ internal sealed class GetDashboardQueryHandler :
             Ride = new DashboardRideResponse
             {
                 CompletedRides = await _rideRepository.GetTotalCountAsync(RideStatus.Completed),
-                ReroutedRides = await _rideRepository.GetTotalCountAsync(RideStatus.Rerouted),
+                //ReroutedRides = await _rideRepository.GetTotalCountAsync(RideStatus.Rerouted),
                 RidesRequested = await _rideRepository.GetTotalCountAsync(RideStatus.Requested),
                 ReassignedRides = await _rideRepository.GetTotalCountAsync(RideStatus.Reassigned),
-                RidesInTransit = await _rideRepository.GetTotalCountAsync(RideStatus.InTransit),
+                RidesInTransit = await _rideRepository.GetTotalCountAsync(RideStatus.Started),
                 CancelledRides = await _rideRepository.GetTotalCountAsync(RideStatus.Cancelled)
             }
         };

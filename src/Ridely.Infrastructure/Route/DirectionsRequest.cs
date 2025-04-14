@@ -23,6 +23,7 @@ public class RouteRequest
 {
     public RouteRequestLocation Origin { get; set; }
     public RouteRequestLocation Destination { get; set; }
+    public List<RouteRequestLocation>? Intermediates { get; set; }
     public string TravelMode { get; set; } = "DRIVE";
     public string RoutingPreference { get; set; } = "TRAFFIC_AWARE";
     public bool ComputeAlternativeRoutes { get; set; } = false;

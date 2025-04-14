@@ -15,9 +15,11 @@ internal sealed class SmsService : ISmsService
         await Task.CompletedTask;
     }
 
-    public async Task<bool> SendVerificationCodeAsync(string phoneNo, string otp, string expiryDurationInMinutes)
+    public async Task<bool> SendVerificationCodeAsync(string phoneNo, string otp, 
+        string expiryDurationInMinutes, MessageMedium messageMedium)
     {
-        var result = await _termiiService.SendAsync(phoneNo, otp, expiryDurationInMinutes);
+        var result = await _termiiService.SendAsync(phoneNo, otp, 
+            expiryDurationInMinutes, messageMedium);
 
         return result;
     }

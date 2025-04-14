@@ -37,6 +37,7 @@ internal sealed class SearchRideQueryHandler(IRideRepository rideRepository) :
                 Destination = ride.Destination,
                 Id = ride.Id,
                 Source = ride.Source,
+                Status = ride.RideStatus.ToString()
             }),
             PageNumber = res.PageNumber,
             PageSize = res.PageSize,

@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Ridely.Shared.Constants;
 
-namespace Ridely.Api.Controllers.Base;
+namespace RidelyAPI.Controllers.Base;
 
 [ApiController]
 public class BaseController<TController> : ControllerBase

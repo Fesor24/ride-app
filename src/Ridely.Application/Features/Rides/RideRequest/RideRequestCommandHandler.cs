@@ -1,13 +1,19 @@
-﻿using Ridely.Application.Abstractions.Messaging;
+﻿using System.Text.Json;
+using Hangfire;
+using Microsoft.AspNetCore.SignalR;
+using Ridely.Application.Abstractions.Messaging;
 using Ridely.Application.Abstractions.Rides;
+using Ridely.Application.Hubs;
 using Ridely.Contracts.Models;
 using Ridely.Domain.Abstractions;
+using Ridely.Domain.Common;
 using Ridely.Domain.Models;
 using Ridely.Domain.Riders;
 using Ridely.Domain.Rides;
 using Ridely.Domain.Services;
 using Ridely.Domain.Transactions;
 using Ridely.Shared.Helper.Keys;
+using Ridely.Shared.SignalRCommunication;
 
 namespace Ridely.Application.Features.Rides.RideRequest;
 internal sealed class RideRequestCommandHandler:
@@ -21,11 +27,15 @@ internal sealed class RideRequestCommandHandler:
     private readonly IPaymentCardRepository _paymentCardRepository;
     private readonly IPaymentRepository _paymentRepository;
     private readonly IRideLogRepository _rideLogRepository;
+    private readonly IPaymentDetailRepository _paymentDetailRepository;
+    private readonly ISettingsRepository _settingsRepository;
+    private readonly IHubContext<RideHub> _rideHubContext;
 
     public RideRequestCommandHandler(IUnitOfWork unitOfWork, IRideService rideService, 
         ICacheService cacheService, IRideRepository rideRepository, IRiderRepository riderRepository,
         IPaymentCardRepository paymentCardRepository, IPaymentRepository paymentRepository,
-        IRideLogRepository rideLogRepository)
+        IRideLogRepository rideLogRepository, IPaymentDetailRepository paymentDetailRepository,
+        ISettingsRepository settingsRepository, IHubContext<RideHub> rideHubContext)
     {
         _unitOfWork = unitOfWork;
         _rideService = rideService;
@@ -35,6 +45,9 @@ internal sealed class RideRequestCommandHandler:
         _paymentCardRepository = paymentCardRepository;
         _paymentRepository = paymentRepository;
         _rideLogRepository = rideLogRepository;
+        _paymentDetailRepository = paymentDetailRepository;
+        _settingsRepository = settingsRepository;
+        _rideHubContext = rideHubContext;
     }
 
     public async Task<Result<RideRequestResponse>> Handle(RideRequestCommand request, CancellationToken cancellationToken)
@@ -67,7 +80,7 @@ internal sealed class RideRequestCommandHandler:
 
         if (rider is null) return Error.NotFound("rider.notfound", "Rider not found");
 
-        if (rider.CurrentRideId.HasValue)
+        if (rider.CurrentRideId.HasValue && rider.CurrentRideId.Value != default)
             return Error.BadRequest("riderequest.duplicate", "Duplicate ride request");
 
         if (rider.Status == RiderStatus.InTrip)
@@ -87,31 +100,65 @@ internal sealed class RideRequestCommandHandler:
 
         Payment? ridePayment = await _paymentRepository.GetAsync(ride.PaymentId);
 
-        // todo: if no record, create new one...
         if (ridePayment is null)
-            return Error.NotFound("payment.notfound", "Payment record not found");
+        {
+            ridePayment = new(request.PaymentMethod, request.PaymentCardId);
 
-        ridePayment.UpdatePaymentMethod(request.PaymentMethod, request.PaymentCardId);
+            await _paymentRepository.AddAsync(ridePayment);
 
-        if (request.RideCategory == RideCategory.Delivery)
-            ridePayment.UpdateAmount(ride.EstimatedDeliveryFare);
+            await _unitOfWork.SaveChangesAsync();
+        }
+        else
+        {
+            ridePayment.UpdatePaymentMethod(request.PaymentMethod, request.PaymentCardId);
 
-        _paymentRepository.Update(ridePayment);
+            _paymentRepository.Update(ridePayment);
+        }
+
+        long initialCharge;
+
+        if (request.RideCategory == RideCategory.Delivery) initialCharge = ride.EstimatedDeliveryFare;
+
+        else
+        {
+            if (request.RideCategory == RideCategory.CabEconomy)
+                initialCharge = ride.EstimatedFare;
+
+            else
+            {
+                var settings = await _settingsRepository.GetAllAsync();
+
+                int premiumCabPrice = settings.First().PremiumCab;
+
+                initialCharge = ride.EstimatedFare + premiumCabPrice;
+            }
+        }
+
+        PaymentDetail paymentDetail = new(
+            Ulid.NewUlid(),
+            ridePayment.Id,
+            PaymentFor.EstimatedCharge,
+            initialCharge
+            );
+
+        await _paymentDetailRepository.AddAsync(paymentDetail);
 
         bool increaseSearchRadius = ride.Status == RideStatus.Requested;
 
         ride.UpdateRideRequest(
             request.RideCategory,
-            request.RideConversation, 
+            request.RideConversation,
             request.MusicGenre);
 
         _rideRepository.Update(ride);
 
         RideLog rideLog = new(
             ride.Id,
-            RideStatus.Requested);
+            RideLogEvent.Requested);
 
         await _rideLogRepository.AddAsync(rideLog);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         string rideNotMatchedKey = RideKeys.RideNotMatched(ride.Id);
 
@@ -123,12 +170,14 @@ internal sealed class RideRequestCommandHandler:
             ride.Id,
             ride.SourceAddress,
             ride.DestinationAddress,
+            [..ride.WaypointAddresses.Split("%%")],
             ride.MusicGenre.ToString(),
             ride.HaveConversation,
             ride.EstimatedFare,
             ride.Payment.Method.ToString()
             );
 
+        // todo: replace...let it come from db...we save it for each ride...
         var res = await _rideService.SendRequestToDriversAsync(
                 sourceLocation,
                 rideObject,
@@ -140,16 +189,37 @@ internal sealed class RideRequestCommandHandler:
         if (!res)
         {
             rider.UpdateStatus(RiderStatus.Online, null);
+
+            // todo: rather than notifying...we do a search again...
+            BackgroundJob.Schedule(() => NotifyRiderOfNoDriver(rider.Id), DateTime.UtcNow.AddSeconds(10));
         }
-        else
-        {
-            rider.UpdateStatus(RiderStatus.Online, ride.Id);
-        }
+        //else
+        //{
+        //     we update when driver accepts...
+        //    rider.UpdateStatus(RiderStatus.Online, ride.Id);
+        //}
 
         _riderRepository.Update(rider);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
+        // todo: wait time...should rider request via websocket and driver accept via web socket...
+        // most likely, we use websockets...
         return new RideRequestResponse(res);
+    }
+
+    public async Task NotifyRiderOfNoDriver(long riderId)
+    {
+        string identifier = RiderKey.CustomNameIdentifier(riderId);
+
+        await _rideHubContext.Clients.User(identifier)
+            .SendAsync(SignalRSubscription.ReceiveRideUpdates, new
+            {
+                Update = ReceiveRideUpdate.NoMatch,
+                Data = JsonSerializer.Serialize(new
+                {
+                    Message = "No match"
+                })
+            });
     }
 }

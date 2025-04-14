@@ -5,6 +5,7 @@ public sealed class StartRideResponse
 {
     public RideLocation Source { get; set; }
     public RideLocation Destination { get; set; }
+    public List<RideLocation> Waypoints { get; set; } = [];
 
     public MusicGenre MusicGenre { get; set; }
     public bool? RideConversation { get; set; }

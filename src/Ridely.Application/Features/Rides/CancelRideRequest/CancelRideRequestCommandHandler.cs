@@ -1,39 +1,38 @@
 ﻿using System.Text.Json;
+using Microsoft.AspNetCore.SignalR;
 using Ridely.Application.Abstractions.Messaging;
 using Ridely.Application.Abstractions.Notifications;
 using Ridely.Application.Abstractions.Payment;
-using Ridely.Application.Abstractions.Websocket;
-using Ridely.Application.Models.WebSocket;
+using Ridely.Application.Hubs;
 using Ridely.Domain.Abstractions;
 using Ridely.Domain.Drivers;
 using Ridely.Domain.Riders;
 using Ridely.Domain.Rides;
 using Ridely.Domain.Services;
 using Ridely.Shared.Constants;
-using Ridely.Shared.Helper;
 using Ridely.Shared.Helper.Keys;
+using Ridely.Shared.SignalRCommunication;
 
 namespace Ridely.Application.Features.Rides.CancelRideRequest;
 internal sealed class CancelRideRequestCommandHandler :
     ICommandHandler<CancelRideRequestCommand>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IWebSocketManager _webSocketManager;
     private readonly ICacheService _cacheService;
-    private readonly IDeviceNotificationService _deviceNotificationService;
+    private readonly IPushNotificationService _deviceNotificationService;
     private readonly IRideRepository _rideRepository;
     private readonly IRiderRepository _riderRepository;
     private readonly IDriverRepository _driverRepository;
     private readonly IRideLogRepository _rideLogRepository;
     private readonly IPaymentService _paymentService;
+    private readonly IHubContext<RideHub> _rideHubContext;
 
-    public CancelRideRequestCommandHandler(IUnitOfWork unitOfWork, IWebSocketManager webSocketManager,
-        ICacheService cacheService, IDeviceNotificationService deviceNotificationService,
+    public CancelRideRequestCommandHandler(IUnitOfWork unitOfWork,
+        ICacheService cacheService, IPushNotificationService deviceNotificationService,
         IRideRepository rideRepository, IRiderRepository riderRepository, IDriverRepository driverRepository,
-        IRideLogRepository rideLogRepository, IPaymentService paymentService)
+        IRideLogRepository rideLogRepository, IPaymentService paymentService, IHubContext<RideHub> rideHubContext)
     {
         _unitOfWork = unitOfWork;
-        _webSocketManager = webSocketManager;
         _cacheService = cacheService;
         _deviceNotificationService = deviceNotificationService;
         _rideRepository = rideRepository;
@@ -41,6 +40,7 @@ internal sealed class CancelRideRequestCommandHandler :
         _driverRepository = driverRepository;
         _rideLogRepository = rideLogRepository;
         _paymentService = paymentService;
+        _rideHubContext = rideHubContext;
     }
 
     public async Task<Result<bool>> Handle(CancelRideRequestCommand request, CancellationToken cancellationToken)
@@ -70,7 +70,7 @@ internal sealed class CancelRideRequestCommandHandler :
 
         _rideRepository.Update(ride);
 
-        RideLog rideLog = new(ride.Id, RideStatus.Cancelled);
+        RideLog rideLog = new(ride.Id, RideLogEvent.Cancelled);
 
         await _rideLogRepository.AddAsync(rideLog);
 
@@ -80,17 +80,26 @@ internal sealed class CancelRideRequestCommandHandler :
 
             driver!.UpdateStatus(DriverStatus.Online);
 
-            string driverWebSocketKey = WebSocketKeys.Driver.Key(driver.Id.ToString());
+            await _rideHubContext.Clients.User(DriverKey.CustomNameIdentifier(driver.Id))
+                .SendAsync(SignalRSubscription.ReceiveRideUpdates, new
+                {
+                    Update = ReceiveRideUpdate.Cancelled,
+                    Data = JsonSerializer.Serialize(new
+                    {
+                        Message = "Ride cancelled"
+                    })
+                }, cancellationToken);
 
-            var cancellationMessage = new WebSocketResponse<object>
-            {
-                Event = SocketEventConstants.RIDE_CANCELLATION,
-                Payload = new { message = "Ride request cancelled" }
-            };
+            //string driverWebSocketKey = WebSocketKeys.Driver.Key(driver.Id.ToString());
 
-            string message = Serialize.Object(cancellationMessage);
+            //var cancellationMessage = WebSocketMessage<object>.Create(
+            //    SocketEventConstants.RIDE_CANCELLATION,
+            //    new
+            //    {
+            //        message = "Ride request cancelled"
+            //    });
 
-            await _webSocketManager.SendMessageAsync(driverWebSocketKey, message);
+            //await _webSocketManager.SendMessageAsync(driverWebSocketKey, cancellationMessage);
 
             string driverMatchedKey = RideKeys.Matched(driver.Id.ToString());
 
@@ -106,7 +115,7 @@ internal sealed class CancelRideRequestCommandHandler :
                 await _deviceNotificationService.PushAsync(
                     driver.DeviceTokenId,
                     "Ride cancelled",
-                    "Ride request cancelled",
+                    "Ride has been cancelled",
                     new Dictionary<string, string>(),
                     PushNotificationType.RideCancelled);
             }
@@ -119,22 +128,35 @@ internal sealed class CancelRideRequestCommandHandler :
 
         if (rider is not null)
         {
+            if(request.CancelledBy == UserType.Driver)
+            {
+                await _rideHubContext.Clients.User(RiderKey.CustomNameIdentifier(rider.Id))
+                  .SendAsync(SignalRSubscription.ReceiveRideUpdates, new
+                  {
+                      Update = ReceiveRideUpdate.Cancelled,
+                      Data = JsonSerializer.Serialize(new
+                      {
+                          Message = "Ride cancelled"
+                      })
+                  }, cancellationToken);
+
+                if (!string.IsNullOrWhiteSpace(rider.DeviceTokenId))
+                {
+                    await _deviceNotificationService.PushAsync(
+                        rider.DeviceTokenId,
+                        "Ride cancelled",
+                        "Ride has been cancelled",
+                        new Dictionary<string, string>(),
+                        PushNotificationType.RideCancelled);
+                }
+            }
+
             rider.UpdateStatus(RiderStatus.Online);
 
             _riderRepository.Update(rider);
         }
 
-        await RefundRiderIfNecessary(ride);
-
         return await _unitOfWork.SaveChangesAsync(cancellationToken) > 0;
-    }
-
-    private async Task RefundRiderIfNecessary(Ride ride)
-    {
-        if (!(ride.Payment.Method == PaymentMethod.Card && ride.Payment.Status == PaymentStatus.Success))
-            return;
-
-        await _paymentService.RefundAsync(ride, ride.Payment.Reference);
     }
 
     private static Result<bool> CanBeCancelled(RideStatus status) =>
@@ -144,7 +166,7 @@ internal sealed class CancelRideRequestCommandHandler :
             RideStatus.Requested => true,
             RideStatus.Matched => true,
             RideStatus.Arrived => true,
-            RideStatus.InTransit => Error.BadRequest("ride.inprogress", "Ride in progress and can not be cancelled"),
+            RideStatus.Started => Error.BadRequest("ride.inprogress", "Ride in progress and can not be cancelled"),
             RideStatus.Completed => Error.BadRequest("ride.completed", "Ride has been completed and can not be cancelled"),
             RideStatus.Cancelled => Error.BadRequest("ride.cancelled", "Ride cancelled already"),
             _ => Error.BadRequest("invalid.ridestatus", "Ride status is invalid")

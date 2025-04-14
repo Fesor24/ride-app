@@ -1,7 +1,7 @@
 ﻿using Ridely.Domain.Drivers;
 using Ridely.Domain.Shared;
 
-namespace Ridely.Api.Controllers.Driver;
+namespace RidelyAPI.Controllers.Driver;
 
 public sealed record RegisterDriverRequest(
     string? ReferrerCode,
@@ -18,7 +18,9 @@ public sealed record PersonalInfo(
     string DriversLicenseNo,
     DriverService DriverService,
     string ProfileImageBase64Url,
-    string DriversLicenseBase64Url
+    string DriversLicenseBase64Url,
+    string IdentityNo,
+    IdentityType IdentityType
     );
 
 public sealed record VehicleInfo(

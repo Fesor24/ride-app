@@ -69,7 +69,7 @@ internal sealed class NumberVerificationCommandHandler:
 
             (accessToken, refreshToken) = await _jwtService.GenerateToken(rider);
 
-            BackgroundJob.Enqueue(() => UpdateImageUrls(rider));
+            BackgroundJob.Enqueue(() => UpdateRiderImageUrls(rider.Id));
         }
 
         else if (request.AppInstance == ApplicationInstance.Driver)
@@ -91,7 +91,7 @@ internal sealed class NumberVerificationCommandHandler:
 
             (accessToken, refreshToken) = await _jwtService.GenerateToken(driver);
 
-            BackgroundJob.Enqueue(() => UpdateImageUrls(driver));
+            BackgroundJob.Enqueue(() => UpdateDriverImageUrls(driver.Id));
         }
 
         else
@@ -106,10 +106,16 @@ internal sealed class NumberVerificationCommandHandler:
         };
     }
 
-    public async Task UpdateImageUrls(Rider rider)
+    public async Task UpdateRiderImageUrls(long riderId)
     {
+        var rider = await _riderRepository.GetAsync(riderId);
+
+        if (rider is null) return;
+
         if(rider.ProfileImageUrlExpiry.Date <= DateTime.UtcNow.Date)
         {
+            if (string.IsNullOrWhiteSpace(rider.ProfileImageUrl)) return;
+
             string riderProfileImageKey = UploadKeys.Rider.ProfileImage(rider.Id);
 
             (string imageUrl, DateTime expiry) = await _objectStoreService.GeneratePreSignedUrl(riderProfileImageKey);
@@ -123,8 +129,12 @@ internal sealed class NumberVerificationCommandHandler:
     }
 
     // todo: add to admin endpoint which returns driver/riders details...
-    public async Task UpdateImageUrls(Driver driver)
+    public async Task UpdateDriverImageUrls(long driverId)
     {
+        var driver = await _driverRepository.GetAsync(driverId);
+
+        if (driver is null) return;
+
         if (driver.ProfileImageUrlExpiry.HasValue && driver.ProfileImageUrlExpiry.Value.Date <= DateTime.UtcNow.Date)
         {
             string driverProfileImageKey = UploadKeys.Driver.ProfileImage(driver.Id);

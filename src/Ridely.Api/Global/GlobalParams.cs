@@ -1,4 +1,4 @@
-﻿namespace Ridely.Api.Global
+﻿namespace RidelyAPI.Global
 {
     public static class GlobalParams
     {

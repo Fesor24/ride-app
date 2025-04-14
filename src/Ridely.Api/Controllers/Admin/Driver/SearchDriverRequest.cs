@@ -1,4 +1,4 @@
-﻿namespace Ridely.Api.Controllers.Admin.Driver;
+﻿namespace RidelyAPI.Controllers.Admin.Driver;
 
 public class SearchDriverRequest
 {

@@ -41,7 +41,7 @@ internal sealed class GetDriverQueryHandler :
                 FirstName = driver.FirstName,
                 LastName = driver.LastName,
                 LicenseNo = driver.LicenseNo,
-                ZeroCommissionTripsExpiry = driver.ZeroCommissionRidesExpiry,
+                //ZeroCommissionTripsExpiry = driver.ZeroCommissionRidesExpiry,
                 Status = driver.Status,
                 DeviceTokenId = driver.DeviceTokenId,
                 AvgRatings = driver.AvgRatings,
@@ -49,7 +49,8 @@ internal sealed class GetDriverQueryHandler :
                 IdentityValidated = driver.IdentityValidated,
                 Email = driver.Email,
                 PhoneNo = driver.PhoneNo,
-                AvailableBalance = wallet!.AvailableBalance
+                AvailableBalance = wallet!.AvailableBalance,
+                EmailVerified = driver.EmailValidated
             },
             Cab = new()
             {
@@ -66,6 +67,10 @@ internal sealed class GetDriverQueryHandler :
                     driver.ReferralCode.ToUpperInvariant(),
                 DriversReferred = referredUsers.Drivers,
                 RidersReferred = referredUsers.Riders
+            },
+            Ride = new()
+            {
+                // todo: fill relevant info here...
             }
         };
     }

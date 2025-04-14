@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Ridely.Application.Features.Common.Banks.Query.GetAll;
 using Ridely.Application.Features.Common.GetContacts;
-using Ridely.Api.Controllers.Base;
-using Ridely.Api.Extensions;
-using Ridely.Api.Filter;
-using Ridely.Api.Shared;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Extensions;
+using RidelyAPI.Filter;
+using RidelyAPI.Shared;
 
-namespace Ridely.Api.Controllers.Common;
+namespace RidelyAPI.Controllers.Common;
 
 [ResourceAuthorizationFilter]
 public class CommonController : BaseController<CommonController>

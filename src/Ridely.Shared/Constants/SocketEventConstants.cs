@@ -14,4 +14,5 @@ public static class SocketEventConstants
     public const string DRIVER_REASSIGN = "DRIVER.REASSIGN";
     public const string ROUTE_CALL = "CALL.ROUTE";
     public const string CARD_TRIP_PAYMENT_FAILURE = "CARDTRIP.PAYMENTFAILURE";
+    public const string RIDE_CHAT_RESPONSE = "RIDE.CHAT.RESPONSE";
 }

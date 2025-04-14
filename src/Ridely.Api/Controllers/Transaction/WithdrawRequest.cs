@@ -1,4 +1,4 @@
-﻿namespace Ridely.Api.Controllers.Transaction
+﻿namespace RidelyAPI.Controllers.Transaction
 {
     public sealed class WithdrawRequest
     {

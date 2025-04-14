@@ -3,7 +3,8 @@ using Ridely.Domain.Abstractions;
 using Ridely.Domain.Drivers;
 
 namespace Ridely.Application.Features.Drivers.UpdateStatus;
-internal sealed class UpdateStatusCommandHandler(IUnitOfWork unitOfWork, IDriverRepository driverRepository) :
+internal sealed class UpdateStatusCommandHandler(IUnitOfWork unitOfWork, 
+    IDriverRepository driverRepository) :
     ICommandHandler<UpdateStatusCommand>
 {
     public async Task<Result<bool>> Handle(UpdateStatusCommand request, CancellationToken cancellationToken)

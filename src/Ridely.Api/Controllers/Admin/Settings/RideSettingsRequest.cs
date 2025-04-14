@@ -1,4 +1,4 @@
-﻿namespace Ridely.Api.Controllers.Admin.Settings;
+﻿namespace RidelyAPI.Controllers.Admin.Settings;
 
 public class RideSettingsRequest
 {

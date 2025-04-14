@@ -20,7 +20,7 @@ internal sealed class RideRepository(ApplicationDbContext context) :
 
     public async Task<Ride?> GetLatestDriverRideDetails(long driverId) =>
         await _context.Set<Ride>()
-        .Where(x => x.Status == RideStatus.Matched || x.Status == RideStatus.InTransit)
+        .Where(x => x.Status == RideStatus.Matched || x.Status == RideStatus.Started)
         .Include(x => x.Payment)
         .Include(x => x.Rider)
         .Include(x => x.Driver)
@@ -76,7 +76,7 @@ internal sealed class RideRepository(ApplicationDbContext context) :
         var queryProjection = query.Select(x => new RideModel
         {
             Id = x.Id,
-            Amount = x.Payment.Amount,
+            Amount = x.EstimatedFare,
             PaymentMethod = x.Payment.Method,
             PaymentStatus = x.Payment.Status,
             CreatedAt = x.CreatedAtUtc,

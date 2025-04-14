@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Ridely.Infrastructure.Outbox;
-using Ridely.Api.Middlewares;
+using RidelyAPI.Middlewares;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Ridely.Api.Extensions;
+namespace RidelyAPI.Extensions;
 
 public static class ApplicationBuilderExtensions
 {
@@ -27,11 +27,11 @@ public static class ApplicationBuilderExtensions
 
         using var scope = app.ApplicationServices.CreateScope();
 
-        var processOutboxMessageJob = scope.ServiceProvider.GetRequiredService<ProcessOutboxMessagesJob>();
+        //var processOutboxMessageJob = scope.ServiceProvider.GetRequiredService<ProcessOutboxMessagesJob>();
 
-        recurringJobManager.AddOrUpdate("ProcessOutboxMessages", 
-            () => processOutboxMessageJob.Execute(),
-            "* * * * *"); //every minute...
+        //recurringJobManager.AddOrUpdate("ProcessOutboxMessages", 
+        //    () => processOutboxMessageJob.Execute(),
+        //    "* * * * *"); //every minute...
     }
 
     private static void AddSwagger(IServiceCollection services)

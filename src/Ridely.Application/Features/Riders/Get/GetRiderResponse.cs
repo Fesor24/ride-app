@@ -11,6 +11,7 @@ public class GetRiderResponse
     public RiderStatus Status { get; set; }
     public decimal AvailableBalance { get; set; }
     public string ProfileImage { get; set; }
+    public bool EmailVerified { get; set; }
     public List<GetCardResponse> Cards { get; set; } = [];
     public GetReferralInfo ReferralInfo { get; set; } = new();
 }

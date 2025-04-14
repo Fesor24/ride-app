@@ -4,15 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 using Ridely.Application.Features.Users.Deactivate;
 using Ridely.Application.Features.Users.Delete;
 using Ridely.Application.Features.Users.GetUserStatus;
+using Ridely.Application.Features.Users.InitiateEmailVerification;
 using Ridely.Application.Features.Users.InitiatePhoneNoVerification;
 using Ridely.Application.Features.Users.PhoneNoVerification;
 using Ridely.Application.Features.Users.UpdateDeviceToken;
-using Ridely.Api.Controllers.Base;
-using Ridely.Api.Extensions;
-using Ridely.Api.Filter;
-using Ridely.Api.Shared;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Extensions;
+using RidelyAPI.Filter;
+using RidelyAPI.Shared;
 
-namespace Ridely.Api.Controllers.User;
+namespace RidelyAPI.Controllers.User;
 
 [ApiVersion(ApiVersions.V1)]
 [ApiVersion(ApiVersions.V2)]
@@ -29,7 +30,7 @@ public class UserController : BaseController<UserController>
     public async Task<IActionResult> PhoneNoVerificationInit(InitiateVerificationRequest request)
     {
         var response = await Sender.Send(new InitiateNumberVerificationCommand(request.PhoneNo,
-            request.AppInstance));
+            request.AppInstance, request.MessageMedium));
 
         return response.Match(value => Ok(new ApiResponse<InitiateNumberResponse>(value)), this.HandleErrorResult);
     }
@@ -103,6 +104,21 @@ public class UserController : BaseController<UserController>
         long? riderId = GetRiderId();
 
         var response = await Sender.Send(new UpdateDeviceTokenCommand(request.DeviceTokenId, riderId, driverId));
+
+        return response.Match(value => Ok(new ApiResponse<bool>(value)), this.HandleErrorResult);
+    }
+
+    [MapToApiVersion(ApiVersions.V1)]
+    [HttpGet("initiate-email-verification")]
+    [ProducesResponseType(200, Type = typeof(ApiResponse<bool>))]
+    [ProducesResponseType(400, Type = typeof(ApiResponse))]
+    public async Task<IActionResult> InitiateEmailVerification()
+    {
+        long? driverId = GetDriverId();
+
+        long? riderId = GetRiderId();
+
+        var response = await Sender.Send(new InitiateEmailVerificationCommand(driverId, riderId));
 
         return response.Match(value => Ok(new ApiResponse<bool>(value)), this.HandleErrorResult);
     }

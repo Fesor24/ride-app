@@ -1,35 +1,36 @@
-﻿using MassTransit;
+﻿using System.Text.Json;
+using MassTransit;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ridely.Application.Abstractions.Notifications;
-using Ridely.Application.Abstractions.Websocket;
-using Ridely.Application.Models.WebSocket;
+using Ridely.Application.Hubs;
 using Ridely.Contracts.Events;
 using Ridely.Contracts.Models;
 using Ridely.Domain.Riders;
 using Ridely.Shared.Constants;
-using Ridely.Shared.Helper;
 using Ridely.Shared.Helper.Keys;
+using Ridely.Shared.SignalRCommunication;
 using StackExchange.Redis;
 
 namespace Ridely.Infrastructure.Consumers;
 internal sealed class RideRequestedConsumer : IConsumer<RideRequestedEvent>
 {
-    private readonly IWebSocketManager _webSocketManager;
-    private readonly IDeviceNotificationService _deviceNotificationService;
+    private readonly IPushNotificationService _deviceNotificationService;
     private readonly ApplicationDbContext _context;
     private readonly ILogger<RideRequestedConsumer> _logger;
+    private readonly IHubContext<RideHub> _rideHubContext;
     private readonly IDatabase _database;
 
-    public RideRequestedConsumer(IWebSocketManager webSocketManager,
-        IConnectionMultiplexer connectionMultiplexer,
-        IDeviceNotificationService deviceNotificationService,
-        ApplicationDbContext context, ILogger<RideRequestedConsumer> logger)
+    public RideRequestedConsumer(IConnectionMultiplexer connectionMultiplexer,
+        IPushNotificationService deviceNotificationService,
+        ApplicationDbContext context, ILogger<RideRequestedConsumer> logger,
+        IHubContext<RideHub> rideHubContext)
     {
-        _webSocketManager = webSocketManager;
         _deviceNotificationService = deviceNotificationService;
         _context = context;
         _logger = logger;
+        _rideHubContext = rideHubContext;
         _database = connectionMultiplexer.GetDatabase();
     }
 
@@ -42,13 +43,7 @@ internal sealed class RideRequestedConsumer : IConsumer<RideRequestedEvent>
     private async Task SendRequestToAvailableDriversAsync(List<DriverProfile> availableDriverProfiles,
         RideObject ride, RiderProfile rider)
     {
-        _logger.LogInformation("Processing ride requests...");
-
-        if(ride is null)
-        {
-            _logger.LogInformation("Ride object is null");
-            return;
-        }
+        if (ride is null) return;
 
         string rideNotMatchedKey = RideKeys.RideNotMatched(ride.Id);
 
@@ -59,6 +54,10 @@ internal sealed class RideRequestedConsumer : IConsumer<RideRequestedEvent>
         foreach (var driverProfile in availableDriverProfiles)
         {
             int responseTime = ApplicationConstant.DRIVER_RESPONSETIME_INSECONDS;
+
+            var riderDisconnected = await _database.StringGetAsync(RiderKey.Disconnected(rider.Id));
+
+            if (riderDisconnected.HasValue) break;
 
             var rideNotMatchedvalue = await _database.StringGetAsync(rideNotMatchedKey);
             if (rideNotMatchedvalue.IsNull) break;
@@ -79,33 +78,68 @@ internal sealed class RideRequestedConsumer : IConsumer<RideRequestedEvent>
             await _database.StringSetAsync(driverRideRequestKey, 1,
                 expiry: TimeSpan.FromSeconds(responseTime + 1));
 
-            string driverWebSocketKey = WebSocketKeys.Driver.Key(driverProfile.Id.ToString());
-            var driverRideRequestMessage = new WebSocketResponse<object>
+            var rideRequestSignalRData = new
             {
-                Event = SocketEventConstants.RIDE_REQUEST,
-                Payload = new
+                Source = ride.SourceAddress,
+                Destination = ride.DestinationAddress,
+                ride.Waypoints,
+                RideId = ride.Id,
+                ride.MusicGenre,
+                ride.HaveConversation,
+                ride.EstimatedFare,
+                ride.PaymentMethod,
+                ResponseTime = responseTime,
+                Rider = new
                 {
-                    source = ride.SourceAddress,
-                    destination = ride.DestinationAddress,
-                    rideId = ride.Id,
-                    musicGenre = ride.MusicGenre,
-                    conversation = ride.HaveConversation,
-                    estimatedFare = ride.EstimatedFare,
-                    paymentMethod = ride.PaymentMethod,
-                    responseTime,
-                    rider = new
-                    {
-                        firstName = rider.FirstName,
-                        lastName = rider.LastName,
-                        profileImage = rider.ProfileImageUrl,
-                        phoneNo = rider.PhoneNo
-                    }
+                    rider.FirstName,
+                    rider.LastName,
+                    rider.ProfileImageUrl,
+                    rider.PhoneNo
                 }
             };
 
-            string requestMessage = Serialize.Object(driverRideRequestMessage);
-            // Send request message to driver
-            await _webSocketManager.SendMessageAsync(driverWebSocketKey, requestMessage);
+            await _rideHubContext.Clients.User(DriverKey.CustomNameIdentifier(driverProfile.Id))
+                .SendAsync(SignalRSubscription.ReceiveRideRequests, rideRequestSignalRData, CancellationToken.None);
+
+            var rideRequestSignalRDriverData = new
+            {
+                Driver = new
+                {
+                    driverProfile.FirstName,
+                    driverProfile.LastName,
+                    driverProfile.ProfileImageUrl,
+                    driverProfile.Ratings
+                }
+            };
+
+            await _rideHubContext.Clients.User(RiderKey.CustomNameIdentifier(rider.Id))
+                .SendAsync(SignalRSubscription.ReceiveRideRequests, rideRequestSignalRDriverData, CancellationToken.None);
+
+            //string driverWebSocketKey = WebSocketKeys.Driver.Key(driverProfile.Id.ToString());
+
+            //var driverRideRequestMessage = WebSocketMessage<object>.Create(
+            //    SocketEventConstants.RIDE_REQUEST,
+            //    new
+            //    {
+            //        source = ride.SourceAddress,
+            //        waypoints = ride.Waypoints,
+            //        destination = ride.DestinationAddress,
+            //        rideId = ride.Id,
+            //        musicGenre = ride.MusicGenre,
+            //        conversation = ride.HaveConversation,
+            //        estimatedFare = ride.EstimatedFare,
+            //        paymentMethod = ride.PaymentMethod,
+            //        responseTime,
+            //        rider = new
+            //        {
+            //            firstName = rider.FirstName,
+            //            lastName = rider.LastName,
+            //            profileImage = rider.ProfileImageUrl,
+            //            phoneNo = rider.PhoneNo
+            //        }
+            //    });
+
+            //await _webSocketManager.SendMessageAsync(driverWebSocketKey, driverRideRequestMessage);
 
             if (!string.IsNullOrWhiteSpace(driverProfile.DeviceTokenId))
             {
@@ -123,22 +157,19 @@ internal sealed class RideRequestedConsumer : IConsumer<RideRequestedEvent>
             }
 
             // Communicate to rider
-            var riderRideRequestMessage = new WebSocketResponse<object>
-            {
-                Event = SocketEventConstants.RIDER_NOTIFIED_DRIVERPOTENTIAL,
-                Payload = new
-                {
-                    driver = new
-                    {
-                        name = driverProfile.FirstName + " " + driverProfile.LastName,
-                        imageUrl = driverProfile.ProfileImageUrl
-                    }
-                }
-            };
+            //var riderRideRequestMessage = WebSocketMessage<object>.Create(
+            //    SocketEventConstants.RIDER_NOTIFIED_DRIVERPOTENTIAL,
+            //    new
+            //    {
+            //        driver = new
+            //        {
+            //            name = driverProfile.FirstName + " " + driverProfile.LastName,
+            //            imageUrl = driverProfile.ProfileImageUrl
+            //        }
+            //    });
 
-            string riderRequestMessage = Serialize.Object(riderRideRequestMessage);
-            string riderWebSocketKey = WebSocketKeys.Rider.Key(rider.Id.ToString());
-            await _webSocketManager.SendMessageAsync(riderWebSocketKey, riderRequestMessage);
+            //string riderWebSocketKey = WebSocketKeys.Rider.Key(rider.Id.ToString());
+            //await _webSocketManager.SendMessageAsync(riderWebSocketKey, riderRideRequestMessage);
 
             // Add .5 second 
             await Task.Delay((responseTime * 1000) + 500);
@@ -154,29 +185,42 @@ internal sealed class RideRequestedConsumer : IConsumer<RideRequestedEvent>
                 // if there's a value, then ride match is still pending and request sent to all available drivers
                 if (ridePendingValue.HasValue)
                 {
-                    // communicate to rider
-                    var noMatchMessage = new WebSocketResponse<object>
+                    var rideRequestNoMatchData = new
                     {
-                        Event = SocketEventConstants.RIDE_NOMATCH,
-                        Payload = new
+                        Update = ReceiveRideUpdate.NoMatch,
+                        Data = JsonSerializer.Serialize(new
                         {
-                            match = false
-                        }
+                            Message = "No match"
+                        })
                     };
 
-                    string noMatchRequestMessage = Serialize.Object(noMatchMessage);
-                    await _webSocketManager.SendMessageAsync(riderWebSocketKey, noMatchRequestMessage);
+                    await _rideHubContext.Clients.User(RiderKey.CustomNameIdentifier(rider.Id))
+                        .SendAsync(SignalRSubscription.ReceiveRideUpdates, 
+                        rideRequestNoMatchData, CancellationToken.None);
 
-                    // todo: possible refactor??
-                    var riderDomain = await _context.Set<Rider>().FirstOrDefaultAsync(rider => rider.Id == rider.Id);
+                    // communicate to rider
+                    //var noMatchMessage = WebSocketMessage<object>.Create(
+                    //    SocketEventConstants.RIDE_NOMATCH,
+                    //    new
+                    //    {
+                    //        match = false
+                    //    });
 
-                    if (riderDomain is null) return;
+                    //await _webSocketManager.SendMessageAsync(riderWebSocketKey, noMatchMessage);
 
-                    riderDomain.UpdateStatus(RiderStatus.Online, null);
+                    //var riderDomain = await _context.Set<Rider>().FirstOrDefaultAsync(rdr => rdr.Id == rider.Id);
 
-                    _context.Set<Rider>().Update(riderDomain);
+                    //if (riderDomain is null)
+                    //{
+                    //    Console.WriteLine("rider is null");
+                    //    return;
+                    //}
 
-                    await _context.SaveChangesAsync();
+                    //riderDomain.UpdateStatus(RiderStatus.Online, 0);
+
+                    //_context.Set<Rider>().Update(riderDomain);
+
+                    //await _context.SaveChangesAsync();
                 }
             }
         }

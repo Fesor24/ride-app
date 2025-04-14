@@ -1,13 +1,14 @@
 ﻿using System.Text.Json;
-using Hangfire;
 using MassTransit;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Ridely.Application.Abstractions.Notifications;
 using Ridely.Application.Abstractions.Rides;
-using Ridely.Application.Abstractions.Websocket;
+using Ridely.Application.Abstractions.Settings;
 using Ridely.Application.Features.Rides.CancelRideRequest;
-using Ridely.Application.Models.WebSocket;
+using Ridely.Application.Hubs;
 using Ridely.Contracts.Events;
 using Ridely.Contracts.Models;
 using Ridely.Domain.Abstractions;
@@ -17,11 +18,11 @@ using Ridely.Domain.Models.Cache;
 using Ridely.Domain.Models.Rides;
 using Ridely.Domain.Riders;
 using Ridely.Domain.Rides;
-using Ridely.Infrastructure.Locations;
+using Ridely.Infrastructure.Location;
 using Ridely.Infrastructure.Route;
 using Ridely.Shared.Constants;
-using Ridely.Shared.Helper;
 using Ridely.Shared.Helper.Keys;
+using Ridely.Shared.SignalRCommunication;
 using StackExchange.Redis;
 
 namespace Ridely.Infrastructure.Rides;
@@ -30,29 +31,31 @@ internal sealed class RideService : IRideService
     private readonly IDatabase _database;
     private readonly ApplicationDbContext _context;
     private readonly RouteService _routeService;
-    private readonly IDeviceNotificationService _deviceNotificationService;
-    private readonly IWebSocketManager _webSocketManager;
+    private readonly IPushNotificationService _pushNotificationService;
     private readonly IPublishEndpoint _publishEndpoint;
     private readonly ILogger<RideService> _logger;
+    private readonly IHubContext<RideHub> _rideHubContext;
+    private readonly ApplicationSettings _applicationSettings;
 
     public RideService(IConnectionMultiplexer connectionMultiplexer,
         ApplicationDbContext context, RouteService routeService, 
-        IDeviceNotificationService deviceNotificationService, 
-        IWebSocketManager webSocketManager, IPublishEndpoint publishEndpoint,
-        ILogger<RideService> logger)
+        IPushNotificationService pushNotificationService, 
+        IPublishEndpoint publishEndpoint,
+        ILogger<RideService> logger, IHubContext<RideHub> rideHubContext,
+        IOptions<ApplicationSettings> applicationSettings)
     {
         _database = connectionMultiplexer.GetDatabase();
         _context = context;
         _routeService = routeService;
-        _deviceNotificationService = deviceNotificationService;
-        _webSocketManager = webSocketManager;
+        _pushNotificationService = pushNotificationService;
         _publishEndpoint = publishEndpoint;
         _logger = logger;
+        _rideHubContext = rideHubContext;
+        _applicationSettings = applicationSettings.Value;
     }
 
     public async Task<bool> SendRequestToDriversAsync(Domain.Models.Location ridersLocation, RideObject ride,
-       Rider rider, List<long> excludeDrivers, 
-       RideCategory rideCategory, bool increaseSearchRadius = false)
+       Rider rider, List<long> excludeDrivers, RideCategory rideCategory, bool increaseSearchRadius = false)
     {
         // First request, we use 3000M
         // Subsequent request if no driver, increase to 5000M
@@ -96,6 +99,7 @@ internal sealed class RideService : IRideService
         excludeDrivers.AddRange(await GetCancelledDrivers(rider.Id.ToString()));
 
         // todo: very possible that majority here would not be available...
+        // review: the first 20 would always get...when there's a match, we remove the driver from store and just forward...
         long[] availableDriversIds = drivers
             .Select(driver => long.Parse(driver.DriverId))
             .Where(identifier => !excludeDrivers.Contains(identifier))
@@ -104,22 +108,30 @@ internal sealed class RideService : IRideService
 
         if (availableDriversIds.Length < 1) return false;
 
+        int deficitWalletAmount = _applicationSettings.MaximumFundDeficitFromDriver;
+
         // todo: Include drivers that are completing trips nearby...to be done later
+        // might use dapper...
         var availableDriverProfiles = await _context.Set<Driver>()
-            .Include(x => x.Cab)
-            .Where(x => availableDriversIds.Contains(x.Id))
-            .Where(x => cabType != CabType.Unknown && x.Cab.CabType == cabType)
-            .Where(x => driverService != DriverService.Unknown && x.DriverService == driverService)
-            .Where(x => x.Status == DriverStatus.Online)
-            .Where(x => x.IdentityValidated)
-            .OrderByDescending(x => x.CompletedTrips)
-            .ThenByDescending(x => x.AvgRatings)
-            .Select(driver => new DriverProfile(
-                driver.Id,
-                driver.FirstName,
-                driver.LastName,
-                driver.DeviceTokenId ?? "",
-                driver.ProfileImageUrl
+            .Join(_context.Set<DriverWallet>(), dr => dr.Id, wal => wal.DriverId, (dr, wal) => new {dr, wal})
+            .Join(_context.Set<Cab>(), agg => agg.dr.CabId, cb => cb.Id, (agg, cb) => new {agg.dr, agg.wal, cb})
+            .Where(agg => availableDriversIds.Contains(agg.dr.Id))
+            .Where(agg => cabType != CabType.Unknown && agg.cb.CabType == cabType)
+            .Where(agg => driverService != DriverService.Unknown && agg.dr.DriverService == driverService)
+            .Where(agg => agg.dr.Status == DriverStatus.Online)
+            .Where(agg => agg.dr.CurrentRideId == null)
+            .Where(agg => agg.dr.IdentityValidated)
+            .Where(agg => !agg.dr.IsBarred && !agg.dr.IsDeactivated && !agg.dr.IsDeleted)
+            .Where(agg => agg.wal.AvailableBalance > deficitWalletAmount)
+            .OrderByDescending(agg => agg.dr.CompletedTrips)
+            .ThenByDescending(agg => agg.dr.AvgRatings)
+            .Select(agg => new DriverProfile(
+                agg.dr.Id,
+                agg.dr.FirstName,
+                agg.dr.LastName,
+                agg.dr.DeviceTokenId ?? "",
+                agg.dr.ProfileImageUrl,
+                agg.dr.AvgRatings
                 ))
             .AsNoTracking()
             .ToListAsync();
@@ -140,8 +152,6 @@ internal sealed class RideService : IRideService
             Rider = riderProfile
         });
 
-        _logger.LogInformation("Ride request message published to bus. {@Ride}", ride);
-
         // Send requests to drivers
         //BackgroundJob.Enqueue(() => SendRideRequestToAvailableDrivers(availableDriverProfiles, 
         //    ride, riderProfile));
@@ -151,7 +161,8 @@ internal sealed class RideService : IRideService
         return true;
     }
 
-    public async Task SendChatMessageAsync(string message, long rideId, bool isDriver)
+    public async Task SendChatMessageAsync(UserType sender, string message, 
+        string identifier, long rideId)
     {
         long riderId = 0;
         long driverId = 0;
@@ -160,14 +171,16 @@ internal sealed class RideService : IRideService
 
         string? rideObject = await _database.StringGetAsync(rideObjectKey);
 
+        RideCacheModel? rideData;
+
         if (!string.IsNullOrWhiteSpace(rideObject))
         {
-            var rideCacheModel = JsonSerializer.Deserialize<RideCacheModel>(rideObject);
+            rideData = JsonSerializer.Deserialize<RideCacheModel>(rideObject);
 
-            if (rideCacheModel is not null)
+            if (rideData is not null)
             {
-                riderId = rideCacheModel.RiderId;
-                driverId = rideCacheModel.DriverId;
+                riderId = rideData.RiderId;
+                driverId = rideData.DriverId;
             }
         }
         else
@@ -190,18 +203,18 @@ internal sealed class RideService : IRideService
 
         if (riderId == default || driverId == default) return;
 
-        Chat chat = new(rideId, ChatUserType.Rider, ChatUserType.Driver, message);
+        Chat chat = new(rideId, UserType.Driver, UserType.Rider, message);
 
-        if (isDriver)
-            chat.SetChatUsers(ChatUserType.Driver, ChatUserType.Rider);
+        if (sender == UserType.Rider)
+            chat.SetParties(UserType.Rider, UserType.Driver);
 
         await _context.Set<Chat>().AddAsync(chat);
 
         await _context.SaveChangesAsync();
 
-        string riderWebSocketKey = WebSocketKeys.Rider.Key(riderId.ToString());
+        //string riderWebSocketKey = WebSocketKeys.Rider.Key(riderId.ToString());
 
-        string driverWebSocketKey = WebSocketKeys.Driver.Key(driverId.ToString());
+        //string driverWebSocketKey = WebSocketKeys.Driver.Key(driverId.ToString());
 
         var chats = await _context.Set<Chat>()
             .Where(x => x.RideId == rideId)
@@ -213,26 +226,41 @@ internal sealed class RideService : IRideService
                 Sender = x.Sender.ToString()
             })
             .OrderByDescending(x => x.CreatedAt)
-            .Take(20)
+            //.Take(20)
             .ToListAsync();
 
-        var webSocketChatReply = new WebSocketResponse<object>
-        {
-            Event = "RIDE.CHAT.RESPONSE",
-            Payload = new { messages = chats }
-        };
+        //var chatResponseMessage = WebSocketMessage<object>.Create(
+        //    SocketEventConstants.RIDE_CHAT_RESPONSE,
+        //    new
+        //    {
+        //        messages = chats
+        //    });
 
-        string webSocketMessage = Serialize.Object(webSocketChatReply);
+        string riderIdentifier = RiderKey.CustomNameIdentifier(riderId);
+        string driverIdentifier = DriverKey.CustomNameIdentifier(driverId);
 
-        await _webSocketManager.SendMessageAsync(riderWebSocketKey, webSocketMessage);
+        await _rideHubContext.Clients.Users(riderIdentifier, driverIdentifier)
+            .SendAsync(SignalRSubscription.ReceiveChatMessage, new
+            {
+                Chats = chats
+            });
 
-        await _webSocketManager.SendMessageAsync(driverWebSocketKey, webSocketMessage);
+        Dictionary<string, string> notificationData = new();
+
+        if (sender == UserType.Rider && rideData is not null && !string.IsNullOrWhiteSpace(rideData.DriverDeviceTokenId))
+            await _pushNotificationService.PushAsync(rideData.DriverDeviceTokenId, 
+                "New message from rider", "You have a message from your rider", notificationData, PushNotificationType.Chat);
+
+        else if (sender == UserType.Driver && rideData is not null && !string.IsNullOrWhiteSpace(rideData.RiderDeviceTokenId))
+            await _pushNotificationService.PushAsync(rideData.RiderDeviceTokenId,
+                "New message from driver", "You have a message from your driver", notificationData, PushNotificationType.Chat);
     }
 
     public async Task<Result<EstimatedFareResponse>> ComputeEstimatedFare(
-        Domain.Models.Location source, Domain.Models.Location destination)
+        Domain.Models.Location source, Domain.Models.Location destination,
+        Domain.Models.Location? waypoint)
     {
-        var response = await _routeService.GetDistanceAndDurationAsync(new RouteRequest
+        var request = new RouteRequest
         {
             Origin = new RouteRequest.RouteRequestLocation
             {
@@ -256,10 +284,31 @@ internal sealed class RideService : IRideService
                     }
                 }
             }
-        });
+        };
+
+        if(waypoint is not null)
+        {
+            request.Intermediates = new()
+            {
+                new RouteRequest.RouteRequestLocation
+                {
+                    Location = new RouteRequest.RouteRequestLocation.RequestLocation
+                    {
+                        LatLng = new RouteRequest.RouteRequestLocation.RequestLocation.Coordinates
+                        {
+                            Latitude = waypoint.Latitude,
+                            Longitude = waypoint.Longitude
+                        }
+                    }
+                }
+            };
+        }
+
+        var response = await _routeService.GetDistanceAndDurationAsync(request);
 
         if (response.IsFailure) return response.Error;
 
+        // todo: cache settings...
         var settings = await _context.Set<Settings>()
             .ToListAsync();
 
@@ -281,149 +330,140 @@ internal sealed class RideService : IRideService
 
         decimal timePrice = (decimal)(duration / 60) * ratePerMinute;
 
-        ulong estimatedFare = (ulong)(distancePrice + timePrice);
+        long estimatedFare = (long)(distancePrice + timePrice);
 
-        ulong deliveryFare = (ulong)(deliveryRatePerKm * (route.DistanceMeters / 1000));
+        long deliveryFare = (long)(deliveryRatePerKm * (route.DistanceMeters / 1000));
 
         return new EstimatedFareResponse(estimatedFare, deliveryFare, duration, route.DistanceMeters);
     }
 
-    [Queue("high")]
-    public async Task SendRideRequestToAvailableDrivers(
-        List<DriverProfile> availableDriverProfiles,
-        RideObject ride, RiderProfile rider)
-    {
-        string rideNotMatchedKey = RideKeys.RideNotMatched(ride.Id);
+    //[Queue("high")]
+    //public async Task SendRideRequestToAvailableDrivers(
+    //    List<DriverProfile> availableDriverProfiles,
+    //    RideObject ride, RiderProfile rider)
+    //{
+    //    string rideNotMatchedKey = RideKeys.RideNotMatched(ride.Id);
 
-        string rideCancelledKey = RideKeys.RideCancelled(ride.Id.ToString());
+    //    string rideCancelledKey = RideKeys.RideCancelled(ride.Id.ToString());
 
-        var lastDriver = availableDriverProfiles.Last();
+    //    var lastDriver = availableDriverProfiles.Last();
 
-        foreach (var driverProfile in availableDriverProfiles)
-        {
-            int responseTime = ApplicationConstant.DRIVER_RESPONSETIME_INSECONDS;
+    //    foreach (var driverProfile in availableDriverProfiles)
+    //    {
+    //        int responseTime = ApplicationConstant.DRIVER_RESPONSETIME_INSECONDS;
 
-            var rideNotMatchedvalue = await _database.StringGetAsync(rideNotMatchedKey);
-            if (rideNotMatchedvalue.IsNull) break;
+    //        var rideNotMatchedvalue = await _database.StringGetAsync(rideNotMatchedKey);
+    //        if (rideNotMatchedvalue.IsNull) break;
 
-            var matchCancelledValue = await _database.StringGetAsync(rideCancelledKey);
-            if (matchCancelledValue.HasValue)
-            {
-                await _database.KeyDeleteAsync(rideCancelledKey);
-                break;
-            }
+    //        var matchCancelledValue = await _database.StringGetAsync(rideCancelledKey);
+    //        if (matchCancelledValue.HasValue)
+    //        {
+    //            await _database.KeyDeleteAsync(rideCancelledKey);
+    //            break;
+    //        }
 
-            string driverRideRequestKey = RideKeys.RideRequestToDriver(driverProfile.Id.ToString());
-            var driverRideRequestvalue = await _database.StringGetAsync(driverRideRequestKey);
+    //        string driverRideRequestKey = RideKeys.RideRequestToDriver(driverProfile.Id.ToString());
+    //        var driverRideRequestvalue = await _database.StringGetAsync(driverRideRequestKey);
 
-            // If value exist, request has been sent to driver
-            if (driverRideRequestvalue.HasValue) continue;
+    //        // If value exist, request has been sent to driver
+    //        if (driverRideRequestvalue.HasValue) continue;
 
-            await _database.StringSetAsync(driverRideRequestKey, 1,
-                expiry: TimeSpan.FromSeconds(responseTime + 1));
+    //        await _database.StringSetAsync(driverRideRequestKey, 1,
+    //            expiry: TimeSpan.FromSeconds(responseTime + 1));
 
-            string driverWebSocketKey = WebSocketKeys.Driver.Key(driverProfile.Id.ToString());
-            var driverRideRequestMessage = new WebSocketResponse<object>
-            {
-                Event = SocketEventConstants.RIDE_REQUEST,
-                Payload = new
-                {
-                    source = ride.SourceAddress,
-                    destination = ride.DestinationAddress,
-                    rideId = ride.Id,
-                    musicGenre = ride.MusicGenre,
-                    conversation = ride.HaveConversation,
-                    estimatedFare = ride.EstimatedFare,
-                    paymentMethod = ride.PaymentMethod,
-                    responseTime,
-                    rider = new 
-                    { 
-                        firstName = rider.FirstName, 
-                        lastName = rider.LastName, 
-                        profileImage = rider.ProfileImageUrl, 
-                        phoneNo = rider.PhoneNo 
-                    }
-                }
-            };
+    //        string driverWebSocketKey = WebSocketKeys.Driver.Key(driverProfile.Id.ToString());
+    //        var driverRideRequestMessage = WebSocketMessage<object>.Create(
+    //            SocketEventConstants.RIDE_REQUEST,
+    //            new
+    //            {
+    //                source = ride.SourceAddress,
+    //                destination = ride.DestinationAddress,
+    //                rideId = ride.Id,
+    //                musicGenre = ride.MusicGenre,
+    //                conversation = ride.HaveConversation,
+    //                estimatedFare = ride.EstimatedFare,
+    //                paymentMethod = ride.PaymentMethod,
+    //                responseTime,
+    //                rider = new
+    //                {
+    //                    firstName = rider.FirstName,
+    //                    lastName = rider.LastName,
+    //                    profileImage = rider.ProfileImageUrl,
+    //                    phoneNo = rider.PhoneNo
+    //                }
+    //            });
 
-            string requestMessage = Serialize.Object(driverRideRequestMessage);
-            // Send request message to driver
-            await _webSocketManager.SendMessageAsync(driverWebSocketKey, requestMessage);
+    //        // Send request message to driver
+    //        await _webSocketManager.SendMessageAsync(driverWebSocketKey, driverRideRequestMessage);
 
-            if (!string.IsNullOrWhiteSpace(driverProfile.DeviceTokenId))
-            {
-                Dictionary<string, string> data = new()
-                {
-                    {"rideId", ride.Id.ToString()},
-                    {"responseTime", responseTime.ToString()}
-                };
+    //        if (!string.IsNullOrWhiteSpace(driverProfile.DeviceTokenId))
+    //        {
+    //            Dictionary<string, string> data = new()
+    //            {
+    //                {"rideId", ride.Id.ToString()},
+    //                {"responseTime", responseTime.ToString()}
+    //            };
 
-                await _deviceNotificationService.PushAsync(
-                    driverProfile.DeviceTokenId,
-                    "Ride request",
-                    "New ride request. Click to view details.",
-                    data, PushNotificationType.RideRequest);
-            }
+    //            await _deviceNotificationService.PushAsync(
+    //                driverProfile.DeviceTokenId,
+    //                "Ride request",
+    //                "New ride request. Click to view details.",
+    //                data, PushNotificationType.RideRequest);
+    //        }
 
-            // Communicate to rider
-            var riderRideRequestMessage = new WebSocketResponse<object>
-            {
-                Event = SocketEventConstants.RIDER_NOTIFIED_DRIVERPOTENTIAL,
-                Payload = new
-                {
-                    driver = new
-                    {
-                        name = driverProfile.FirstName + " " + driverProfile.LastName,
-                        imageUrl = driverProfile.ProfileImageUrl
-                    }
-                }
-            };
+    //        // Communicate to rider
+    //        var riderRideRequestMessage = WebSocketMessage<object>.Create(
+    //            SocketEventConstants.RIDER_NOTIFIED_DRIVERPOTENTIAL,
+    //            new
+    //            {
+    //                driver = new
+    //                {
+    //                    name = driverProfile.FirstName + " " + driverProfile.LastName,
+    //                    imageUrl = driverProfile.ProfileImageUrl
+    //                }
+    //            });
 
-            string riderRequestMessage = Serialize.Object(riderRideRequestMessage);
-            string riderWebSocketKey = WebSocketKeys.Rider.Key(rider.Id.ToString());
-            await _webSocketManager.SendMessageAsync(riderWebSocketKey, riderRequestMessage);
+    //        string riderWebSocketKey = WebSocketKeys.Rider.Key(rider.Id.ToString());
+    //        await _webSocketManager.SendMessageAsync(riderWebSocketKey, riderRideRequestMessage);
 
-            // Add .5 second 
-            await Task.Delay((responseTime * 1000) + 500);
+    //        // Add .5 second 
+    //        await Task.Delay((responseTime * 1000) + 500);
 
-            // if driver is last driver
-            // after the delay, we see if ride was accepted
-            if (driverProfile.Id == lastDriver.Id)
-            {
-                string ridePendingKey = RideKeys.RideNotMatched(ride.Id);
+    //        // if driver is last driver
+    //        // after the delay, we see if ride was accepted
+    //        if (driverProfile.Id == lastDriver.Id)
+    //        {
+    //            string ridePendingKey = RideKeys.RideNotMatched(ride.Id);
 
-                var ridePendingValue = await _database.StringGetAsync(ridePendingKey);
+    //            var ridePendingValue = await _database.StringGetAsync(ridePendingKey);
 
-                // if there's a value, then ride match is still pending and request sent to all available drivers
-                if (ridePendingValue.HasValue)
-                {
-                    // communicate to rider
-                    var noMatchMessage = new WebSocketResponse<object>
-                    {
-                        Event = SocketEventConstants.RIDE_NOMATCH,
-                        Payload = new
-                        {
-                            match = false
-                        }
-                    };
+    //            // if there's a value, then ride match is still pending and request sent to all available drivers
+    //            if (ridePendingValue.HasValue)
+    //            {
+    //                // communicate to rider
+    //                var noMatchMessage = WebSocketMessage<object>.Create(
+    //                    SocketEventConstants.RIDE_NOMATCH,
+    //                    new
+    //                    {
+    //                        match = false
+    //                    });
 
-                    string noMatchRequestMessage = Serialize.Object(noMatchMessage);
-                    await _webSocketManager.SendMessageAsync(riderWebSocketKey, noMatchRequestMessage);
+    //                await _webSocketManager.SendMessageAsync(riderWebSocketKey, noMatchMessage);
 
-                    // todo: possible refactor??
-                    var riderDomain = await _context.Set<Rider>().FirstOrDefaultAsync(rider => rider.Id == rider.Id);
+    //                // todo: possible refactor??
+    //                var riderDomain = await _context.Set<Rider>().FirstOrDefaultAsync(rider => rider.Id == rider.Id);
 
-                    if (riderDomain is null) return;
+    //                if (riderDomain is null) return;
 
-                    riderDomain.UpdateStatus(RiderStatus.Online, null);
+    //                riderDomain.UpdateStatus(RiderStatus.Online, null);
 
-                    _context.Set<Rider>().Update(riderDomain);
+    //                _context.Set<Rider>().Update(riderDomain);
 
-                    await _context.SaveChangesAsync();
-                }
-            }
-        }
-    }
+    //                await _context.SaveChangesAsync();
+    //            }
+    //        }
+    //    }
+    //}
     private async Task<List<long>> GetCancelledDrivers(string riderId)
     {
         string key = RideKeys.DriversCancelled(riderId);

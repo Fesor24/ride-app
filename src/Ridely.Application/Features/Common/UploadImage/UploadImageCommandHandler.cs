@@ -1,6 +1,7 @@
 ﻿using Ridely.Application.Abstractions.Messaging;
 using Ridely.Application.Abstractions.Storage;
 using Ridely.Domain.Abstractions;
+using Ridely.Domain.Drivers;
 using Ridely.Domain.Riders;
 using Ridely.Shared.Exceptions;
 using Ridely.Shared.Helper.Keys;
@@ -10,13 +11,15 @@ internal sealed class UploadImageCommandHandler :
     ICommandHandler<UploadImageCommand>
 {
     private readonly IRiderRepository _riderRepository;
+    private readonly IDriverRepository _driverRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IObjectStoreService _objectStoreService;
 
-    public UploadImageCommandHandler(IRiderRepository riderRepository, IUnitOfWork unitOfWork,
-        IObjectStoreService objectStoreService)
+    public UploadImageCommandHandler(IRiderRepository riderRepository, IDriverRepository driverRepository,
+        IUnitOfWork unitOfWork, IObjectStoreService objectStoreService)
     {
         _riderRepository = riderRepository;
+        _driverRepository = driverRepository;
         _unitOfWork = unitOfWork;
         _objectStoreService = objectStoreService;
     }
@@ -45,6 +48,23 @@ internal sealed class UploadImageCommandHandler :
             rider.UpdateProfileImageUrl(profileImageUrl, profileImageExpiry);
 
             _riderRepository.Update(rider);
+
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+
+        else if(request.FileType == FileType.DriversProfileImage)
+        {
+            (string profileImageUrl, DateTime profileImageExpiry) = await
+                _objectStoreService.GeneratePreSignedUrl(key);
+
+            var driver = await _driverRepository
+                .GetAsync(request.Identifier);
+
+            if (driver is null) return true;
+
+            driver.UploadImages(profileImageUrl, string.Empty, profileImageExpiry);
+
+            _driverRepository.Update(driver);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
         }

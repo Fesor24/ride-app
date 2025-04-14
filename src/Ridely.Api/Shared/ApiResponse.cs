@@ -1,6 +1,6 @@
 ﻿using Ridely.Domain.Abstractions;
 
-namespace Ridely.Api.Shared;
+namespace RidelyAPI.Shared;
 public class ApiResponse
 {
     public ApiResponse()

@@ -2,28 +2,32 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ridely.Application.Features.Rides.AcceptRejectRide;
+using Ridely.Application.Features.Rides.AcceptRejectWaitTime;
 using Ridely.Application.Features.Rides.CancelRideRequest;
 using Ridely.Application.Features.Rides.DriverSourceArrival;
 using Ridely.Application.Features.Rides.EndRide;
 using Ridely.Application.Features.Rides.GetChatMessages;
 using Ridely.Application.Features.Rides.GetFareEstimate;
 using Ridely.Application.Features.Rides.GetRide;
+using Ridely.Application.Features.Rides.GetWaitTime;
 using Ridely.Application.Features.Rides.Reassign;
+using Ridely.Application.Features.Rides.RequestWaitTime;
 using Ridely.Application.Features.Rides.Reroute;
 using Ridely.Application.Features.Rides.RideRating;
 using Ridely.Application.Features.Rides.RideRequest;
 using Ridely.Application.Features.Rides.Search;
 using Ridely.Application.Features.Rides.StartRide;
 using Ridely.Application.Features.Rides.UpdatePaymentMethod;
+using Ridely.Application.Features.Rides.VerifyCardPayment;
 using Ridely.Application.Models.Shared;
 using Ridely.Domain.Models;
 using Ridely.Domain.Rides;
-using Ridely.Api.Controllers.Base;
-using Ridely.Api.Extensions;
-using Ridely.Api.Filter;
-using Ridely.Api.Shared;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Extensions;
+using RidelyAPI.Filter;
+using RidelyAPI.Shared;
 
-namespace Ridely.Api.Controllers.Rides;
+namespace RidelyAPI.Controllers.Rides;
 
 [ApiVersion(ApiVersions.V1)]
 [ApiVersion(ApiVersions.V2)]
@@ -38,11 +42,17 @@ public class RidesController : BaseController<RidesController>
     [ProducesResponseType(400, Type = typeof(ApiResponse))]
     public async Task<IActionResult> GetFareEstimate(RideFareEstimateRequest request)
     {
+        LocationRequest? wayPointLocation = null;
+
+        if (request.Waypoint is not null)
+            wayPointLocation = new(request.Waypoint.Lat, request.Waypoint.Long);
+
         var response = await Sender.Send(new GetFareEstimateCommand(
             new LocationRequest(request.Source.Lat, request.Source.Long),
             new LocationRequest(request.Destination.Lat, request.Destination.Long),
+            wayPointLocation,
             request.Source.Address, request.Destination.Address,
-            RiderId));
+            request.Waypoint?.Address, RiderId));
 
         return response.Match(value => Ok(new ApiResponse<GetFareEstimateResponse>(value)), this.HandleErrorResult);
     }
@@ -181,7 +191,7 @@ public class RidesController : BaseController<RidesController>
             To = request.To,
             PageNumber = request.PageNumber,
             PageSize = request.PageSize,
-            RideStatus = [RideStatus.Completed, RideStatus.Reassigned]
+            RideStatus = [RideStatus.Completed, RideStatus.Reassigned, RideStatus.Cancelled]
         });
 
         return response.Match(value => Ok(new ApiResponse<PaginatedList<SearchRideResponse>>(value)), this.HandleErrorResult);
@@ -228,6 +238,51 @@ public class RidesController : BaseController<RidesController>
     {
         var response = await Sender.Send(new UpdatePaymentMethodCommand(
             request.RideId, request.Method, request.PaymentCardId));
+
+        return response.Match(value => Ok(new ApiResponse<bool>(value)), this.HandleErrorResult);
+    }
+
+    [MapToApiVersion(ApiVersions.V1)]
+    [HttpGet("wait-times")]
+    [ProducesResponseType(200, Type = typeof(ApiResponse<IReadOnlyList<GetWaitTimeResponse>>))]
+    [ProducesResponseType(400, Type = typeof(ApiResponse))]
+    public async Task<IActionResult> GetWaitingTimes()
+    {
+        var response = await Sender.Send(new GetWaitTimeQuery());
+
+        return response.Match(value => Ok(new ApiResponse<IReadOnlyList<GetWaitTimeResponse>>(value)), this.HandleErrorResult);
+    }
+
+    [MapToApiVersion(ApiVersions.V1)]
+    [HttpPost("wait-time/extension-request")]
+    [ProducesResponseType(200, Type = typeof(ApiResponse<RequestWaitTimeResponse>))]
+    [ProducesResponseType(400, Type = typeof(ApiResponse))]
+    public async Task<IActionResult> RequestWaitTimeExtension(RequestWaitTimeRequest request)
+    {
+        var response = await Sender.Send(new RequestWaitTimeCommand(request.RideId, request.WaitTimeId));
+
+        return response.Match(value => Ok(new ApiResponse<RequestWaitTimeResponse>(value)), this.HandleErrorResult);
+    }
+
+    [MapToApiVersion(ApiVersions.V1)]
+    [HttpPut("wait-time/extension-status")]
+    [ProducesResponseType(200, Type = typeof(ApiResponse<bool>))]
+    [ProducesResponseType(400, Type = typeof(ApiResponse))]
+    public async Task<IActionResult> UpdateWaitingTimeExtensionStatus(WaitingTimeExtensionRequest request)
+    {
+        var response = await Sender.Send(new AcceptRejectWaitTimeCommand(request.RideId, request.RideLogId, 
+            request.AcceptExtension, request.RejectReason));
+
+        return response.Match(value => Ok(new ApiResponse<bool>(value)), this.HandleErrorResult);
+    }
+
+    [MapToApiVersion(ApiVersions.V1)]
+    [HttpPost("card-payment/verify")]
+    [ProducesResponseType(200, Type = typeof(ApiResponse<bool>))]
+    [ProducesResponseType(400, Type = typeof(ApiResponse))]
+    public async Task<IActionResult> VerifyCardPayment(VerifyCardPaymentRequest request)
+    {
+        var response = await Sender.Send(new VerifyCardPaymentCommand(request.RideId));
 
         return response.Match(value => Ok(new ApiResponse<bool>(value)), this.HandleErrorResult);
     }

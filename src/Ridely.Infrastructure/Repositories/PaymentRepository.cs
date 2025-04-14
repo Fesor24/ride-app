@@ -7,9 +7,9 @@ internal sealed class PaymentRepository(ApplicationDbContext context)
 {
     private readonly ApplicationDbContext _context = context;
 
-    public async Task<Payment?> GetByReferenceAsync(Ulid reference)
-    {
-        return await _context.Set<Payment>()
-            .FirstOrDefaultAsync(payment => payment.Reference == reference);
-    }
+    //public async Task<Payment?> GetByReferenceAsync(Ulid reference)
+    //{
+    //    return await _context.Set<Payment>()
+    //        .FirstOrDefaultAsync(payment => payment.Reference == reference);
+    //}
 }

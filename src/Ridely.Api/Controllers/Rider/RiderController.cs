@@ -7,16 +7,18 @@ using Ridely.Application.Features.Riders.Get;
 using Ridely.Application.Features.Riders.GetSavedLocations;
 using Ridely.Application.Features.Riders.RegisterRider;
 using Ridely.Application.Features.Riders.UpdateSavedLocation;
-using Ridely.Api.Controllers.Base;
-using Ridely.Api.Extensions;
-using Ridely.Api.Filter;
-using Ridely.Api.Shared;
+using Ridely.Infrastructure.Authentication;
+using Ridely.Shared.Constants;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Extensions;
+using RidelyAPI.Filter;
+using RidelyAPI.Shared;
 
-namespace Ridely.Api.Controllers.Rider;
+namespace RidelyAPI.Controllers.Rider;
 
 [ApiVersion(ApiVersions.V1)]
 [ApiVersion(ApiVersions.V2)]
-[Authorize]
+[Authorize(Roles = Roles.Rider)]
 [ResourceAuthorizationFilter]
 [Route("api/v{v:apiVersion}/rider")]
 public class RiderController : BaseController<RiderController>

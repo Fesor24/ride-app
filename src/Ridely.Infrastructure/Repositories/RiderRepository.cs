@@ -26,6 +26,7 @@ internal sealed class RiderRepository(ApplicationDbContext context) :
                 ReferralCode = x.ReferralCode,
                 DeviceTokenId = x.DeviceTokenId,
                 ProfileImageUrl = x.ProfileImageUrl,
+                EmailVerified = x.EmailValidated,
                 Cards = x.PaymentCards
                 .Select(y => new CardModel
                 {

@@ -15,9 +15,11 @@ internal sealed class RiderConfiguration : IEntityTypeConfiguration<Rider>
         builder.Property(rider => rider.LastName)
             .HasMaxLength(60);
 
-        builder.HasIndex(rider => rider.PhoneNo);
+        builder.HasIndex(rider => rider.PhoneNo)
+            .IsUnique();
 
-        builder.HasIndex(rider => rider.Email);
+        builder.HasIndex(rider => rider.Email)
+            .IsUnique();
 
         builder.Property(rider => rider.PhoneNo)
            .HasMaxLength(15);

@@ -3,5 +3,5 @@
 namespace Ridely.Domain.Rides;
 public interface IPaymentRepository : IGenericRepository<Payment>
 {
-    Task<Payment?> GetByReferenceAsync(Ulid reference);
+    //Task<Payment?> GetByReferenceAsync(Ulid reference);
 }

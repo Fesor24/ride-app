@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Ridely.Application.Abstractions.Notifications;
 
 namespace Ridely.Infrastructure.Notifications;
 internal sealed class TermiiService
@@ -17,7 +18,8 @@ internal sealed class TermiiService
         _termiiSettings = termiiSettings.Value;
     }
 
-    public async Task<bool> SendAsync(string phoneNo, string otp, string expiryDurationInMinutes)
+    public async Task<bool> SendAsync(string phoneNo, string otp, 
+        string expiryDurationInMinutes, MessageMedium messageMedium)
     {
         if (string.IsNullOrWhiteSpace(phoneNo)) return false;
 
@@ -27,8 +29,11 @@ internal sealed class TermiiService
         if (phoneNo.StartsWith("0"))
             phoneNo = "234" + phoneNo[1..];
 
-        await Task.WhenAll(SendViaSmsAsync(phoneNo, otp, expiryDurationInMinutes),
-            SendViaWhatsappAsync(phoneNo, otp, expiryDurationInMinutes));
+        if (messageMedium == MessageMedium.Sms)
+            await SendViaSmsAsync(phoneNo, otp, expiryDurationInMinutes);
+
+        else if(messageMedium == MessageMedium.Whatsapp)
+            await SendViaWhatsappAsync(phoneNo, otp, expiryDurationInMinutes);
 
         return true;
     }

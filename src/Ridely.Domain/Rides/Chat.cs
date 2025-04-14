@@ -10,7 +10,7 @@ public sealed class Chat : Entity
         
     }
 
-    public Chat(long rideId, ChatUserType sender, ChatUserType recipient,
+    public Chat(long rideId, UserType sender, UserType recipient,
         string message)
     {
         if (string.IsNullOrWhiteSpace(message))
@@ -31,15 +31,13 @@ public sealed class Chat : Entity
     [ForeignKey(nameof(RideId))]
     [DeleteBehavior(DeleteBehavior.NoAction)]
     public Ride Ride { get; }
-    public long SenderId { get; private set; }
-    public ChatUserType Sender { get; private set; }
-    public long RecipientId { get; private set; }
-    public ChatUserType Recipient { get; private set; }
+    public UserType Sender { get; private set; }
+    public UserType Recipient { get; private set; }
     public string Message { get; private set; }
     public bool IsRead { get; private set; }
     public DateTime CreatedAtUtc { get; private set; }
 
-    public void SetChatUsers(ChatUserType sender, ChatUserType recipient)
+    public void SetParties(UserType sender, UserType recipient)
     {
         Sender = sender;
         Recipient = recipient;

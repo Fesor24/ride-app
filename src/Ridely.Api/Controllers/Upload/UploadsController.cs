@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ridely.Application.Features.Common.UploadImage;
 using Ridely.Domain.Abstractions;
-using Ridely.Api.Controllers.Base;
-using Ridely.Api.Extensions;
-using Ridely.Api.Filter;
-using Ridely.Api.Shared;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Extensions;
+using RidelyAPI.Filter;
+using RidelyAPI.Shared;
 
-namespace Ridely.Api.Controllers.Upload;
+namespace RidelyAPI.Controllers.Upload;
 
 [Authorize]
 [ResourceAuthorizationFilter]

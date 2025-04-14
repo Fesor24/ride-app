@@ -1,4 +1,4 @@
-﻿namespace Ridely.Api.Controllers
+﻿namespace RidelyAPI.Controllers
 {
     public static class ApiVersions
     {

@@ -52,7 +52,8 @@ internal sealed class FundWalletCommandHandler :
                 request.Amount,
                 RiderTransactionType.FundWallet,
                 reference,
-                TransactionStatus.Pending
+                TransactionStatus.Pending,
+                Domain.Rides.PaymentProvider.Paystack
                 );
 
             TransactionReferenceMap referenceMap = new(reference, TransactionReferenceType.RiderTransaction);

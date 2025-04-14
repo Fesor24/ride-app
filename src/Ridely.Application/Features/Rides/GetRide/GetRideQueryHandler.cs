@@ -33,7 +33,7 @@ internal sealed class GetRideQueryHandler(IRideRepository rideRepository, IRatin
             },
             Ride = new RideResponseRideObj
             {
-                Amount = ride.Payment.Amount,
+                //Amount = ride.Payment.Amount,
                 PaymentMethod = ride.Payment.Method.ToString(),
                 DistanceInMeters = ride.DistanceInMeters,
                 Rating = (await ratingsRepository.GetByRideAsync(ride.Id))?.Rating ?? 0,

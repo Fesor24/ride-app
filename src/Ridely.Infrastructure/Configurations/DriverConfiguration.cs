@@ -30,9 +30,11 @@ internal sealed class DriverConfiguration : IEntityTypeConfiguration<Driver>
         builder.Property(driver => driver.ReferralCode)
             .HasMaxLength(20);
 
-        builder.HasIndex(driver => driver.PhoneNo);
+        builder.HasIndex(driver => driver.PhoneNo)
+            .IsUnique();
 
-        builder.HasIndex(driver => driver.Email);
+        builder.HasIndex(driver => driver.Email)
+            .IsUnique();
 
         builder.HasQueryFilter(driver => !driver.IsDeleted);
     }

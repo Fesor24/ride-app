@@ -17,8 +17,7 @@ internal sealed class RouteService
         _httpClient = httpClient;
         _httpClient.BaseAddress = new Uri(googleRouteSettings.Value.BaseAddress);
         _httpClient.DefaultRequestHeaders.Add("X-Goog-Api-Key", googleRouteSettings.Value.ApiKey);
-        _httpClient.DefaultRequestHeaders.Add("X-Goog-FieldMask",
-            "routes.duration,routes.distanceMeters,routes.polyline.encodedPolyline");
+        _httpClient.DefaultRequestHeaders.Add("X-Goog-FieldMask", "routes.duration,routes.distanceMeters");
 
         _mapboxSettings = mapboxSettings.Value;
     }

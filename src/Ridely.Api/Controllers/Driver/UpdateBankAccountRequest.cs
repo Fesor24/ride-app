@@ -1,4 +1,4 @@
-﻿namespace Ridely.Api.Controllers.Driver;
+﻿namespace RidelyAPI.Controllers.Driver;
 
 public class UpdateBankAccountRequest
 {

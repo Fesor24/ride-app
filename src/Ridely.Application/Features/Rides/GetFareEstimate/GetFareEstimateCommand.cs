@@ -6,8 +6,10 @@ namespace Ridely.Application.Features.Rides.GetFareEstimate;
 public sealed record GetFareEstimateCommand(
     LocationRequest Source,
     LocationRequest Destination,
+    LocationRequest? Waypoint,
     string SourceAddress,
     string DestinationAddress,
+    string? WayPointAddress,
     long RiderId) :
     ICommand<GetFareEstimateResponse>;
 

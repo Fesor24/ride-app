@@ -42,10 +42,10 @@ internal sealed class GetAccessTokenCommandHandler(IJwtService tokenService, IRi
             if (rider.RefreshTokenExpiry <= DateTime.UtcNow)
                 return Error.BadRequest("refreshtoken.expired", "Refresh token has expired");
 
-            (string AccessToken, string RefreshToken) =  await tokenService
+            (string accessToken, string refreshToken) =  await tokenService
                 .GenerateToken(rider, false);
 
-            return new LoginResponse(AccessToken, RefreshToken);
+            return new LoginResponse(accessToken, request.RefreshToken);
         }
         else
         {
@@ -67,10 +67,10 @@ internal sealed class GetAccessTokenCommandHandler(IJwtService tokenService, IRi
             if (driver.RefreshTokenExpiry <= DateTime.UtcNow)
                 return Error.BadRequest("refreshtoken.expiry", "Refresh token has expired");
 
-            (string AccessToken, string RefreshToken) = await tokenService
-                .GenerateToken(driver, populateExp: false);
+            (string accessToken, string refreshToken) = await tokenService
+                .GenerateToken(driver, false);
 
-            return new LoginResponse(AccessToken, RefreshToken);
+            return new LoginResponse(accessToken, request.RefreshToken);
         }
     }
 }

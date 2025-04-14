@@ -7,12 +7,12 @@ using Ridely.Application.Features.Transactions.RemovePaymentCard;
 using Ridely.Application.Features.Transactions.Verify;
 using Ridely.Application.Features.Transactions.WithdrawFunds;
 using Ridely.Domain.Abstractions;
-using Ridely.Api.Controllers.Base;
-using Ridely.Api.Extensions;
-using Ridely.Api.Filter;
-using Ridely.Api.Shared;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Extensions;
+using RidelyAPI.Filter;
+using RidelyAPI.Shared;
 
-namespace Ridely.Api.Controllers.Transaction;
+namespace RidelyAPI.Controllers.Transaction;
 
 [ApiVersion(ApiVersions.V1)]
 [ApiVersion(ApiVersions.V2)]

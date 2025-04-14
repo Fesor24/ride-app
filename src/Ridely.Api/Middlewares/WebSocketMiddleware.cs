@@ -6,206 +6,206 @@ using Ridely.Application.Abstractions.Authentication;
 using Ridely.Application.Abstractions.Websocket;
 using Ridely.Shared.Constants;
 using Ridely.Shared.Helper.Keys;
-using Ridely.Api.WebSocket.Handler;
+using RidelyAPI.WebSocket.Handler;
 
-namespace Ridely.Api.Middlewares;
+namespace RidelyAPI.Middlewares;
 
-public class WebSocketMiddleware
-{
-    private readonly RequestDelegate _next;
-    private IServiceProvider _serviceProvider;
-    private readonly IWebSocketManager _webSocketManager;
-    private readonly Dictionary<string, WebSocketRequestHandler> _webSocketRequestHandler;
-    public WebSocketMiddleware(RequestDelegate next, IWebSocketManager webSocketManager)
-    {
-        _next = next;
-        _webSocketManager = webSocketManager;
-        _webSocketRequestHandler = new();
-    }
+//public class WebSocketMiddleware
+//{
+//    private readonly RequestDelegate _next;
+//    private IServiceProvider _serviceProvider;
+//    private readonly IWebSocketManager _webSocketManager;
+//    private readonly Dictionary<string, WebSocketRequestHandler> _webSocketRequestHandler;
+//    public WebSocketMiddleware(RequestDelegate next, IWebSocketManager webSocketManager)
+//    {
+//        _next = next;
+//        _webSocketManager = webSocketManager;
+//        _webSocketRequestHandler = new();
+//    }
 
-    public async Task InvokeAsync(HttpContext context, IServiceProvider serviceProvider, 
-        IJwtService tokenService)
-    {
-        _serviceProvider = serviceProvider;
+//    public async Task InvokeAsync(HttpContext context, IServiceProvider serviceProvider, 
+//        IJwtService tokenService)
+//    {
+//        _serviceProvider = serviceProvider;
 
-        if (!context.WebSockets.IsWebSocketRequest)
-        {
-            await _next(context);
+//        if (!context.WebSockets.IsWebSocketRequest)
+//        {
+//            await _next(context);
 
-            return;
-        }
+//            return;
+//        }
 
-        IDictionary<string, object> claims;
+//        IDictionary<string, object> claims;
 
-        bool isRider = false;
+//        bool isRider = false;
 
-        StringValues jwt;
+//        StringValues jwt;
 
-        string? jwt_;
+//        string? jwt_;
 
-        context.Request.Headers.TryGetValue("Authorization", out jwt);
+//        context.Request.Headers.TryGetValue("Authorization", out jwt);
 
-        if (StringValues.IsNullOrEmpty(jwt))
-        {
-            context.Request.Cookies.TryGetValue("Authorization", out jwt_);
+//        if (StringValues.IsNullOrEmpty(jwt))
+//        {
+//            context.Request.Cookies.TryGetValue("Authorization", out jwt_);
 
-            if(jwt_ == null)
-            {
-                await _next(context);
+//            if(jwt_ == null)
+//            {
+//                await _next(context);
 
-                return;
-            }
-            else
-            {
-                string token = Uri.UnescapeDataString(jwt_);
+//                return;
+//            }
+//            else
+//            {
+//                string token = Uri.UnescapeDataString(jwt_);
 
-                claims = await tokenService.GetClaimsFromToken(token);
-            }
-        }
-        else
-        {
-            claims = await tokenService.GetClaimsFromToken(jwt!);
-        }
+//                claims = await tokenService.GetClaimsFromToken(token);
+//            }
+//        }
+//        else
+//        {
+//            claims = await tokenService.GetClaimsFromToken(jwt!);
+//        }
 
-        if (claims.ContainsKey(ClaimsConstant.Driver))
-            isRider = false;
+//        if (claims.ContainsKey(ClaimsConstant.Driver))
+//            isRider = false;
 
-        else if (claims.ContainsKey(ClaimsConstant.Rider))
-            isRider = true;
+//        else if (claims.ContainsKey(ClaimsConstant.Rider))
+//            isRider = true;
 
-        else
-        {
-            await _next(context);
+//        else
+//        {
+//            await _next(context);
 
-            return;
-        }
+//            return;
+//        }
 
-        string? identifier = "";
+//        string? identifier = "";
 
-        string webSocketUserKey = "";
+//        string webSocketUserKey = "";
 
-        if (isRider)
-            identifier = tokenService.GetClaimValueFromToken<string>(ClaimsConstant.Rider, claims);
+//        if (isRider)
+//            identifier = tokenService.GetClaimValueFromToken<string>(ClaimsConstant.Rider, claims);
 
-        else
-            identifier = tokenService.GetClaimValueFromToken<string>(ClaimsConstant.Driver, claims);
+//        else
+//            identifier = tokenService.GetClaimValueFromToken<string>(ClaimsConstant.Driver, claims);
 
-        if (string.IsNullOrWhiteSpace(identifier))
-        {
-            await _next(context);
+//        if (string.IsNullOrWhiteSpace(identifier))
+//        {
+//            await _next(context);
 
-            return;
-        }
+//            return;
+//        }
 
-        if (isRider)
-            webSocketUserKey = WebSocketKeys.Rider.Key(identifier);
+//        if (isRider)
+//            webSocketUserKey = WebSocketKeys.Rider.Key(identifier);
 
-        else
-            webSocketUserKey = WebSocketKeys.Driver.Key(identifier);
+//        else
+//            webSocketUserKey = WebSocketKeys.Driver.Key(identifier);
 
-        //if (context.Request.Path == "/web-chat")
-        //    identifier += "/web-chat";
+//        //if (context.Request.Path == "/web-chat")
+//        //    identifier += "/web-chat";
 
-        if (context.Request.Path == "/web-chat")
-            webSocketUserKey += "/web-chat";
+//        if (context.Request.Path == "/web-chat")
+//            webSocketUserKey += "/web-chat";
 
-        System.Net.WebSockets.WebSocket webSocket = _webSocketManager
-            .AddWebSocket(webSocketUserKey, await context.WebSockets.AcceptWebSocketAsync());
+//        System.Net.WebSockets.WebSocket webSocket = _webSocketManager
+//            .AddWebSocket(webSocketUserKey, await context.WebSockets.AcceptWebSocketAsync());
 
-        if (!_webSocketRequestHandler.ContainsKey(webSocketUserKey))
-            _webSocketRequestHandler.Add(webSocketUserKey, new WebSocketRequestHandler(serviceProvider, webSocketUserKey));
+//        if (!_webSocketRequestHandler.ContainsKey(webSocketUserKey))
+//            _webSocketRequestHandler.Add(webSocketUserKey, new WebSocketRequestHandler(serviceProvider, webSocketUserKey));
 
-        await KeepConnectionAlive(webSocketUserKey, webSocket);
-    }
+//        await KeepConnectionAlive(webSocketUserKey, webSocket);
+//    }
 
-    private async Task KeepConnectionAlive(string webSocketUserKey, System.Net.WebSockets.WebSocket webSocket)
-    {
-        while(webSocket.State == System.Net.WebSockets.WebSocketState.Open)
-        {
-            GeneralEvent<JObject> message = new GeneralEvent<JObject>() { EventName = "End" };
+//    private async Task KeepConnectionAlive(string webSocketUserKey, System.Net.WebSockets.WebSocket webSocket)
+//    {
+//        while(webSocket.State == System.Net.WebSockets.WebSocketState.Open)
+//        {
+//            GeneralEvent<JObject> message = new GeneralEvent<JObject>() { EventName = "End" };
 
-            try
-            {
-                message = await ReceiveMessageAsync(webSocket);
-            }
-            catch(Exception ex)
-            {
-                // Log error
-                break;
-            }
+//            try
+//            {
+//                message = await ReceiveMessageAsync(webSocket);
+//            }
+//            catch(Exception ex)
+//            {
+//                // Log error
+//                break;
+//            }
 
-            if (message == null)
-                break;
+//            if (message == null)
+//                break;
 
-            else
-            {
-                object result = await _webSocketRequestHandler[webSocketUserKey].InvokeAsync(message, webSocketUserKey);
+//            else
+//            {
+//                object result = await _webSocketRequestHandler[webSocketUserKey].InvokeAsync(message, webSocketUserKey);
 
-                if (result == null)
-                    continue;
+//                if (result == null)
+//                    continue;
 
-                await _webSocketManager.SendMessageAsync(webSocket, System.Text.Json.JsonSerializer.Serialize(result));
-            }
-        }
+//                await _webSocketManager.SendMessageAsync(webSocket, System.Text.Json.JsonSerializer.Serialize(result));
+//            }
+//        }
 
-        JObject params_ = new()
-        {
-            {"userIdentifier", webSocketUserKey }
-        };
+//        JObject params_ = new()
+//        {
+//            {"userIdentifier", webSocketUserKey }
+//        };
 
-        try
-        {
-            await _webSocketRequestHandler[webSocketUserKey].InvokeAsync(new GeneralEvent<JObject>
-            {
-                EventName = "DRIVER.DISCONNECT",
-                EventArgs = params_
-            }, webSocketUserKey);
-        }
-        catch(Exception ex)
-        {
+//        try
+//        {
+//            await _webSocketRequestHandler[webSocketUserKey].InvokeAsync(new GeneralEvent<JObject>
+//            {
+//                EventName = "DRIVER.DISCONNECT",
+//                EventArgs = params_
+//            }, webSocketUserKey);
+//        }
+//        catch(Exception ex)
+//        {
 
-        }
+//        }
 
-        await _webSocketManager.RemoveWebSocket(webSocketUserKey);
+//        await _webSocketManager.RemoveWebSocket(webSocketUserKey);
 
-        _webSocketRequestHandler.Remove(webSocketUserKey);
-    }
+//        _webSocketRequestHandler.Remove(webSocketUserKey);
+//    }
 
-    private async Task<GeneralEvent<JObject>> ReceiveMessageAsync(System.Net.WebSockets.WebSocket webSocket)
-    {
-        if (webSocket.State == System.Net.WebSockets.WebSocketState.Closed)
-            return new GeneralEvent<JObject>
-            {
-                EventName = "End"
-            };
+//    private async Task<GeneralEvent<JObject>> ReceiveMessageAsync(System.Net.WebSockets.WebSocket webSocket)
+//    {
+//        if (webSocket.State == System.Net.WebSockets.WebSocketState.Closed)
+//            return new GeneralEvent<JObject>
+//            {
+//                EventName = "End"
+//            };
 
-        var buffer = new byte[1024];
+//        var buffer = new byte[1024];
 
-        var result = await webSocket.ReceiveAsync(buffer, CancellationToken.None);
+//        var result = await webSocket.ReceiveAsync(buffer, CancellationToken.None);
 
-        if (result.CloseStatus.HasValue) return null;
+//        if (result.CloseStatus.HasValue) return null;
 
-        string data;
+//        string data;
 
-        GeneralEvent<JObject?>? json = null;
+//        GeneralEvent<JObject?>? json = null;
 
-        try
-        {
-            data = System.Text.Encoding.UTF8.GetString(buffer, 0, result.Count);
-            json = JsonConvert.DeserializeObject<GeneralEvent<JObject?>>(data);
-        }
-        catch (Exception e)
-        {
-            data = JsonConvert.SerializeObject(new GeneralEvent<JObject?>
-            {
-                EventName = "Error",
-                EventArgs = new JObject { { "Message", e.Message } }
+//        try
+//        {
+//            data = System.Text.Encoding.UTF8.GetString(buffer, 0, result.Count);
+//            json = JsonConvert.DeserializeObject<GeneralEvent<JObject?>>(data);
+//        }
+//        catch (Exception e)
+//        {
+//            data = JsonConvert.SerializeObject(new GeneralEvent<JObject?>
+//            {
+//                EventName = "Error",
+//                EventArgs = new JObject { { "Message", e.Message } }
 
-            });
+//            });
 
-            await _webSocketManager.SendMessageAsync(webSocket, data);
-        }
+//            await _webSocketManager.SendMessageAsync(webSocket, data);
+//        }
 
-        return json;
-    }
-}
+//        return json;
+//    }
+//}

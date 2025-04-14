@@ -1,4 +1,4 @@
-﻿namespace Ridely.Api.Controllers
+﻿namespace RidelyAPI.Controllers
 {
     public abstract class SearchRequest
     {

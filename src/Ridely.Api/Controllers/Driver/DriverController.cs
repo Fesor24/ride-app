@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Ridely.Application.Features.Admin.Driver.UpgradeCab;
 using Ridely.Application.Features.Drivers.CreateBankAccount;
 using Ridely.Application.Features.Drivers.DeleteBankAccount;
 using Ridely.Application.Features.Drivers.Get;
@@ -12,16 +13,17 @@ using Ridely.Application.Features.Drivers.UpdateStatus;
 using Ridely.Application.Features.Drivers.VerifyBankAccount;
 using Ridely.Application.Models.Shared;
 using Ridely.Domain.Models;
-using Ridely.Api.Controllers.Base;
-using Ridely.Api.Extensions;
-using Ridely.Api.Filter;
-using Ridely.Api.Shared;
+using Ridely.Shared.Constants;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Extensions;
+using RidelyAPI.Filter;
+using RidelyAPI.Shared;
 
-namespace Ridely.Api.Controllers.Driver;
+namespace RidelyAPI.Controllers.Driver;
 
 [ApiVersion(ApiVersions.V1)]
 [ApiVersion(ApiVersions.V2)]
-[Authorize]
+[Authorize(Roles = Roles.Driver)]
 [ResourceAuthorizationFilter]
 [Route("api/v{v:apiVersion}/driver")]
 public class DriverController : BaseController<DriverController>
@@ -39,7 +41,8 @@ public class DriverController : BaseController<DriverController>
             request.Driver.LastName, request.Driver.Gender,
             request.Driver.PhoneNo, request.Driver.Email,
             request.Driver.DriversLicenseNo, request.Driver.DriverService,
-            request.Driver.ProfileImageBase64Url, request.Driver.DriversLicenseBase64Url),
+            request.Driver.ProfileImageBase64Url, request.Driver.DriversLicenseBase64Url,
+            request.Driver.IdentityNo, request.Driver.IdentityType),
             new RegisterDriverVehicleInfo(request.Vehicle.Color, request.Vehicle.Year,
             request.Vehicle.Model, request.Vehicle.LicensePlateNo, request.Vehicle.Manufacturer, "")));
 
@@ -140,5 +143,16 @@ public class DriverController : BaseController<DriverController>
 
         return response.Match(value => Ok(new ApiResponse<PaginatedList<SearchDriverTransactionsResponse>>(value)),
             this.HandleErrorResult);
+    }
+
+    [MapToApiVersion(ApiVersions.V1)]
+    [HttpPut("cab")]
+    [ProducesResponseType(200, Type = typeof(ApiResponse<bool>))]
+    [ProducesResponseType(400, Type = typeof(ApiResponse))]
+    public async Task<IActionResult> UpgradeCab(UpgradeCabRequest request)
+    {
+        var response = await Sender.Send(new UpgradeCabCommand(request.CabId));
+
+        return response.Match(value => Ok(new ApiResponse<bool>(value)), this.HandleErrorResult);
     }
 }

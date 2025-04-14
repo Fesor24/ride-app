@@ -6,9 +6,8 @@ public enum RideStatus
     Requested = 2,
     Matched = 3,
     Arrived = 4,
-    InTransit = 5,
+    Started = 5,
     Completed = 6,
     Reassigned = 7,
-    Cancelled = 8,
-    Rerouted = 9
+    Cancelled = 8
 }

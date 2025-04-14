@@ -1,4 +1,4 @@
-﻿namespace Ridely.Api.Controllers.Admin.Rider
+﻿namespace RidelyAPI.Controllers.Admin.Rider
 {
     public class SearchRiderRequest : SearchRequest
     {

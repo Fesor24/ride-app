@@ -55,7 +55,7 @@ internal sealed class InitiateNumberVerificationCommandHandler :
             if (rider is null)
             {
                 if (!_env.IsDevelopment())
-                    await _smsService.SendVerificationCodeAsync(phoneNo, code, "5");
+                    await _smsService.SendVerificationCodeAsync(phoneNo, code, "5", request.MessageMedium);
 
                 key = Cache.UserAuth.Key(phoneNo, (int)request.AppInstance);
 
@@ -78,7 +78,7 @@ internal sealed class InitiateNumberVerificationCommandHandler :
                     return Error.BadRequest("account.barred", "User account barred. Contact support");
 
                 if (!(_env.IsDevelopment() || env == "Docker"))
-                    await _smsService.SendVerificationCodeAsync(rider.PhoneNo!, code, "5");
+                    await _smsService.SendVerificationCodeAsync(rider.PhoneNo!, code, "5", request.MessageMedium);
 
                 key = Cache.UserAuth.Key(rider.PhoneNo!.ToPhoneNumber(), (int)request.AppInstance);
 
@@ -94,7 +94,7 @@ internal sealed class InitiateNumberVerificationCommandHandler :
             if (driver is null)
             {
                 if (!_env.IsDevelopment())
-                    await _smsService.SendVerificationCodeAsync(phoneNo, code, "5");
+                    await _smsService.SendVerificationCodeAsync(phoneNo, code, "5", request.MessageMedium);
 
                 key = Cache.UserAuth.Key(phoneNo, (int)request.AppInstance);
 
@@ -117,7 +117,7 @@ internal sealed class InitiateNumberVerificationCommandHandler :
                     return Error.BadRequest("account.barred", "User account barred");
 
                 if (!(_env.IsDevelopment() || env == "Docker"))
-                    await _smsService.SendVerificationCodeAsync(driver.PhoneNo!, code, "5");
+                    await _smsService.SendVerificationCodeAsync(driver.PhoneNo!, code, "5", request.MessageMedium);
 
                 key = Cache.UserAuth.Key(phoneNo.ToPhoneNumber(), (int)request.AppInstance);
 

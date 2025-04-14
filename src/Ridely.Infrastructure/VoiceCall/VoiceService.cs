@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using AgoraIO.Media;
+using Microsoft.Extensions.Options;
 using Ridely.Application.Abstractions.VoiceCall;
 using Ridely.Infrastructure.VoiceCall;
 
@@ -44,22 +45,20 @@ internal class VoiceService : IVoiceService
 
     public async Task<(string Token, string Channel)> GenerateAgoraAccessTokenAsync(string rideId, bool isDriver)
     {
-        //cr32.NET
-        //string appId = _agoraCredentials.AppId;
-        //string appCertificate = _agoraCredentials.AppCertificate;
-        //string channelName = $"room-{rideId}";
-        //uint uid = 1;
-        //uint tokenExpire = (uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 3600; // Token valid for 1 hour
-        //uint privilegeExpire = (uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 3600; // Privilege valid for 1 hour
+        //string appId = "306d8f42071a46e99ba35bcc390491a1";
+        string appId = _agoraCredentials.AppId;
+        //string appCertificate = "3e9399bef1c747e49ff76d0b6e70093a";
+        string appCertificate = _agoraCredentials.AppCertificate;
+        string channelName = $"room-{rideId}";
+        uint uid = 1;
+        uint tokenExpire = (uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 3600; // Token valid for 1 hour
+        uint privilegeExpire = (uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 3600; // Privilege valid for 1 hour
 
-        //if(isDriver)
-        //    uid = 2;
+        if(isDriver)
+            uid = 2;
 
-        //string token = RtcTokenBuilder.buildTokenWithUID(appId, appCertificate, channelName, uid,
-        //                RtcTokenBuilder.Role.RolePublisher, privilegeExpire);
-
-        string token = "";
-        string channelName = "";
+        string token = RtcTokenBuilder.buildTokenWithUID(appId, appCertificate, channelName, uid,
+                        RtcTokenBuilder.Role.RolePublisher, privilegeExpire);
 
 
         return await Task.FromResult((token, channelName));

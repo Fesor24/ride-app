@@ -39,7 +39,8 @@ internal sealed class GetOtpQueryHandler(IDriverRepository driverRepository, IHo
         await cacheService.SetAsync(key, code, TimeSpan.FromSeconds(codeExpiryInSeconds));
 
         if (!env.IsDevelopment())
-            await smsService.SendVerificationCodeAsync(driver.PhoneNo!, code, "5");
+            await smsService.SendVerificationCodeAsync(driver.PhoneNo!, code, "5",
+                MessageMedium.Sms);
 
         return true;
     }

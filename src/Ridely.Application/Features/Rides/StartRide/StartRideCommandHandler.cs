@@ -1,49 +1,36 @@
-﻿using Hangfire;
+﻿using System.Text.Json;
+using Hangfire;
+using Microsoft.AspNetCore.SignalR;
 using Ridely.Application.Abstractions.Messaging;
-using Ridely.Application.Abstractions.Notifications;
 using Ridely.Application.Abstractions.Payment;
-using Ridely.Application.Abstractions.Websocket;
-using Ridely.Application.Models.WebSocket;
+using Ridely.Application.Hubs;
 using Ridely.Domain.Abstractions;
 using Ridely.Domain.Drivers;
-using Ridely.Domain.Riders;
 using Ridely.Domain.Rides;
-using Ridely.Shared.Constants;
-using Ridely.Shared.Helper;
 using Ridely.Shared.Helper.Keys;
+using Ridely.Shared.SignalRCommunication;
 
 namespace Ridely.Application.Features.Rides.StartRide;
 internal sealed class StartRideCommandHandler :
     ICommandHandler<StartRideCommand, StartRideResponse>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IWebSocketManager _webSocketManager;
     private readonly IRideRepository _rideRepository;
     private readonly IRideLogRepository _rideLogRepository;
     private readonly IDriverRepository _driverRepository;
     private readonly IPaymentService _paymentService;
-    private readonly IDeviceNotificationService _deviceNotificationService;
-    private readonly IPaystackService _paystackService;
-    private readonly IPaymentRepository _paymentRepository;
-    private readonly IRiderRepository _riderRepository;
+    private readonly IHubContext<RideHub> _rideHubContext;
 
     public StartRideCommandHandler(IUnitOfWork unitOfWork,
-        IWebSocketManager webSocketManager, IRideRepository rideRepository,
-        IRideLogRepository rideLogRepository, IDriverRepository driverRepository, 
-        IPaymentService paymentService, IDeviceNotificationService deviceNotificationService,
-        IPaystackService paystackService, IPaymentRepository paymentRepository,
-        IRiderRepository riderRepository)
+        IRideRepository rideRepository, IRideLogRepository rideLogRepository, IDriverRepository driverRepository,
+        IPaymentService paymentService, IHubContext<RideHub> rideHubContext)
     {
         _unitOfWork = unitOfWork;
-        _webSocketManager = webSocketManager;
         _rideRepository = rideRepository;
         _rideLogRepository = rideLogRepository;
         _driverRepository = driverRepository;
         _paymentService = paymentService;
-        _deviceNotificationService = deviceNotificationService;
-        _paystackService = paystackService;
-        _paymentRepository = paymentRepository;
-        _riderRepository = riderRepository;
+        _rideHubContext = rideHubContext;
     }
 
     public async Task<Result<StartRideResponse>> Handle(StartRideCommand request, CancellationToken cancellationToken)
@@ -53,14 +40,17 @@ internal sealed class StartRideCommandHandler :
 
         if (ride is null) return Error.NotFound("ride.notfound", "Ride not found");
 
+        if (ride.Status == RideStatus.Started) 
+            return Error.BadRequest("ride.started", "This ride has been started already");
+
         if (ride.Status != RideStatus.Arrived)
             return Error.BadRequest("ride.drivernotarrived", "Driver not at pickup");
 
         ride.Driver.UpdateStatus(DriverStatus.InTrip, ride.Id);
 
-        ride.UpdateStatus(RideStatus.InTransit);
+        ride.UpdateStatus(RideStatus.Started);
 
-        RideLog rideLog = new(ride.Id, RideStatus.InTransit);
+        RideLog rideLog = new(ride.Id, RideLogEvent.Started);
 
         await _rideLogRepository.AddAsync(rideLog);
 
@@ -74,25 +64,47 @@ internal sealed class StartRideCommandHandler :
 
         var destination = ride.GetCoordinates(ride.DestinationCordinates);
 
-        string riderWebSocketKey = WebSocketKeys.Rider.Key(ride.RiderId.ToString());
-        var startRideMessage = new WebSocketResponse<object>
-        {
-            Event = SocketEventConstants.RIDE_START,
-            Payload = new
+        await _rideHubContext.Clients.User(RiderKey.CustomNameIdentifier(ride.RiderId))
+            .SendAsync(SignalRSubscription.ReceiveRideUpdates, new
             {
-                message = "Ride started"
-            }
-        };
+                Update = ReceiveRideUpdate.Started,
+                Data = JsonSerializer.Serialize(new
+                {
+                    Message = "Ride started"
+                })
+            });
 
-        string requestMessage = Serialize.Object(startRideMessage);
-        await _webSocketManager.SendMessageAsync(riderWebSocketKey, requestMessage);
+        //string riderWebSocketKey = WebSocketKeys.Rider.Key(ride.RiderId.ToString());
 
-        // todo: refactor code in places where we using background service...
-        // see if db calls can be reduced by passing the domain object itself...
-        BackgroundJob.Enqueue(() => HandleCardTripPayment(ride, 
-            ride.Rider.DeviceTokenId ?? "",
-            ride.Driver.DeviceTokenId ?? "",
-            cancellationToken));
+        //var startRideMessage = WebSocketMessage<object>.Create(
+        //    SocketEventConstants.RIDE_START,
+        //    new
+        //    {
+        //        message = "Ride started"
+        //    });
+
+        //await _webSocketManager.SendMessageAsync(riderWebSocketKey, startRideMessage);
+
+        BackgroundJob.Schedule(() => HandleCardTripPayment(ride.Id,
+            cancellationToken), DateTime.UtcNow.AddSeconds(40));
+
+        string[] waypointAddressess = ride.WaypointAddresses.Split("%%");
+
+        var waypointsCoordinates = ride.GetWaypointCoordinates();
+
+        List<StartRideResponse.RideLocation> waypoints = [];
+
+        for(int i = 0; i < waypointsCoordinates.Count; i++)
+        {
+            StartRideResponse.RideLocation location = new()
+            {
+                Address = waypointAddressess[i],
+                Latitude = waypointsCoordinates[i].Latitude,
+                Longitude = waypointsCoordinates[i].Longitude
+            };
+
+            waypoints.Add(location);
+        }
 
         return new StartRideResponse
         {
@@ -108,131 +120,40 @@ internal sealed class StartRideCommandHandler :
                 Longitude = source.Longitude,
                 Address = ride.SourceAddress
             },
+            Waypoints = waypoints,
             PaymentMethod = ride.Payment.Method,
             RideConversation = ride.HaveConversation,
             MusicGenre = ride.MusicGenre
         };
     }
 
-    // todo: review implementation...
-    public async Task<Result> HandleCardTripPayment(Domain.Rides.Ride ride, 
-        string riderDeviceTokenId, string driverDeviceTokenId,
-        CancellationToken cancellationToken)
+    public async Task<Result> HandleCardTripPayment(long rideId, CancellationToken cancellationToken)
     {
-        if (ride.Payment is null) return Result.Success();
+        var ride = await _rideRepository.GetRideDetails(rideId);
+
+        // it will never be null...
+        if (ride is null) return Result.Success();
 
         if (ride.Payment.Method != PaymentMethod.Card) return Result.Success();
 
-        var result = await _paymentService.ProcessCardTripPaymentAsync(ride, cancellationToken);
+        var result = await _paymentService
+            .ProcessCardTripPaymentAsync(ride, ride.EstimatedFare, cancellationToken);
 
         if (result.IsSuccessful)
         {
-            int maximumDurationInSeconds = 12 * 60;// 12 mins
+            int maximumDurationInSeconds = 7 * 60;// 7 mins
 
             if(ride.EstimatedDurationInSeconds <= maximumDurationInSeconds)
-                maximumDurationInSeconds = ride.EstimatedDurationInSeconds - (2 * 60);// reduce by 2 mins...
+                maximumDurationInSeconds = ride.EstimatedDurationInSeconds - (3 * 60);// reduce by 2 mins...
 
-            BackgroundJob.Schedule(() => CheckPaymentUpdateMethodToCashIfFail(ride.Id, riderDeviceTokenId, driverDeviceTokenId),
-                DateTimeOffset.UtcNow.AddSeconds(maximumDurationInSeconds));
+            BackgroundJob.Schedule(() => _paymentService.VerifyCardPaymentAndUpdatePaymentMethodToCashIfFailAsync(ride),
+                DateTime.UtcNow.AddSeconds(maximumDurationInSeconds));
 
             return Result.Success();
         }
 
-        await HandleRidePaymentFailure(result.Error, ride.Id, riderDeviceTokenId, driverDeviceTokenId);
+        await _paymentService.UpdatePaymentMethodToCashAndNotifyUsersAsync(ride);
 
         return Result.Success();
-    }
-
-    public async Task HandleRidePaymentFailure(Error error, long rideId,
-        string riderDeviceTokenId, string driverDeviceTokenId)
-    {
-        // note: based on this...mobile notify user that ride payment has been updated to cash...
-        var paymentFailMessage = new WebSocketResponse<object>
-        {
-            Event = SocketEventConstants.CARD_TRIP_PAYMENT_FAILURE,
-            Payload = new
-            {
-                message = "An error occurred during processing payment for this ride",
-                details = error.Message
-            }
-        };
-
-        var ride = await _rideRepository.GetAsync(rideId);
-
-        string paymentFailureMessage = Serialize.Object(paymentFailMessage);
-
-        string riderWebSocketKey = WebSocketKeys.Rider.Key(ride!.RiderId.ToString());
-        string driverWebSocketKey = WebSocketKeys.Driver.Key(ride.DriverId!.Value.ToString());
-
-        await _webSocketManager.SendMessageAsync(riderWebSocketKey, paymentFailureMessage);
-        await _webSocketManager.SendMessageAsync(driverWebSocketKey, paymentFailureMessage);
-
-        if (!string.IsNullOrWhiteSpace(riderDeviceTokenId))
-        {
-            Dictionary<string, string> data = new()
-            {
-
-            };
-
-            await _deviceNotificationService.PushAsync(
-                riderDeviceTokenId,
-                "Card payment failed",
-                "Payment updated to cash",
-                data, PushNotificationType.CardTripPaymentFailure);
-        }
-
-        if (!string.IsNullOrWhiteSpace(driverDeviceTokenId))
-        {
-            Dictionary<string, string> data = new()
-            {
-
-            };
-
-            await _deviceNotificationService.PushAsync(
-                driverDeviceTokenId,
-                "Card payment failed",
-                "Payment updated to cash",
-                data, PushNotificationType.CardTripPaymentFailure);
-        }
-
-        ride.Payment.UpdatePaymentMethod(PaymentMethod.Cash);
-
-        _rideRepository.Update(ride);
-
-        await _unitOfWork.SaveChangesAsync();
-    }
-
-    public async Task CheckPaymentUpdateMethodToCashIfFail(long rideId, string riderDeviceTokenId,
-        string driverDeviceTokenId)
-    {
-        var ride = await _rideRepository.GetAsync(rideId);
-
-        if (ride is null) return;
-
-        if (ride.Payment.Method == PaymentMethod.Cash) return;
-
-        if (ride.Payment.Status == PaymentStatus.Success) return;
-
-        var verificationResult = await _paystackService.VerifyAsync(ride.Payment.Reference.ToString());
-
-        if (verificationResult.IsSuccessful && verificationResult.Value.Status && 
-            verificationResult.Value.Data.Status == "success")
-        {
-            ride.Payment.UpdateStatus(PaymentStatus.Success);
-
-            _paymentRepository.Update(ride.Payment);
-
-            await _unitOfWork.SaveChangesAsync();
-
-            return;
-        }
-
-        var rider = await _riderRepository.GetAsync(ride.RiderId);
-
-        if (rider is null) return;
-
-        await HandleRidePaymentFailure(
-            new Error("payment.failure", "Payment failed"),
-            rideId, riderDeviceTokenId, driverDeviceTokenId);
     }
 }

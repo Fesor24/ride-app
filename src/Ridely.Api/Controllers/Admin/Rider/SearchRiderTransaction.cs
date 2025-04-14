@@ -1,7 +1,7 @@
 ﻿using Ridely.Domain.Riders;
 using Ridely.Domain.Transactions;
 
-namespace Ridely.Api.Controllers.Admin.Rider;
+namespace RidelyAPI.Controllers.Admin.Rider;
 
 public sealed class SearchRiderTransaction : SearchRequest
 {

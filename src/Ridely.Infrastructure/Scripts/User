@@ -3,4 +3,4 @@
 INSERT INTO usr."User"
     ("FirstName", "LastName", "Email", "PhoneNo", "Password", "Status", "RoleId", "CreatedBy", "CreatedAtUtc", "UpdatedBy", "UpdatedAtUtc", "RefreshToken", "RefreshTokenExpiry", "IsDeleted")
 VALUES 
-    ('ridely', 'admin', 'admin@ridely.com', '324456789', 'DWwhiUUYiGLvLagqp1xkb/q04UGjwxGgwZp/zVcgyms=:IBRJPY9s9QgX1m3xXRQu275msdGI0C3F2+zGXbDW3zs=', 1, 4, NULL, NOW(), NULL, NOW(), '', NULL, false);
+    ('soloride', 'admin', 'admin@soloride.com', '324456789', 'DWwhiUUYiGLvLagqp1xkb/q04UGjwxGgwZp/zVcgyms=:IBRJPY9s9QgX1m3xXRQu275msdGI0C3F2+zGXbDW3zs=', 1, 4, NULL, NOW(), NULL, NOW(), '', NULL, false);

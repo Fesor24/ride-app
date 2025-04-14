@@ -3,7 +3,6 @@ using Ridely.Domain.Abstractions;
 using Ridely.Domain.Drivers;
 using Ridely.Domain.Riders;
 using Ridely.Domain.Rides;
-using Ridely.Shared.Helper.Keys;
 
 namespace Ridely.Application.Features.Users.GetUserStatus;
 internal sealed class GetCurrentUserStatusQueryHandler:
@@ -33,7 +32,7 @@ internal sealed class GetCurrentUserStatusQueryHandler:
 
             if (rider is null) return Error.NotFound("rider.notfound", "Rider not found");
 
-            if(!rider.CurrentRideId.HasValue) return new GetCurrentUserStatusResponse
+            if (!rider.CurrentRideId.HasValue || rider.CurrentRideId.Value == default) return new GetCurrentUserStatusResponse
             {
                 Status = CurrentUserStatusEnum.Default
             };

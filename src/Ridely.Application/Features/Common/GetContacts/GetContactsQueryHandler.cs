@@ -13,8 +13,8 @@ internal sealed class GetContactsQueryHandler :
             Emergency = ["01-4931260", "01-4978899"],
             Support = new()
             {
-                Emails = ["customercare@ridely.com"],
-                Whatsapp = ["+23481909298283"]
+                Emails = ["customercare@soloride.app"],
+                Whatsapp = ["+2349124043342"]
             }
         };
 

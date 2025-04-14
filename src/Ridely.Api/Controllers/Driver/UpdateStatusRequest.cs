@@ -1,6 +1,6 @@
 ﻿using Ridely.Application.Features.Drivers.UpdateStatus;
 
-namespace Ridely.Api.Controllers.Driver;
+namespace RidelyAPI.Controllers.Driver;
 
 public sealed class UpdateStatusRequest
 {

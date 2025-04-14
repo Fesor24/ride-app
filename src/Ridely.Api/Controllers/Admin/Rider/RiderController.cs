@@ -2,11 +2,11 @@
 using Ridely.Application.Features.Admin.Rider.Query.Search;
 using Ridely.Application.Features.Admin.Rider.SearchTransactions;
 using Ridely.Domain.Models;
-using Ridely.Api.Controllers.Base;
-using Ridely.Api.Extensions;
-using Ridely.Api.Shared;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Extensions;
+using RidelyAPI.Shared;
 
-namespace Ridely.Api.Controllers.Admin.Rider;
+namespace RidelyAPI.Controllers.Admin.Rider;
 
 [Route("api/riders")]
 public class RiderController : AdminBaseController<RiderController>

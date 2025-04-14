@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Ridely.Domain.Abstractions;
-using Ridely.Api.Shared;
+using RidelyAPI.Shared;
 
-namespace Ridely.Api.Extensions;
+namespace RidelyAPI.Extensions;
 
 internal static class ControllerExtensions
 {

@@ -3,7 +3,7 @@ using Ridely.Domain.Abstractions;
 
 namespace Ridely.Infrastructure.Repositories;
 internal abstract class GenericRepository<TEntity>(ApplicationDbContext context) :
-    IGenericRepository<TEntity> where TEntity : class
+    IGenericRepository<TEntity> where TEntity : Entity
 {
     private readonly ApplicationDbContext _context = context;
 
@@ -29,5 +29,10 @@ internal abstract class GenericRepository<TEntity>(ApplicationDbContext context)
     {
         _context.Set<TEntity>().Attach(entity);
         _context.Entry(entity).State = EntityState.Modified;
+    }
+
+    public void UpdateRange(IEnumerable<TEntity> entities)
+    {
+        _context.Set<TEntity>().UpdateRange(entities);
     }
 }

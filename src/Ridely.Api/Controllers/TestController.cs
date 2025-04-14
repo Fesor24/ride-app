@@ -1,34 +1,31 @@
-﻿using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using MassTransit;
+﻿using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+using Microsoft.Extensions.Options;
+using Ridely.Application.Abstractions.Location;
 using Ridely.Application.Abstractions.Notifications;
 using Ridely.Application.Abstractions.Payment;
+using Ridely.Application.Abstractions.Settings;
 using Ridely.Application.Abstractions.Storage;
 using Ridely.Application.Abstractions.VoiceCall;
 using Ridely.Contracts.Events;
-using Ridely.Infrastructure.WebSockets;
-using Ridely.Infrastructure.WebSockets.Handlers;
-using Ridely.Api.Controllers.Base;
+using Ridely.Shared.Helper.Keys;
+using RidelyAPI.Controllers.Base;
 using StackExchange.Redis;
 
-namespace Ridely.Api.Controllers;
+namespace RidelyAPI.Controllers;
 
-public class TestController(ISmsService smsService, IDeviceNotificationService deviceNotificationService, 
+public class TestController(ISmsService smsService, IPushNotificationService deviceNotificationService, 
     IConnectionMultiplexer connectionMultiplexer, 
     IVoiceService voiceService, IObjectStoreService objectStoreService, IPaystackService paystackService,
-    IPublishEndpoint publishEndpoint, WebSocketEventHandler webSocketEventHandler) : 
+    IPublishEndpoint publishEndpoint, ILocationService locationService) : 
     BaseController<TestController>
 {
     private readonly StackExchange.Redis.IDatabase _db = connectionMultiplexer.GetDatabase();
-    private readonly WebSocketEventHandler _webSocketEventHandler = webSocketEventHandler;
 
     [HttpGet("api/sms")]
     public async Task<IActionResult> SendSms(string phoneNo)
     {
-        await smsService.SendVerificationCodeAsync("08186088250", "89212", "5");
+        await smsService.SendVerificationCodeAsync("08186088250", "89212", "5", MessageMedium.Whatsapp);
 
         return Ok("message sent");
     }
@@ -44,15 +41,10 @@ public class TestController(ISmsService smsService, IDeviceNotificationService d
     [HttpGet("api/hello")]
     public async Task<IActionResult> Hello()
     {
-        var wsEvent = new WebSocketEvent("TEST.HELLO")
-        {
-            EventArgs =
-            {
-                {"name", "Fesor"}
-            }
-        };
-
-        await _webSocketEventHandler.DispatchAsync(wsEvent);
+        //await publishEndpoint.Publish(new RideRequestedEvent
+        //{
+        //    AvailableDriverProfile = []
+        //});
 
         return Ok("Hello world!!");
     }
@@ -103,10 +95,4 @@ public class TestController(ISmsService smsService, IDeviceNotificationService d
 
     
 
-}
-
-public class ImageUploadTest
-{
-    public string Profile { get; set; }
-    public string DriversLicense { get; set; }
 }

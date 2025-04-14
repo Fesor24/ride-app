@@ -62,7 +62,9 @@ public sealed record RegisterDriverInfo(
     string DriversLicenseNo,
     DriverService DriverService,
     string ProfileImage,
-    string DriversLicense
+    string DriversLicense,
+    string IdentityNo,
+    IdentityType IdentityType
     );
 
 public sealed record RegisterDriverVehicleInfo(

@@ -1,18 +1,19 @@
-﻿using Hangfire;
+﻿using System.Text.Json;
+using Hangfire;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Options;
 using Ridely.Application.Abstractions.Messaging;
 using Ridely.Application.Abstractions.Payment;
 using Ridely.Application.Abstractions.Referral;
-using Ridely.Application.Abstractions.Websocket;
-using Ridely.Application.Models.WebSocket;
+using Ridely.Application.Abstractions.Settings;
+using Ridely.Application.Hubs;
 using Ridely.Domain.Abstractions;
-using Ridely.Domain.Common;
 using Ridely.Domain.Drivers;
 using Ridely.Domain.Riders;
 using Ridely.Domain.Rides;
 using Ridely.Domain.Services;
-using Ridely.Shared.Constants;
-using Ridely.Shared.Helper;
 using Ridely.Shared.Helper.Keys;
+using Ridely.Shared.SignalRCommunication;
 
 namespace Ridely.Application.Features.Rides.EndRide;
 internal sealed class EndRideCommandHandler :
@@ -21,38 +22,34 @@ internal sealed class EndRideCommandHandler :
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICacheService _cacheService;
     private readonly IPaymentService _paymentService;
-    private readonly IWebSocketManager _webSocketManager;
     private readonly IReferralService _referralService;
     private readonly IRideRepository _rideRepository;
     private readonly IRiderRepository _riderRepository;
     private readonly IDriverRepository _driverRepository;
     private readonly IRideLogRepository _rideLogRepository;
-    private readonly ISettingsRepository _settingsRepository;
     private readonly IPaymentRepository _paymentRepository;
-    private readonly IRiderWalletRepository _riderWalletRepository;
-    private readonly IDriverWalletRepository _driverWalletRepository;
+    private readonly IHubContext<RideHub> _rideHubContext;
+    private readonly ApplicationSettings _applicationSettings;
 
     public EndRideCommandHandler(IUnitOfWork unitOfWork, ICacheService cacheService,
-        IPaymentService paymentService, IWebSocketManager webSocketManager,
+        IPaymentService paymentService,
         IReferralService referralService, IRideRepository rideRepository,
         IRiderRepository riderRepository, IDriverRepository driverRepository,
-        IRideLogRepository rideLogRepository, ISettingsRepository settingsRepository,
-        IPaymentRepository paymentRepository, IRiderWalletRepository riderWalletRepository,
-        IDriverWalletRepository driverWalletRepository)
+        IRideLogRepository rideLogRepository,
+        IPaymentRepository paymentRepository, IHubContext<RideHub> rideHubContext,
+        IOptions<ApplicationSettings> applicationSettings)
     {
         _unitOfWork = unitOfWork;
         _cacheService = cacheService;
         _paymentService = paymentService;
-        _webSocketManager = webSocketManager;
         _referralService = referralService;
         _rideRepository = rideRepository;
         _riderRepository = riderRepository;
         _driverRepository = driverRepository;
         _rideLogRepository = rideLogRepository;
-        _settingsRepository = settingsRepository;
         _paymentRepository = paymentRepository;
-        _riderWalletRepository = riderWalletRepository;
-        _driverWalletRepository = driverWalletRepository;
+        _rideHubContext = rideHubContext;
+        _applicationSettings = applicationSettings.Value;
     }
 
     public async Task<Result<EndRideResponse>> Handle(EndRideCommand request, CancellationToken cancellationToken)
@@ -66,7 +63,7 @@ internal sealed class EndRideCommandHandler :
         if (ride.Status == RideStatus.Completed)
             return Error.BadRequest("ride.completed", "Ride completed");
 
-        if (ride.Status != RideStatus.InTransit)
+        if (ride.Status != RideStatus.Started)
             return Error.BadRequest("ride.notinprogress", "Only rides in progress can be ended");
 
         var driver = await _driverRepository
@@ -95,7 +92,7 @@ internal sealed class EndRideCommandHandler :
 
         ride.UpdateStatus(RideStatus.Completed);
 
-        RideLog rideLog = new(ride.Id, RideStatus.Completed);
+        RideLog rideLog = new(ride.Id, RideLogEvent.Completed);
 
         await _rideLogRepository.AddAsync(rideLog);
 
@@ -109,39 +106,49 @@ internal sealed class EndRideCommandHandler :
 
         long rideAmount = ride.EstimatedFare;
 
-        bool ridePaidFor = false;
+        List<RideStatus> relevantRideLogStatuses = [RideStatus.Arrived, RideStatus.Started];
 
-        if (ride.Payment.Status == PaymentStatus.Success) ridePaidFor = true;
-
-        (long rideFare, long amountDue) = await _paymentService
+        var paymentResponse = await _paymentService
             .ProcessPaymentAndDriverCommissionAsync(driver!, ride, cancellationToken);
 
-        if (amountDue == 0) ridePaidFor = true;
+        string[] waypoints = ride.WaypointAddresses.Split("%%");
 
-        var endRideMessage = new WebSocketResponse<object>
-        {
-            Event = SocketEventConstants.RIDE_END,
-            Payload = new
-            {
-                message = "Ride ended",
-                fare = rideFare,
-                fareDueByRider = amountDue,
-                paid = ridePaidFor,
-            }
-        };
+        //var endRideMessage = WebSocketMessage<object>.Create(
+        //    SocketEventConstants.RIDE_END,
+        //    new
+        //    {
+              
+        //    });  
 
-        string requestMessage = Serialize.Object(endRideMessage);
-        await _webSocketManager.SendMessageAsync(riderWebSocketKey, requestMessage);
+        //await _webSocketManager.SendMessageAsync(riderWebSocketKey, endRideMessage);
 
         BackgroundJob.Enqueue(() => _referralService.RewardsAfterRidersFirstCompletedRide(ride.RiderId));
+        BackgroundJob.Enqueue(() => _referralService.RewardsAfterDriversFirstCompletedRide(ride.DriverId!.Value));
+
+        await _rideHubContext.Clients.User(RiderKey.CustomNameIdentifier(ride.RiderId))
+        .SendAsync(SignalRSubscription.ReceiveRideUpdates, new
+        {
+            Update = ReceiveRideUpdate.Ended,
+            Data = JsonSerializer.Serialize(new
+            {
+                TotalFareAmount = paymentResponse.TotalRideFare,
+                FareOutstanding = paymentResponse.AmountOutstanding,
+                Source = ride.SourceAddress,
+                Destination = ride.DestinationAddress,
+                Waypoints = waypoints,
+                ride.Payment.DiscountInPercent,
+            })
+        }, cancellationToken);
 
         return new EndRideResponse
         {
-            Fare = rideFare,
-            FareDueByRider = amountDue,
+            TotalFareAmount = paymentResponse.TotalRideFare,
+            FareOutstanding = paymentResponse.AmountOutstanding,
             Source = ride.SourceAddress,
             Destination = ride.DestinationAddress,
-            Paid = ridePaidFor
+            Waypoints = waypoints,
+            DiscountInPercent = ride.Payment.DiscountInPercent,
+            WaitingTimeCharge = paymentResponse.WaitingTimeCharge
         };
     }
 

@@ -2,6 +2,7 @@
 using Ridely.Domain.Models;
 using Ridely.Domain.Models.Rides;
 using Ridely.Domain.Rides;
+using Ridely.Shared.Constants;
 
 namespace Ridely.Infrastructure.Repositories;
 internal sealed class ChatRepository(ApplicationDbContext context) :
@@ -17,19 +18,19 @@ internal sealed class ChatRepository(ApplicationDbContext context) :
         query = query.Where(x => x.RideId == searchParams.RideId);
 
         if (searchParams.RiderId.HasValue)
-            query = query.Where(x => x.SenderId == searchParams.RiderId.Value || x.RecipientId == searchParams.RiderId.Value);
+            query = query.Where(x => x.Sender == UserType.Rider || x.Recipient == UserType.Rider);
 
         if (searchParams.DriverId.HasValue)
-            query = query.Where(x => x.SenderId == searchParams.DriverId.Value || x.RecipientId == searchParams.DriverId.Value);
+            query = query.Where(x => x.Sender == UserType.Driver || x.Recipient == UserType.Driver);
 
         var projections = query.Select(x => new ChatModel
         {
             Id = x.Id,
             Sender = x.Sender.ToString(),
-            SenderName = x.Sender.ToString() == nameof(ChatUserType.Rider) ? x.Ride.Rider.FirstName + " " + x.Ride.Rider.LastName :
+            SenderName = x.Sender.ToString() == nameof(UserType.Rider) ? x.Ride.Rider.FirstName + " " + x.Ride.Rider.LastName :
                     x.Ride.Driver.FirstName + " " + x.Ride.Driver.LastName,
             Recipient = x.Recipient.ToString(),
-            RecipientName = x.Recipient.ToString() == nameof(ChatUserType.Rider) ? x.Ride.Rider.FirstName + " " + x.Ride.Rider.LastName :
+            RecipientName = x.Recipient.ToString() == nameof(UserType.Rider) ? x.Ride.Rider.FirstName + " " + x.Ride.Rider.LastName :
                     x.Ride.Driver.FirstName + " " + x.Ride.Driver.LastName,
             Message = x.Message,
             CreatedAt = x.CreatedAtUtc

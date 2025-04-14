@@ -1,4 +1,6 @@
-﻿using Ridely.Application.Abstractions.Authentication;
+﻿using Hangfire;
+using MediatR;
+using Ridely.Application.Abstractions.Authentication;
 using Ridely.Application.Abstractions.Messaging;
 using Ridely.Application.Extensions;
 using Ridely.Domain.Abstractions;
@@ -15,16 +17,19 @@ internal sealed class RegisterDriverCommandHandler :
     private readonly IDriverRepository _driverRepository;
     private readonly ICabRepository _cabRepository;
     private readonly IDriverWalletRepository _driverWalletRepository;
+    private readonly IPublisher _publisher;
 
     public RegisterDriverCommandHandler(IUnitOfWork unitOfWork,
         IJwtService tokenService, IDriverRepository driverRepository,
-        ICabRepository cabRepository, IDriverWalletRepository driverWalletRepository)
+        ICabRepository cabRepository, IDriverWalletRepository driverWalletRepository,
+        IPublisher publisher)
     {
         _unitOfWork = unitOfWork;
         _tokenService = tokenService;
         _driverRepository = driverRepository;
         _cabRepository = cabRepository;
         _driverWalletRepository = driverWalletRepository;
+        _publisher = publisher;
     }
 
     public async Task<Result<RegisterDriverResponse>> Handle(RegisterDriverCommand request,
@@ -67,16 +72,16 @@ internal sealed class RegisterDriverCommandHandler :
             request.PersonalInfo.Gender,
             request.PersonalInfo.DriversLicenseNo,
             request.PersonalInfo.DriverService,
-            cab.Id
+            cab.Id, request.PersonalInfo.IdentityType, request.PersonalInfo.IdentityNo
             );
 
         await _driverRepository.AddAsync(driver);
 
-        driver.RaiseDomainEvent(new DriverRegisteredDomainEvent(
-            phoneNo,
-            request.ReferrerCode ?? "",
-            request.PersonalInfo.ProfileImage,
-            request.PersonalInfo.DriversLicense));
+        //driver.RaiseDomainEvent(new DriverRegisteredDomainEvent(
+        //    phoneNo,
+        //    request.ReferrerCode ?? "",
+        //    request.PersonalInfo.ProfileImage,
+        //    request.PersonalInfo.DriversLicense));
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -88,6 +93,12 @@ internal sealed class RegisterDriverCommandHandler :
 
         (string accessToken, string refreshToken) = await _tokenService
             .GenerateToken(driver);
+
+        BackgroundJob.Enqueue(() => _publisher.Publish(new DriverRegisteredDomainEvent(
+            phoneNo,
+            request.ReferrerCode ?? "",
+            request.PersonalInfo.ProfileImage,
+            request.PersonalInfo.DriversLicense), cancellationToken));
 
         return new RegisterDriverResponse(accessToken, refreshToken);
     }

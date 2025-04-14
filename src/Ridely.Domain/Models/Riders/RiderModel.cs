@@ -14,6 +14,7 @@ public class RiderModel : BaseModel
     public string? DeviceTokenId { get; set; }
     public DateTime CreatedAt { get; set; }
     public string ProfileImageUrl { get; set; }
+    public bool EmailVerified { get; set; }
 }
 
 public class CardModel : BaseModel

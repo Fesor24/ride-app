@@ -9,6 +9,7 @@ using Ridely.Domain.Drivers;
 using Ridely.Domain.Riders;
 using Ridely.Domain.Users;
 using Ridely.Shared.Constants;
+using Ridely.Shared.Helper.Keys;
 
 namespace Ridely.Infrastructure.Authentication;
 internal sealed class JwtService : IJwtService
@@ -53,7 +54,7 @@ internal sealed class JwtService : IJwtService
         return (accessToken, refreshToken);
     }
 
-    public async Task<(string AccessToken, string RefreshToken)> GenerateToken(Rider rider, bool populateExp = false)
+    public async Task<(string AccessToken, string RefreshToken)> GenerateToken(Rider rider, bool persistRefreshToken = true)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationOptions.Secret));
 
@@ -64,23 +65,31 @@ internal sealed class JwtService : IJwtService
         var claims = new Dictionary<string, object>
         {
             [JwtRegisteredClaimNames.Email] = rider.Email,
+            [ClaimTypes.NameIdentifier] = RiderKey.CustomNameIdentifier(rider.Id),
             [ClaimsConstant.Rider] = rider.Id.ToString(),
+            [ClaimTypes.Role] = Roles.Rider
         };
-
-        string refreshToken = GenerateRefreshToken();
-
-        rider.UpdateRefreshToken(refreshToken);
-
-        _context.Set<Rider>().Update(rider);
-
-        await _context.SaveChangesAsync();
 
         string accessToken = token.CreateToken(GetTokenDescriptor(signingCredentials, claims));
 
-        return (accessToken, refreshToken);
+        if (persistRefreshToken)
+        {
+            string refreshToken = GenerateRefreshToken();
+
+            rider.UpdateRefreshToken(refreshToken);
+
+            _context.Set<Rider>().Update(rider);
+
+            await _context.SaveChangesAsync();
+
+            return (accessToken, refreshToken);
+
+        }
+
+        return (accessToken, string.Empty);
     }
 
-    public async Task<(string AccessToken, string RefreshToken)> GenerateToken(Driver driver, bool populateExp = false)
+    public async Task<(string AccessToken, string RefreshToken)> GenerateToken(Driver driver, bool persistRefreshToken = true)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationOptions.Secret));
 
@@ -91,20 +100,27 @@ internal sealed class JwtService : IJwtService
         var claims = new Dictionary<string, object>
         {
             [JwtRegisteredClaimNames.Email] = driver.Email,
-            [ClaimsConstant.Driver] = driver.Id.ToString()
+            [ClaimTypes.NameIdentifier] = DriverKey.CustomNameIdentifier(driver.Id),
+            [ClaimsConstant.Driver] = driver.Id.ToString(),
+            [ClaimTypes.Role] = Roles.Driver
         };
-
-        string refreshToken = GenerateRefreshToken();
-
-        driver.UpdateRefreshToken(refreshToken);
-
-        _context.Set<Driver>().Update(driver);
-
-        await _context.SaveChangesAsync();
 
         string accessToken = token.CreateToken(GetTokenDescriptor(signingCredentials, claims));
 
-        return (accessToken, refreshToken);
+        if (persistRefreshToken)
+        {
+            string refreshToken = GenerateRefreshToken();
+
+            driver.UpdateRefreshToken(refreshToken);
+
+            _context.Set<Driver>().Update(driver);
+
+            await _context.SaveChangesAsync();
+
+            return (accessToken, refreshToken);
+        }
+
+        return (accessToken, string.Empty);
     }
 
     private string GenerateRefreshToken()

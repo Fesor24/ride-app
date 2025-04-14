@@ -3,7 +3,6 @@ public enum RiderTransactionType
 {
     FundWallet = 1,
     CardAddition = 2,
-    RidePaymentFromVirtualWallet = 3,
-    RidePaymentUsingPaystack = 4,
-    Refund = 5
+    RidePayment = 3,
+    Refund = 4
 }

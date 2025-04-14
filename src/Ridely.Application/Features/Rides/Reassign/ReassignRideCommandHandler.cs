@@ -1,18 +1,18 @@
-﻿using Hangfire;
+﻿using System.Text.Json;
+using Hangfire;
+using Microsoft.AspNetCore.SignalR;
 using Ridely.Application.Abstractions.Messaging;
 using Ridely.Application.Abstractions.Referral;
 using Ridely.Application.Abstractions.Rides;
-using Ridely.Application.Abstractions.Websocket;
-using Ridely.Application.Models.WebSocket;
+using Ridely.Application.Hubs;
 using Ridely.Contracts.Models;
 using Ridely.Domain.Abstractions;
 using Ridely.Domain.Drivers;
 using Ridely.Domain.Riders;
 using Ridely.Domain.Rides;
 using Ridely.Domain.Services;
-using Ridely.Shared.Constants;
-using Ridely.Shared.Helper;
 using Ridely.Shared.Helper.Keys;
+using Ridely.Shared.SignalRCommunication;
 
 namespace Ridely.Application.Features.Rides.Reassign;
 internal sealed class ReassignRideCommandHandler :
@@ -21,32 +21,35 @@ internal sealed class ReassignRideCommandHandler :
     private readonly IUnitOfWork _unitOfWork;
     private readonly IRideService _rideService;
     private readonly ICacheService _cacheService;
-    private readonly IWebSocketManager _webSocketManager;
     private readonly IReferralService _referralService;
     private readonly IRiderRepository _riderRepository;
     private readonly IRideRepository _rideRepository;
     private readonly IDriverRepository _driverRepository;
     private readonly IRideLogRepository _rideLogRepository;
     private readonly IPaymentRepository _paymentRepository;
+    private readonly IPaymentDetailRepository _paymentDetailRepository;
     private readonly PricingService _pricingService;
+    private readonly IHubContext<RideHub> _rideHubContext;
 
     public ReassignRideCommandHandler(IUnitOfWork unitOfWork, IRideService rideService,
-        ICacheService cacheService, IWebSocketManager webSocketManager,
+        ICacheService cacheService,
         IReferralService referralService, IRiderRepository riderRepository,
         IRideRepository rideRepository, IDriverRepository driverRepository, IRideLogRepository rideLogRepository,
-        IPaymentRepository paymentRepository, PricingService pricingService)
+        IPaymentRepository paymentRepository, IPaymentDetailRepository paymentDetailRepository, PricingService pricingService,
+        IHubContext<RideHub> rideHubContext)
     {
         _unitOfWork = unitOfWork;
         _rideService = rideService;
         _cacheService = cacheService;
-        _webSocketManager = webSocketManager;
         _referralService = referralService;
         _riderRepository = riderRepository;
         _rideRepository = rideRepository;
         _driverRepository = driverRepository;
         _rideLogRepository = rideLogRepository;
         _paymentRepository = paymentRepository;
+        _paymentDetailRepository = paymentDetailRepository;
         _pricingService = pricingService;
+        _rideHubContext = rideHubContext;
     }
 
     public async Task<Result<ReassignRideResponse>> Handle(ReassignRideCommand request, CancellationToken cancellationToken)
@@ -60,12 +63,12 @@ internal sealed class ReassignRideCommandHandler :
         if (ride.Category == RideCategory.Delivery)
             return Error.BadRequest("ridetype.invalid", "Deliveries can not be rerouted");
 
-        if (ride.Status != RideStatus.InTransit)
-            return Error.BadRequest("ridestatus.notinprogress", "Only ride in progress can be rerouted");
+        if (ride.Status != RideStatus.Started)
+            return Error.BadRequest("ridestatus.notinprogress", "Only rides in progress can be rerouted");
 
         ride.UpdateStatus(RideStatus.Reassigned, reassignReason: request.ReassignReason);
 
-        RideLog rideLog = new(ride.Id, RideStatus.Reassigned);
+        RideLog rideLog = new(ride.Id, RideLogEvent.Reassigned);
 
         await _rideLogRepository.AddAsync(rideLog);
 
@@ -86,29 +89,44 @@ internal sealed class ReassignRideCommandHandler :
 
         driver.UpdateCompletedTrips();
 
+        driver.UpdateStatus(DriverStatus.Online);
+
         _driverRepository.Update(driver);
 
-        string driverWebsocketKey = WebSocketKeys.Driver.Key(driver.Id.ToString());
-
-        var driverRerouteObjectMessage = new WebSocketResponse<object>
-        {
-            Event = SocketEventConstants.DRIVER_REASSIGN,
-            Payload = new
+        await _rideHubContext.Clients.User(DriverKey.CustomNameIdentifier(driver.Id))
+            .SendAsync(SignalRSubscription.ReceiveRideUpdates, new
             {
-                message = "Ride reassigned",
-                stopLocation = new
+                update = ReceiveRideUpdate.Reassigned,
+                data = JsonSerializer.Serialize(new
                 {
-                    latitude = request.Source.Latitude,
-                    longitutude = request.Source.Longitude
-                }
-            }
-        };
+                    stop = new
+                    {
+                        latitude = request.Source.Latitude,
+                        longitude = request.Source.Longitude
+                    }
+                })
+            });
 
-        string driverRerouteMessage = Serialize.Object(driverRerouteObjectMessage);
+        //string driverWebsocketKey = WebSocketKeys.Driver.Key(driver.Id.ToString());
 
-        await _webSocketManager.SendMessageAsync(driverWebsocketKey, driverRerouteMessage);
+        //var driverRerouteMessage = WebSocketMessage<object>.Create(
+        //    SocketEventConstants.DRIVER_REASSIGN,
+        //    new
+        //    {
+        //        message = "Ride reassigned",
+        //        stopLocation = new
+        //        {
+        //            latitude = request.Source.Latitude,
+        //            longitutude = request.Source.Longitude
+        //        }
+        //    });
+
+        //await _webSocketManager.SendMessageAsync(driverWebsocketKey, driverRerouteMessage);
 
         // todo: charge for previous ride...
+        // todo: review and sort payment globally...
+        // use different service for payment??
+        // Questions for CEO on paymen
         // communicate price to driver via websocket...same with rider...
         //BackgroundJob.Enqueue(() => paymentService.ChargeRideAsync(ride.Id));
 
@@ -120,22 +138,25 @@ internal sealed class ReassignRideCommandHandler :
 
         if (res.IsFailure) return res.Error;
 
-        long estimatedFare = _pricingService.FormatPrice(res.Value.EstimatedFare);
+        long estimatedFare = _pricingService.ConvertPriceInDecimalToLong(res.Value.EstimatedFare);
 
         Payment ridePayment = new(
-            estimatedFare,
-            Ulid.NewUlid(),
             ride.Payment.Method,
             ride.Payment.PaymentCardId
             );
 
-        //await _unitOfWork.PaymentRepository.AddAsync(ridePayment);
+        await _paymentRepository.AddAsync(ridePayment);
+
+        await _unitOfWork.SaveChangesAsync();
+
+        PaymentDetail paymentDetail = new(Ulid.NewUlid(), ridePayment.Id, PaymentFor.EstimatedCharge, ride.EstimatedFare);
+
+        await _paymentDetailRepository.AddAsync(paymentDetail);
 
         BackgroundJob.Enqueue(() => _referralService.RewardsAfterRidersFirstCompletedRide(ride.RiderId));
+        BackgroundJob.Enqueue(() => _referralService.RewardsAfterDriversFirstCompletedRide(ride.DriverId!.Value));
 
         var destinationCoordinates = ride.GetCoordinates(ride.DestinationCordinates);
-
-        await _paymentRepository.AddAsync(ridePayment);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -160,7 +181,7 @@ internal sealed class ReassignRideCommandHandler :
 
         await _rideRepository.AddAsync(newRide);
 
-        RideLog newRideLog = new(newRide.Id, RideStatus.Requested);
+        RideLog newRideLog = new(newRide.Id, RideLogEvent.Requested);
 
         await _rideLogRepository.AddAsync(newRideLog);
 
@@ -174,6 +195,7 @@ internal sealed class ReassignRideCommandHandler :
             newRide.Id,
             newRide.SourceAddress,
             newRide.DestinationAddress,
+            [],// todo: handle waypoints...
             newRide.MusicGenre.ToString(),
             newRide.HaveConversation,
             newRide.EstimatedFare,

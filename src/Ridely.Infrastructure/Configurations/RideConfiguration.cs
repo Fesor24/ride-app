@@ -10,5 +10,7 @@ internal sealed class RideConfiguration : IEntityTypeConfiguration<Ride>
     {
         builder.ToTable(nameof(Ride), ApplicationDbContext.Rides);
         builder.HasKey(ride => ride.Id);
+        builder.Property<uint>("Version")
+            .IsRowVersion();
     }
 }

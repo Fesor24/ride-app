@@ -30,7 +30,6 @@ public sealed class Rider : Entity
         CreatedAtUtc = DateTime.UtcNow;
         DateOfBirth = dateOfBirth;
     }
-
     public string FirstName { get; private set; }
     public string LastName { get; private set; }
     public string PhoneNo { get; private set; }
@@ -51,12 +50,14 @@ public sealed class Rider : Entity
     public bool IsDeactivated { get; private set; } = false;
     public bool IsDeleted { get; private set; } = false;
     public bool IsBarred { get; private set; } = false;
+    public bool EmailValidated { get; private set; } = false;
     public DateTime? RefreshTokenExpiry { get; private set; }
     public long? CurrentRideId { get; private set; }
     public DateTime UpdatedAtUtc { get; private set; }
     public ICollection<PaymentCard> PaymentCards { get; private set; } = [];
     public ICollection<SavedLocation> SavedLocations { get; private set; } = [];
     public ICollection<RiderReferrers> Referrers { get; private set; } = [];
+    public ICollection<RiderDiscount> Discounts { get; private set; } = [];
 
     public void UpdateRefreshToken(string refreshToken)
     {
@@ -78,6 +79,8 @@ public sealed class Rider : Entity
 
     public void Delete()
     {
+        PhoneNo = PhoneNo + "_deleted_" + DateTime.UtcNow.ToString();
+        Email = Email + "_deleted" + DateTime.UtcNow.ToString();
         IsDeleted = true;
         UpdatedAtUtc = DateTime.UtcNow;
     }
@@ -115,5 +118,10 @@ public sealed class Rider : Entity
             );
 
         return rider;
+    }
+
+    public void ValidateEmail()
+    {
+        EmailValidated = true;
     }
 }

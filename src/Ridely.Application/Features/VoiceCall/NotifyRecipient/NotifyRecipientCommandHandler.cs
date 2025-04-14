@@ -1,15 +1,15 @@
-﻿using Ridely.Application.Abstractions.Messaging;
+﻿using Microsoft.AspNetCore.SignalR;
+using Ridely.Application.Abstractions.Messaging;
 using Ridely.Application.Abstractions.Notifications;
 using Ridely.Application.Abstractions.VoiceCall;
-using Ridely.Application.Abstractions.Websocket;
-using Ridely.Application.Models.WebSocket;
+using Ridely.Application.Hubs;
 using Ridely.Domain.Abstractions;
 using Ridely.Domain.Drivers;
 using Ridely.Domain.Riders;
 using Ridely.Domain.Rides;
 using Ridely.Shared.Constants;
-using Ridely.Shared.Helper;
 using Ridely.Shared.Helper.Keys;
+using Ridely.Shared.SignalRCommunication;
 
 namespace Ridely.Application.Features.VoiceCall.NotifyRecipient
 {
@@ -19,21 +19,21 @@ namespace Ridely.Application.Features.VoiceCall.NotifyRecipient
         private readonly IRideRepository _rideRepository;
         private readonly IRiderRepository _riderRepository;
         private readonly IDriverRepository _driverRepository;
-        private readonly IDeviceNotificationService _deviceNotificationService;
-        private readonly IWebSocketManager _webSocketManager;
+        private readonly IPushNotificationService _deviceNotificationService;
         private readonly IVoiceService _voiceService;
+        private readonly IHubContext<RideHub> _rideHubContext;
 
         public NotifyRecipientCommandHandler(IRideRepository rideRepository,
             IRiderRepository riderRepository, IDriverRepository driverRepository,
-            IDeviceNotificationService deviceNotificationService, IWebSocketManager webSocketManager,
-            IVoiceService voiceService)
+            IPushNotificationService deviceNotificationService,
+            IVoiceService voiceService, IHubContext<RideHub> rideHubContext)
         {
             _rideRepository = rideRepository;
             _riderRepository = riderRepository;
             _driverRepository = driverRepository;
             _deviceNotificationService = deviceNotificationService;
-            _webSocketManager = webSocketManager;
             _voiceService = voiceService;
+            _rideHubContext = rideHubContext;
         }
 
         public async Task<Result<bool>> Handle(NotifyRecipientCommand request, CancellationToken cancellationToken)
@@ -49,7 +49,6 @@ namespace Ridely.Application.Features.VoiceCall.NotifyRecipient
 
             if (request.RiderId.HasValue)
             {
-                // notify driver
                 if (!ride.DriverId.HasValue)
                     return Error.BadRequest("ride.notmatched", "Ride not matched");
 
@@ -58,44 +57,61 @@ namespace Ridely.Application.Features.VoiceCall.NotifyRecipient
 
                 if (rider is null) return true;
 
-                string driverWebSocketKey = WebSocketKeys.Driver.Key(ride.DriverId.Value.ToString());
+                //string driverWebSocketKey = WebSocketKeys.Driver.Key(ride.DriverId.Value.ToString());
 
                 //token for the driver...
                 var (token, channel) = await _voiceService.GenerateAgoraAccessTokenAsync(ride.Id.ToString(), true);
 
-                var callRouteMessage = new WebSocketResponse<object>
-                {
-                    Event = SocketEventConstants.ROUTE_CALL,
-                    Payload = new 
-                    { 
-                        message = "Call routed",
-                        createdAt = callInitiatedTime,
-                        expiryInSeconds = 10,
-                        rideId = ride.Id,
-                        callerInfo = new
-                        {
-                            caller = "rider",
-                            name = rider.FirstName + " " + rider.LastName,
-                            profileImage = rider.ProfileImageUrl
-                        },
-                        callInfo = new
-                        {
-                            recipient = "driver",
-                            token,
-                            channel
-                        }
-                    }
-                };
+                //var callRouteMessage = WebSocketMessage<object>.Create(
+                //    SocketEventConstants.ROUTE_CALL,
+                //    new
+                //    {
+                //        message = "Call routed",
+                //        createdAt = callInitiatedTime,
+                //        expiryInSeconds = 10,
+                //        rideId = ride.Id,
+                //        callerInfo = new
+                //        {
+                //            caller = "rider",
+                //            name = rider.FirstName + " " + rider.LastName,
+                //            profileImage = rider.ProfileImageUrl
+                //        },
+                //        callInfo = new
+                //        {
+                //            recipient = "driver",
+                //            token,
+                //            channel
+                //        }
+                //    });
 
                 var data = new Dictionary<string, string>
                 {
-                    {"expiryInSeconds", "10" },
+                    {"expiryInSeconds", ApplicationConstant.CALL_WAIT_TIME.ToString() },
                     {"createdAt", callInitiatedTime },
                 };
 
-                string message = Serialize.Object(callRouteMessage);
+                //await _webSocketManager.SendMessageAsync(driverWebSocketKey, callRouteMessage);
 
-                await _webSocketManager.SendMessageAsync(driverWebSocketKey, callRouteMessage);
+                // notify driver...
+                await _rideHubContext.Clients.User(DriverKey.CustomNameIdentifier(ride.DriverId!.Value))
+                    .SendAsync(SignalRSubscription.ReceiveCallNotification, new
+                    {
+                        CreatedAt = callInitiatedTime,
+                        ExpiryInSeconds = ApplicationConstant.CALL_WAIT_TIME,
+                        RideId = ride.Id,
+                        CallerInfo = new
+                        {
+                            Caller = "rider",
+                            Name = rider.FirstName + " " + rider.LastName,
+                            ProfileImage = rider.ProfileImageUrl
+                        },
+                        CallInfo = new
+                        {
+                            Recipient = "driver",
+                            Token = token,
+                            Channel = channel
+                        }
+                    }, cancellationToken);
 
                 var driver = await _driverRepository
                     .GetAsync(ride.DriverId.Value);
@@ -113,50 +129,65 @@ namespace Ridely.Application.Features.VoiceCall.NotifyRecipient
                 if (!ride.DriverId.HasValue)
                     return Error.BadRequest("ride.notmatched", "Ride not matched");
 
-                // notify rider...
                 var driver = await _driverRepository
                     .GetAsync(ride.DriverId!.Value);
 
                 if (driver is null) return true;
 
-                string riderWebSocketKey = WebSocketKeys.Rider.Key(ride.RiderId.ToString());
+                //string riderWebSocketKey = WebSocketKeys.Rider.Key(ride.RiderId.ToString());
 
                 //token for the rider...
                 var (token, channel) = await _voiceService.GenerateAgoraAccessTokenAsync(ride.Id.ToString(), false);
 
-                var callRouteMessage = new WebSocketResponse<object>
-                {
-                    Event = SocketEventConstants.ROUTE_CALL,
-                    Payload = new
-                    {
-                        message = "Call routed",
-                        createdAt = callInitiatedTime,
-                        expiryInSeconds = 10,
-                        rideId = ride.Id,
-                        callerInfo = new
-                        {
-                            caller = "driver",
-                            name = driver.FirstName + " " + driver.LastName,
-                            profileImage = driver.ProfileImageUrl
-                        },
-                        callInfo = new
-                        {
-                            recipient = "rider",
-                            token,
-                            channel
-                        }
-                    }
-                };
+                //var callRouteMessage = WebSocketMessage<object>.Create(
+                //    SocketEventConstants.ROUTE_CALL,
+                //    new
+                //    {
+                //        createdAt = callInitiatedTime,
+                //        expiryInSeconds = 10,
+                //        rideId = ride.Id,
+                //        callerInfo = new
+                //        {
+                //            caller = "driver",
+                //            name = driver.FirstName + " " + driver.LastName,
+                //            profileImage = driver.ProfileImageUrl
+                //        },
+                //        callInfo = new
+                //        {
+                //            recipient = "rider",
+                //            token,
+                //            channel
+                //        }
+                //    });
 
                 var data = new Dictionary<string, string>
                 {
-                    {"expiryInSeconds", "10" },
+                    {"expiryInSeconds", ApplicationConstant.CALL_WAIT_TIME.ToString() },
                     {"createdAt", callInitiatedTime },
                 };
 
-                string message = Serialize.Object(callRouteMessage);
+                //await _webSocketManager.SendMessageAsync(riderWebSocketKey, callRouteMessage);
 
-                await _webSocketManager.SendMessageAsync(riderWebSocketKey, callRouteMessage);
+                // notify rider...
+                await _rideHubContext.Clients.User(RiderKey.CustomNameIdentifier(ride.RiderId))
+                   .SendAsync(SignalRSubscription.ReceiveCallNotification, new
+                   {
+                       CreatedAt = callInitiatedTime,
+                       ExpiryInSeconds = ApplicationConstant.CALL_WAIT_TIME,
+                       RideId = ride.Id,
+                       CallerInfo = new
+                       {
+                           Caller = "driver",
+                           Name = driver.FirstName + " " + driver.LastName,
+                           ProfileImage = driver.ProfileImageUrl
+                       },
+                       CallInfo = new
+                       {
+                           Recipient = "rider",
+                           Token = token,
+                           Channel = channel
+                       }
+                   }, cancellationToken);
 
                 var rider = await _riderRepository
                     .GetAsync(ride.RiderId);

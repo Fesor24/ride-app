@@ -4,4 +4,5 @@ public sealed record DriverProfile(
     string FirstName,
     string LastName,
     string DeviceTokenId,
-    string ProfileImageUrl);
+    string ProfileImageUrl,
+    decimal Ratings);

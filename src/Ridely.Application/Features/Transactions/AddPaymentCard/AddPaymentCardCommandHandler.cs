@@ -40,7 +40,8 @@ internal sealed class AddPaymentCardCommandHandler :
             50,
             RiderTransactionType.CardAddition,
             reference,
-            TransactionStatus.Pending
+            TransactionStatus.Pending,
+            Domain.Rides.PaymentProvider.Paystack
             );
 
         await _riderTransactionHistoryRepository.AddAsync(riderTransactionHistory);

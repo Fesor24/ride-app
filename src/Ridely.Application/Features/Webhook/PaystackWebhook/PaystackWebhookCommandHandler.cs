@@ -1,5 +1,4 @@
-﻿using System.Data;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Hangfire;
 using Ridely.Application.Abstractions.Messaging;
 using Ridely.Domain.Abstractions;
@@ -23,13 +22,16 @@ internal sealed class PaystackWebhookCommandHandler :
     private readonly ITransactionReferenceMapRepository _transactionReferenceMapRepository;
     private readonly IPaymentRepository _paymentRepository;
     private readonly IPaymentCardRepository _paymentCardRepository;
+    private readonly IRideRepository _rideRepository;
+    private readonly IPaymentDetailRepository _paymentDetailRepository;
 
     public PaystackWebhookCommandHandler(ITransactionLogRepository transactionLogRepository,
         IRiderRepository riderRepository, IRiderTransactionHistoryRepository riderTransactionHistoryRepository,
         IDriverRepository driverRepository, IDriverTransactionHistoryRepository driverTransactionHistoryRepository,
         IRiderWalletRepository riderWalletRepository, IDriverWalletRepository driverWalletRepository,
         IUnitOfWork unitOfWork, ITransactionReferenceMapRepository transactionReferenceMapRepository,
-        IPaymentRepository paymentRepository, IPaymentCardRepository paymentCardRepository)
+        IPaymentRepository paymentRepository, IPaymentCardRepository paymentCardRepository,
+        IRideRepository rideRepository, IPaymentDetailRepository paymentDetailRepository)
     {
         _transactionLogRepository = transactionLogRepository;
         _riderRepository = riderRepository;
@@ -42,6 +44,8 @@ internal sealed class PaystackWebhookCommandHandler :
         _transactionReferenceMapRepository = transactionReferenceMapRepository;
         _paymentRepository = paymentRepository;
         _paymentCardRepository = paymentCardRepository;
+        _rideRepository = rideRepository;
+        _paymentDetailRepository = paymentDetailRepository;
     }
 
     public async Task<Result<bool>> Handle(PaystackWebhookCommand request, CancellationToken cancellationToken)
@@ -223,26 +227,59 @@ internal sealed class PaystackWebhookCommandHandler :
 
     private async Task ProcessRidePayment(PaystackWebhookCommand request, int amount)
     {
-        var ridePayment = await _paymentRepository
-            .GetByReferenceAsync(Ulid.Parse(request.Reference));
+        //var ridePayment = await _paymentRepository
+        //    .GetByReferenceAsync(Ulid.Parse(request.Reference));
 
-        if (ridePayment is null) return;
-
-        if (ridePayment.Status == PaymentStatus.Success) return;
-
-        ridePayment.UpdateStatus(PaymentStatus.Success);
-
-        _paymentRepository.Update(ridePayment);
+        //if (ridePayment is null) return;
 
         var riderTransaction = await _riderTransactionHistoryRepository
             .GetByReferenceAsync(Ulid.Parse(request.Reference));
 
-        if(riderTransaction is not null)
+        if(riderTransaction is null)
         {
-            riderTransaction.UpdateStatus(TransactionStatus.Success);
+            // log
 
-            _riderTransactionHistoryRepository.Update(riderTransaction);
+            return;
         }
+
+        riderTransaction.UpdateStatus(TransactionStatus.Success);
+
+        _riderTransactionHistoryRepository.Update(riderTransaction);
+
+        await _unitOfWork.SaveChangesAsync();
+
+        if (!riderTransaction.RideId.HasValue)
+        {
+            // log
+
+            return;
+        }
+
+        var ride = await _rideRepository.GetAsync(riderTransaction.RideId.Value);
+
+        if(ride is null)
+        {
+            // log
+
+            return;
+        }
+
+        // ensure all ride payment has payment references tied to it...once it is successful here or verified using the 
+        // rider tranaction reference, we update all the payment references tied to it...
+        List<Ulid> paymentReferences = riderTransaction.RidePaymentReferences
+            .Split(".")
+            .Select(Ulid.Parse)
+            .ToList();
+
+        var paymentDetails = await _paymentDetailRepository.GetAllByReference(paymentReferences);
+
+        foreach(var payment in paymentDetails)
+        {
+            payment.UpdateStatus(PaymentStatus.Success);
+            payment.IncreaseOrOverrideAmountDue(0, true);
+        }
+
+        _paymentDetailRepository.UpdateRange(paymentDetails);
 
         await _unitOfWork.SaveChangesAsync();
     }

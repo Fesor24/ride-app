@@ -1,4 +1,4 @@
-﻿namespace Ridely.Api.Controllers.Webhooks;
+﻿namespace RidelyAPI.Controllers.Webhooks;
 
 public class VerifyPaymentRequest
 {

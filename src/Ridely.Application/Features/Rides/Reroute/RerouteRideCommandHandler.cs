@@ -1,13 +1,14 @@
-﻿using Ridely.Application.Abstractions.Messaging;
+﻿using System.Text.Json;
+using Hangfire;
+using Microsoft.AspNetCore.SignalR;
+using Ridely.Application.Abstractions.Messaging;
+using Ridely.Application.Abstractions.Payment;
 using Ridely.Application.Abstractions.Rides;
-using Ridely.Application.Abstractions.Websocket;
-using Ridely.Application.Models.WebSocket;
+using Ridely.Application.Hubs;
 using Ridely.Domain.Abstractions;
-using Ridely.Domain.Riders;
 using Ridely.Domain.Rides;
-using Ridely.Shared.Constants;
-using Ridely.Shared.Helper;
 using Ridely.Shared.Helper.Keys;
+using Ridely.Shared.SignalRCommunication;
 
 namespace Ridely.Application.Features.Rides.Reroute;
 internal sealed class RerouteRideCommandHandler :
@@ -15,21 +16,18 @@ internal sealed class RerouteRideCommandHandler :
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IRideRepository _rideRepository;
-    private readonly IRiderRepository _riderRepository;
-    private readonly IRideLogRepository _rideLogRepository;
     private readonly IRideService _rideService;
-    private readonly IWebSocketManager _webSocketManager;
+    private readonly IHubContext<RideHub> _rideHubContext;
+    private readonly IPaymentService _paymentService;
 
     public RerouteRideCommandHandler(IUnitOfWork unitOfWork, IRideRepository rideRepository,
-        IRiderRepository riderRepository, IRideLogRepository rideLogRepository, IRideService rideService,
-        IWebSocketManager webSocketManager)
+         IRideService rideService, IHubContext<RideHub> rideHubContext, IPaymentService paymentService)
     {
         _unitOfWork = unitOfWork;
         _rideRepository = rideRepository;
-        _riderRepository = riderRepository;
-        _rideLogRepository = rideLogRepository;
         _rideService = rideService;
-        _webSocketManager = webSocketManager;
+        _rideHubContext = rideHubContext;
+        _paymentService = paymentService;
     }
 
     public async Task<Result<RerouteRideResponse>> Handle(RerouteRideCommand request,
@@ -41,20 +39,27 @@ internal sealed class RerouteRideCommandHandler :
         if (ride is null)
             return Error.NotFound("ride.notfound", "Ride not found");
 
-        if (ride.Status != RideStatus.InTransit)
+        if (ride.WasRerouted)
+            return Error.BadRequest("ride.rerouted", "A ride can only be rerouted once");
+
+        // for now...reroute can be done once...
+        if (ride.Status != RideStatus.Started)
             return Error.BadRequest("ride.notinprogress", "Only rides in progress can be extended");
 
-        ride.UpdateWaypointCoordinates(request.Source.Latitude, request.Source.Longitude);
+        //ride.UpdateWaypointCoordinates(request.Source.Latitude, request.Source.Longitude, true);
 
-        ride.UpdateWaypointAddresses(request.SourceAddress);
+        //ride.UpdateWaypointAddresses(request.SourceAddress);
 
-        ride.UpdateDestinationAddress(request.DestinationAddress);
+        //ride.UpdateDestinationAddress(request.DestinationAddress);
 
-        ride.UpdateDestinationCordinates(request.Destination.Latitude, request.Destination.Longitude);
+        //ride.UpdateDestinationCordinates(request.Destination.Latitude, request.Destination.Longitude);
 
-        // todo: recalculate based on the distance covered...do not factor in the time here
-        // use the initial estimated fare and the distance covered...
-        // reason is traffic might differ between requests...
+        ride.Reroute(request.DestinationAddress, request.Destination.Latitude, request.Destination.Longitude);
+
+        _rideRepository.Update(ride);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
         var getCompletedDistanceFare = await _rideService.ComputeEstimatedFare(ride.GetCoordinates(ride.SourceCordinates),
             request.Source);
 
@@ -66,38 +71,51 @@ internal sealed class RerouteRideCommandHandler :
 
         if (res.IsFailure) return res.Error;
 
-        //todo: update the new fare
-        //ride.EstimatedFare = res.Value.EstimatedFare + completedDistanceFare;
+        BackgroundJob.Enqueue(() => _paymentService
+            .ProcessReroutedTripPaymentAsync(ride, completedDistanceFare, res.Value.EstimatedFare));
 
-        _rideRepository.Update(ride);
+        //string driverWebSocketKey = WebSocketKeys.Driver.Key(ride.DriverId!.Value.ToString());
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        //var rerouteRideMessage = WebSocketMessage<object>.Create(
+        //    SocketEventConstants.RIDE_DESTINATIONUPDATE,
+        //    new
+        //    {
+        //        source = new
+        //        {
+        //            address = request.SourceAddress,
+        //            latitude = request.Source.Latitude,
+        //            longitude = request.Source.Longitude,
+        //        },
+        //        destination = new
+        //        {
+        //            address = request.DestinationAddress,
+        //            latitude = request.Destination.Latitude,
+        //            longitude = request.Destination.Longitude
+        //        }
+        //    });
 
-        string driverWebSocketKey = WebSocketKeys.Driver.Key(ride.DriverId!.Value.ToString());
-        var driverRideExtensionRequestMessage = new WebSocketResponse<object>
-        {
-            Event = SocketEventConstants.RIDE_DESTINATIONUPDATE,
-            Payload = new
+        await _rideHubContext.Clients.User(DriverKey.CustomNameIdentifier(ride.DriverId!.Value))
+            .SendAsync(SignalRSubscription.ReceiveRideUpdates, new
             {
-                source = new
+                Update = ReceiveRideUpdate.Rerouted,
+                Data = JsonSerializer.Serialize(new
                 {
-                    address = request.SourceAddress,
-                    latitude = request.Source.Latitude,
-                    longitude = request.Source.Longitude,
-                },
-                destination = new
-                {
-                    address = request.DestinationAddress,
-                    latitude = request.Destination.Latitude,
-                    longitude = request.Destination.Longitude
-                }
-            }
+                    source = new
+                    {
+                        address = request.SourceAddress,
+                        latitude = request.Source.Latitude,
+                        longitude = request.Source.Longitude,
+                    },
+                    destination = new
+                    {
+                        address = request.DestinationAddress,
+                        latitude = request.Destination.Latitude,
+                        longitude = request.Destination.Longitude
+                    }
+                })
+            });
 
-        };
-
-        string requestMessage = Serialize.Object(driverRideExtensionRequestMessage);
-
-        await _webSocketManager.SendMessageAsync(driverWebSocketKey, requestMessage);
+        //await _webSocketManager.SendMessageAsync(driverWebSocketKey, rerouteRideMessage);
 
         return new RerouteRideResponse
         {

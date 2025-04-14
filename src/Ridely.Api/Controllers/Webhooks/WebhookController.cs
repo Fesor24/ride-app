@@ -3,9 +3,9 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ridely.Application.Features.Webhook.PaystackWebhook;
-using Ridely.Api.Extensions;
+using RidelyAPI.Extensions;
 
-namespace Ridely.Api.Controllers.Webhooks
+namespace RidelyAPI.Controllers.Webhooks
 {
     [Route("api/webhook")]
     [AllowAnonymous]

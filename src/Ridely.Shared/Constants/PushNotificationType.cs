@@ -9,5 +9,6 @@
         public const string RideMatched = "ride-matched";
         public const string RideCancelled = "ride-cancelled";
         public const string CardTripPaymentFailure = "ride-card-payment-failure";
+        public const string RequestWaitTimeExtension = "request-wait-time-extension";
     }
 }

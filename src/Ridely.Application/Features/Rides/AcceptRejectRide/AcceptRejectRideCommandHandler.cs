@@ -1,14 +1,11 @@
 ﻿using System.Text.Json;
-using Hangfire;
-using MediatR;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Ridely.Application.Abstractions.Location;
 using Ridely.Application.Abstractions.Messaging;
 using Ridely.Application.Abstractions.Notifications;
-using Ridely.Application.Abstractions.Payment;
-using Ridely.Application.Abstractions.Websocket;
-using Ridely.Application.Features.Rides.CancelRideRequest;
+using Ridely.Application.Hubs;
 using Ridely.Application.Models.Shared;
-using Ridely.Application.Models.WebSocket;
 using Ridely.Domain.Abstractions;
 using Ridely.Domain.Drivers;
 using Ridely.Domain.Models;
@@ -17,8 +14,8 @@ using Ridely.Domain.Riders;
 using Ridely.Domain.Rides;
 using Ridely.Domain.Services;
 using Ridely.Shared.Constants;
-using Ridely.Shared.Helper;
 using Ridely.Shared.Helper.Keys;
+using Ridely.Shared.SignalRCommunication;
 using DriverDomain = Ridely.Domain.Drivers.Driver;
 
 namespace Ridely.Application.Features.Rides.AcceptRejectRide;
@@ -27,34 +24,28 @@ internal sealed class AcceptRejectRideCommandHandler :
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICacheService _cacheService;
-    private readonly IWebSocketManager _webSocketManager;
-    private readonly IDeviceNotificationService _deviceNotificationService;
+    private readonly IPushNotificationService _deviceNotificationService;
     private readonly ILocationService _locationService;
     private readonly IRideRepository _rideRepository;
     private readonly IDriverRepository _driverRepository;
     private readonly IRiderRepository _riderRepository;
     private readonly IRideLogRepository _rideLogRepository;
-    private readonly IPaymentService _paymentService;
-    private readonly ISender _sender;
+    private readonly IHubContext<RideHub> _rideHubContext;
 
     public AcceptRejectRideCommandHandler(IUnitOfWork unitOfWork, ICacheService cacheService,
-        IWebSocketManager webSocketManager,
-        IDeviceNotificationService deviceNotificationService, ILocationService locationService,
+        IPushNotificationService deviceNotificationService, ILocationService locationService,
         IRideRepository rideRepository, IDriverRepository driverRepository, IRiderRepository riderRepository,
-        IRideLogRepository rideLogRepository,  IPaymentService paymentService,
-        ISender sender)
+        IRideLogRepository rideLogRepository, IHubContext<RideHub> rideHubContext)
     {
         _unitOfWork = unitOfWork;
         _cacheService = cacheService;
-        _webSocketManager = webSocketManager;
         _deviceNotificationService = deviceNotificationService;
         _locationService = locationService;
         _rideRepository = rideRepository;
         _driverRepository = driverRepository;
         _riderRepository = riderRepository;
         _rideLogRepository = rideLogRepository;
-        _paymentService = paymentService;
-        _sender = sender;
+        _rideHubContext = rideHubContext;
     }
 
     public async Task<Result<AcceptRejectResponse>> Handle(AcceptRejectRideCommand request,
@@ -68,7 +59,6 @@ internal sealed class AcceptRejectRideCommandHandler :
 
         if (ride.DriverId.HasValue) return Error.BadRequest("ride.matched", "Ride has been matched to driver");
 
-        // todo: set concurrency for ride...still uncertain though...think abt it if it is needed...
         string driverRideRequestKey = RideKeys.RideRequestToDriver(request.DriverId.ToString());
 
         string? driverRideRequestValue = await _cacheService.GetAsync(driverRideRequestKey);
@@ -88,14 +78,20 @@ internal sealed class AcceptRejectRideCommandHandler :
             await _cacheService.RemoveAsync(rideMatchKey);
         }
 
-        else await HandleRideRejection(request.DriverId, driverRideRequestKey, cancellationToken);
+        else return await HandleRideRejection(request.DriverId, driverRideRequestKey, cancellationToken);
+
+        // todo: handle this situation...this needs to be handled
+        // 1.return from here
+        // other options???
+        // can it be ignored...perhaps not relevant??
+        var riderDisconnected = await _cacheService.GetAsync(RiderKey.Disconnected(ride.RiderId));
 
         var driver = await _driverRepository
             .GetDetailsAsync(request.DriverId);
 
         if (driver is null) return Error.NotFound("driver.notfound", "Driver not found");
 
-        var rideCancelled = await CheckRideCancellationStatus(ride.Id, driver.Id);
+        var rideCancelled = await IsRideCancelled(ride.Id);
 
         if(rideCancelled) return new AcceptRejectResponse(new LocationResponse(0, 0), true, true);
 
@@ -104,44 +100,32 @@ internal sealed class AcceptRejectRideCommandHandler :
 
         Location sourceLocation = ride.GetCoordinates(ride.SourceCordinates);
 
-        string driversLocationKey = RideKeys.DriverLocation(driver.Id.ToString());
-
-        var (latitude, longitude) = await _locationService.GetDriverCoordinatesAsync(driversLocationKey);
+        var (latitude, longitude, _) = await _locationService.GetDriverCoordinatesAsync(driver.Id);
 
         await NotifyRiderOfMatch(latitude, longitude, driver, ride, rider!);
 
         await UpdateCache(driver, ride, driver.Id);
 
-        await PersistData(ride, driver, rider!, cancellationToken);
+        try
+        {
+            await PersistData(ride, driver, rider!, cancellationToken);
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return Error.BadRequest("error", "An error occurred");
+        }
 
         return new AcceptRejectResponse(new LocationResponse(sourceLocation.Latitude,
             sourceLocation.Longitude), true, false);
     }
 
-    private async Task<bool> CheckRideCancellationStatus(long rideId, long driverId)
+    private async Task<bool> IsRideCancelled(long rideId)
     {
         string matchProcessCancellationKey = RideKeys.RideCancelled(rideId.ToString());
 
         var matchCancellationValue = await _cacheService.GetAsync(matchProcessCancellationKey);
 
-        if (!string.IsNullOrWhiteSpace(matchCancellationValue))
-        {
-            string driverWebSocketKey = WebSocketKeys.Driver.Key(driverId.ToString());
-
-            var cancellationMessage = new WebSocketResponse<object>
-            {
-                Event = SocketEventConstants.RIDE_CANCELLATION,
-                Payload = new { message = "Ride request cancelled" }
-            };
-
-            string message = Serialize.Object(cancellationMessage);
-
-            await _webSocketManager.SendMessageAsync(driverWebSocketKey, message);
-
-            return true;
-        }
-
-        return false;
+        return !string.IsNullOrWhiteSpace(matchCancellationValue);
     }
 
     private async Task<AcceptRejectResponse> HandleRideRejection(long driverId, string driverRideRequestKey,
@@ -167,43 +151,71 @@ internal sealed class AcceptRejectRideCommandHandler :
     private async Task NotifyRiderOfMatch(double latitude, double longitude,
         DriverDomain driver, Domain.Rides.Ride ride, Domain.Riders.Rider rider)
     {
-        var rideMatchedMessage = new WebSocketResponse<object>
-        {
-            Event = SocketEventConstants.RIDE_MATCHED,
-            Payload = new
+        await _rideHubContext.Clients.User(RiderKey.CustomNameIdentifier(rider.Id))
+            .SendAsync(SignalRSubscription.ReceiveRideUpdates, new
             {
-                driverLocation = new
+                Update = ReceiveRideUpdate.Accepted,
+                Data = JsonSerializer.Serialize(new
                 {
-                    latitude,
-                    longitude
-                },
-                driver = new
-                {
-                    name = driver.FirstName + " " + driver.LastName,
-                    phoneNo = driver.PhoneNo,
-                    imageUrl = driver.ProfileImageUrl
-                },
-                cab = new
-                {
-                    licensePlateNo = driver.Cab.LicensePlateNo,
-                    color = driver.Cab.Color,
-                    name = driver.Cab.Name,
-                    model = driver.Cab.Model,
-                    manufacturer = driver.Cab.Manufacturer
-                },
-                ride = new
-                {
-                    rideId = ride.Id
-                }
-            }
-        };
+                    DriverLocation = new
+                    {
+                        Latitude = latitude,
+                        Longitude = longitude,
+                    },
+                    Driver = new
+                    {
+                        Name = driver.FirstName + " " + driver.LastName,
+                        driver.PhoneNo,
+                        driver.ProfileImageUrl,
+                        Ratings = driver.AvgRatings
+                    },
+                    Cab = new
+                    {
+                        driver.Cab.LicensePlateNo,
+                        driver.Cab.Color,
+                        driver.Cab.Name,
+                        driver.Cab.Model,
+                        driver.Cab.Manufacturer
+                    },
+                    Ride = new
+                    {
+                        RideId = ride.Id
+                    }
+                })
+            });
 
-        string riderMatchMessage = Serialize.Object(rideMatchedMessage);
+        //var rideMatchedMessage = WebSocketMessage<object>.Create(
+        //    SocketEventConstants.RIDE_MATCHED,
+        //    new
+        //    {
+        //        driverLocation = new
+        //        {
+        //            latitude,
+        //            longitude
+        //        },
+        //        driver = new
+        //        {
+        //            name = driver.FirstName + " " + driver.LastName,
+        //            phoneNo = driver.PhoneNo,
+        //            imageUrl = driver.ProfileImageUrl
+        //        },
+        //        cab = new
+        //        {
+        //            licensePlateNo = driver.Cab.LicensePlateNo,
+        //            color = driver.Cab.Color,
+        //            name = driver.Cab.Name,
+        //            model = driver.Cab.Model,
+        //            manufacturer = driver.Cab.Manufacturer
+        //        },
+        //        ride = new
+        //        {
+        //            rideId = ride.Id
+        //        }
+        //    });
 
-        string riderWebSocketKey = WebSocketKeys.Rider.Key(ride.RiderId.ToString());
+        //string riderWebSocketKey = WebSocketKeys.Rider.Key(ride.RiderId.ToString());
 
-        // Notify rider with details
-        await _webSocketManager.SendMessageAsync(riderWebSocketKey, riderMatchMessage);
+        //await _webSocketManager.SendMessageAsync(riderWebSocketKey, rideMatchedMessage);
 
         if (!string.IsNullOrWhiteSpace(rider.DeviceTokenId))
         {
@@ -227,12 +239,14 @@ internal sealed class AcceptRejectRideCommandHandler :
 
         await _cacheService.SetAsync(driverMatchedKey, ride.RiderId.ToString(), TimeSpan.FromHours(10));
 
-        // cache for chat??
-        RideCacheModel rideCacheModel = new(ride.Id, ride.RiderId, driverId);
+        // todo: add the respective device token ids...
+        RideCacheModel rideCacheModel = new(ride.Id, ride.RiderId, driverId, "", "");
 
         string rideObjectKey = RideKeys.Ride(ride.Id.ToString());
 
         await _cacheService.SetAsync(rideObjectKey, JsonSerializer.Serialize(rideCacheModel), TimeSpan.FromHours(12));
+
+        await _locationService.DeleteLocationRecordAsync(driverId);
     }
 
     private async Task PersistData(Domain.Rides.Ride ride, DriverDomain driver, Domain.Riders.Rider rider,
@@ -250,7 +264,7 @@ internal sealed class AcceptRejectRideCommandHandler :
 
         _riderRepository.Update(rider);
 
-        RideLog rideLog = new(ride.Id, RideStatus.Matched);
+        RideLog rideLog = new(ride.Id, RideLogEvent.Matched);
 
         await _rideLogRepository.AddAsync(rideLog);
 

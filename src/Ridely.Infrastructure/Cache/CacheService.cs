@@ -2,7 +2,7 @@
 using StackExchange.Redis;
 using System.Text.Json;
 
-namespace Ridely.Infrastructure.Services;
+namespace Ridely.Infrastructure.Cache;
 internal class CacheService(IConnectionMultiplexer connectionMultiplexer) : ICacheService
 {
     private readonly IDatabase db = connectionMultiplexer.GetDatabase();

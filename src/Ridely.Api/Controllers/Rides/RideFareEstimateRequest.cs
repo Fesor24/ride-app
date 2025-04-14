@@ -1,9 +1,10 @@
-﻿namespace Ridely.Api.Controllers.Rides;
+﻿namespace RidelyAPI.Controllers.Rides;
 
 public class RideFareEstimateRequest
 {
     public RideLocation Source { get; set; }
     public RideLocation Destination { get; set; }
+    public RideLocation? Waypoint { get; set; }
 }
 
 public class RideLocation

@@ -1,7 +1,7 @@
 ﻿using Ridely.Domain.Drivers;
 using Ridely.Domain.Transactions;
 
-namespace Ridely.Api.Controllers.Admin.Driver;
+namespace RidelyAPI.Controllers.Admin.Driver;
 
 public class SearchDriverTransactionRequest : SearchRequest
 {

@@ -1,4 +1,4 @@
-﻿namespace Ridely.Api.Dto.Account;
+﻿namespace RidelyAPI.Dto.Account;
 
 public class TokenDto
 {

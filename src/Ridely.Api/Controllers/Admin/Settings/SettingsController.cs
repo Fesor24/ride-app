@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Ridely.Application.Features.Admin.Settings.Command.UpdateRideSettings;
 using Ridely.Application.Features.Admin.Settings.Query.GetSettings;
 using Ridely.Application.Features.Common.Banks.Command.CreateMany;
-using Ridely.Api.Controllers.Base;
-using Ridely.Api.Extensions;
-using Ridely.Api.Shared;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Extensions;
+using RidelyAPI.Shared;
 
-namespace Ridely.Api.Controllers.Admin.Settings;
+namespace RidelyAPI.Controllers.Admin.Settings;
 
 [Route("api/settings")]
 public class SettingsController : AdminBaseController<SettingsController>

@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Ridely.Application.Features.Admin.Users.Query.GetDashboard;
 using Ridely.Application.Features.Admin.Users.Query.GetProfile;
-using Ridely.Api.Controllers.Base;
-using Ridely.Api.Extensions;
-using Ridely.Api.Shared;
+using RidelyAPI.Controllers.Base;
+using RidelyAPI.Extensions;
+using RidelyAPI.Shared;
 
-namespace Ridely.Api.Controllers.Admin.User;
+namespace RidelyAPI.Controllers.Admin.User;
 
 [Route("api/user")]
 public class UserController : AdminBaseController<UserController>

@@ -1,11 +1,12 @@
 ﻿using System.Text.Json;
+using Microsoft.Extensions.Options;
 using Ridely.Application.Abstractions.Messaging;
 using Ridely.Application.Abstractions.Payment;
+using Ridely.Application.Abstractions.Settings;
 using Ridely.Domain.Abstractions;
 using Ridely.Domain.Drivers;
 using Ridely.Domain.Services;
 using Ridely.Domain.Transactions;
-using Ridely.Shared.Helper;
 using Ridely.Shared.Helper.Keys;
 
 namespace Ridely.Application.Features.Transactions.WithdrawFunds;
@@ -19,11 +20,14 @@ internal sealed class WithdrawFundsCommandHandler :
     private readonly IDriverTransactionHistoryRepository _driverTransactionHistoryRepository;
     private readonly IDriverWalletRepository _driverWalletRepository;
     private readonly IBankAccountRepository _bankAccountRepository;
+    private readonly ApplicationSettings _applicationSettings;
 
     public WithdrawFundsCommandHandler(IUnitOfWork unitOfWork, IPaystackService paymentService,
         ICacheService cacheService, IDriverRepository driverRepository,
         IDriverTransactionHistoryRepository driverTransactionHistoryRepository,
-        IDriverWalletRepository driverWalletRepository, IBankAccountRepository bankAccountRepository)
+        IDriverWalletRepository driverWalletRepository, 
+        IBankAccountRepository bankAccountRepository,
+        IOptions<ApplicationSettings> applicationSettings)
     {
         _unitOfWork = unitOfWork;
         _paymentService = paymentService;
@@ -32,10 +36,14 @@ internal sealed class WithdrawFundsCommandHandler :
         _driverTransactionHistoryRepository = driverTransactionHistoryRepository;
         _driverWalletRepository = driverWalletRepository;
         _bankAccountRepository = bankAccountRepository;
+        _applicationSettings = applicationSettings.Value;
     }
 
     public async Task<Result<bool>> Handle(WithdrawFundsCommand request, CancellationToken cancellationToken)
     {
+        if (request.Amount < _applicationSettings.MinimumWithdrawAmount)
+            return Error.BadRequest("invalid.amount", $"Minimum withdraw amount is {_applicationSettings.MinimumWithdrawAmount}");
+
         var driver = await _driverRepository
             .GetDetailsAsync(request.DriverId);
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System.Text.RegularExpressions;
 
-namespace Ridely.Api.Global
+namespace RidelyAPI.Global
 {
     public static class InputValidator
     {

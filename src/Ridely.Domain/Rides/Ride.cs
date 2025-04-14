@@ -33,7 +33,7 @@ public sealed class Ride : Entity
     public long EstimatedFare { get; private set; }
     public long EstimatedDeliveryFare { get; private set; }
     public string SourceAddress { get; private set; }
-    public string WayPointAddresses { get; private set; } = "";
+    public string WaypointAddresses { get; private set; } = "";
     public string DestinationAddress { get; private set; }
     public string SourceCordinates { get; private set; }
     public string WaypointCordinates { get; private set; } = "";
@@ -44,12 +44,21 @@ public sealed class Ride : Entity
     [ForeignKey(nameof(ReassignFromId))]
     public Ride ReassignFrom { get; private set; }
     public RideCategory Category { get; private set; }
+    // reroute can only be done once...for now...
+    public bool WasRerouted { get; private set; } = false;
+    public string RerouteTo { get; private set; } = string.Empty;
     public string? CancellationReason { get; private set; }
+    public UserType CancelledBy { get; private set; }
     public string? ReassignReason { get; private set; }
     public DateTime CreatedAtUtc { get; private set; }
     public ICollection<Chat> Chats { get; private set; } = [];
     public ICollection<CallLog> CallLogs { get; private set; } = [];
     public ICollection<RideLog> RideLogs { get; private set; } = [];
+
+    public void UpdateEstimatedFare(long fare)
+    {
+        EstimatedFare = fare;
+    }
 
     private void UpdateCordinates(double sourceLat, double sourceLongitude,
         double destinationLat, double destinationLong)
@@ -74,16 +83,24 @@ public sealed class Ride : Entity
         };
     }
 
-    public void UpdateWaypointCoordinates(double latitude, double longitude)
+    public List<Location> GetWaypointCoordinates()
+    {
+        if (string.IsNullOrWhiteSpace(WaypointCordinates)) return [];
+
+        return JsonSerializer.Deserialize<List<Location>>(WaypointCordinates) ?? [];
+    }
+
+    public void UpdateWaypointCoordinates(double latitude, double longitude, bool rideExtension = false)
     {
         if (string.IsNullOrWhiteSpace(WaypointCordinates))
         {
-            List<Location> locations = [];
+            List<WaypointLocation> locations = [];
 
-            Location coordinates = new()
+            WaypointLocation coordinates = new()
             {
                 Latitude = latitude,
-                Longitude = longitude
+                Longitude = longitude,
+                RideExtension = rideExtension
             };
 
             locations.Add(coordinates);
@@ -94,16 +111,16 @@ public sealed class Ride : Entity
         {
             try
             {
-                List<Location> locations = JsonSerializer.Deserialize<List<Location>>(WaypointCordinates) ?? [];
+                List<WaypointLocation> locations = JsonSerializer.Deserialize<List<WaypointLocation>>(WaypointCordinates) ?? [];
 
-                locations.Add(new Location { Latitude = latitude, Longitude = longitude });
+                locations.Add(new WaypointLocation { Latitude = latitude, Longitude = longitude, RideExtension = rideExtension });
 
                 WaypointCordinates = JsonSerializer.Serialize(locations);
             }
             catch (Exception)
             {
-                List<Location> locations = [
-                        new Location{Latitude = latitude, Longitude = longitude}
+                List<WaypointLocation> locations = [
+                        new WaypointLocation{Latitude = latitude, Longitude = longitude, RideExtension = rideExtension}
                     ];
 
                 WaypointCordinates = JsonSerializer.Serialize(locations);
@@ -113,14 +130,19 @@ public sealed class Ride : Entity
 
     public void UpdateWaypointAddresses(string address)
     {
-        WayPointAddresses += $"%%{address}";
+        if (string.IsNullOrWhiteSpace(WaypointAddresses))
+            WaypointAddresses = address;
+
+        else
+            WaypointAddresses += $"%%{address}";
     }
 
     public void UpdateStatus(
         RideStatus status, 
         long? driverId = null,
         string? cancellationReason = null,
-        string? reassignReason = null)
+        string? reassignReason = null,
+        UserType cancelledBy = UserType.Rider)
     {
         Status = status;
 
@@ -132,6 +154,16 @@ public sealed class Ride : Entity
 
         if(driverId.HasValue)
             DriverId = driverId.Value;
+
+        if (status == RideStatus.Cancelled)
+            CancelledBy = cancelledBy;
+    }
+
+    public void Reroute(string address, double latitude, double longitude)
+    {
+        RerouteTo rerouteTo = new(address, latitude, longitude);
+
+        RerouteTo = rerouteTo.ToString();
     }
 
     public void UpdateRideRequest(RideCategory rideCategory, bool? haveConversation = true, 
@@ -190,4 +222,19 @@ public sealed class Ride : Entity
 
         return ride;
     }
+}
+
+internal sealed class WaypointLocation : Location
+{
+    public bool RideExtension { get; set; }
+}
+
+public sealed record RerouteTo(string Address, double Latitude, double Longitude)
+{
+    public override string ToString()
+    {
+        return JsonSerializer.Serialize(this);
+    }
+
+    public static RerouteTo FromString(string rerouteInfo) => JsonSerializer.Deserialize<RerouteTo>(rerouteInfo)!;
 }

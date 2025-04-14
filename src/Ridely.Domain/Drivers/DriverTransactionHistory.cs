@@ -2,6 +2,7 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Ridely.Domain.Abstractions;
+using Ridely.Domain.Rides;
 using Ridely.Domain.Transactions;
 
 namespace Ridely.Domain.Drivers;
@@ -36,6 +37,10 @@ public sealed class DriverTransactionHistory : Entity
     public DriverTransactionType Type { get; private set; }
     public DateTime CreatedAtUtc { get; private set; }
     public DateTime UpdatedAtUtc { get; private set; }
+    public long? RideId { get; private set; }
+
+    [ForeignKey(nameof(RideId))]
+    public Ride Ride { get; private set; }
     public void SetBankAccountDetails(string bankName, string accountNo, string accountName)
     {
         DriverBankAccount bankAccount = new(bankName, accountNo, accountName);
@@ -48,6 +53,11 @@ public sealed class DriverTransactionHistory : Entity
         Status = status;
         UpdatedAtUtc = DateTime.UtcNow;
         Error = error;
+    }
+
+    public void SetRide(long rideId)
+    {
+        RideId = rideId;
     }
 }
 

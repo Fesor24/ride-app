@@ -1,9 +1,13 @@
-﻿namespace Ridely.Application.Features.Rides.EndRide;
+﻿using Amazon.Runtime;
+
+namespace Ridely.Application.Features.Rides.EndRide;
 public class EndRideResponse
 {
-    public long Fare { get; set; }
-    public long FareDueByRider {  get; set; } 
+    public long TotalFareAmount { get; set; }
+    public long FareOutstanding {  get; set; }
+    public long DiscountInPercent { get; set; }
     public string Source { get; set; }
     public string Destination { get; set; }
-    public bool Paid { get; set; } = false;
+    public string[] Waypoints { get; set; } = [];
+    public long WaitingTimeCharge { get; set; } 
 }

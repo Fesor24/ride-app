@@ -8,6 +8,7 @@ public class GetDriverResponse
     public DriverResponse Driver { get; set; }
     public CabResponse Cab { get; set; }
     public GetReferralInfo ReferralInfo { get; set; } = new();
+    public DriverRideResponse Ride { get; set; } = new();
 }
 
 public class DriverResponse
@@ -19,13 +20,14 @@ public class DriverResponse
     public string ProfileImageUrl { get; set; }
     public string LicenseImageUrl { get; set; }
     public decimal AvailableBalance { get; set; }
-    public DateTime ZeroCommissionTripsExpiry { get; set; }
+    //public DateTime ZeroCommissionTripsExpiry { get; set; }
     public string? DeviceTokenId { get; set; }
     public decimal AvgRatings { get; set; }
     public int CompletedRides { get; set; }
     public bool IdentityValidated { get; set; }
     public string PhoneNo { get; set; }
     public string Email { get; set; }
+    public bool EmailVerified { get; set; }
 }
 
 public class CabResponse
@@ -36,4 +38,11 @@ public class CabResponse
     public string Year { get; set; }
     public string LicensePlateNo { get; set; }
     public string Color { get; set; }
+}
+
+public class DriverRideResponse
+{
+    public decimal TodaysEarnings { get; set; }
+    public int TodaysTrips { get; set; }
+    public int CancelledTrips { get; set; }
 }

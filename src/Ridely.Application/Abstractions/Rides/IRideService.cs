@@ -8,9 +8,9 @@ public interface IRideService
 {
     Task<bool> SendRequestToDriversAsync(Domain.Models.Location ridersLocation,
         RideObject ride, Rider rider,
-        List<long> excludeDrivers, RideCategory rideCategory, 
+        List<long> excludeDrivers, RideCategory rideCategory,
         bool increaseSearchRadius = false);
     Task<Result<EstimatedFareResponse>> ComputeEstimatedFare(Domain.Models.Location source,
-        Domain.Models.Location destination);
-    Task SendChatMessageAsync(string message, long riderId, bool isDriver);
+        Domain.Models.Location destination, Domain.Models.Location? waypoint = null);
+    Task SendChatMessageAsync(UserType sender, string message, string identifier, long rideId);
 }

@@ -1,9 +1,9 @@
-﻿namespace Ridely.Api.WebSocket.Controller;
+﻿namespace RidelyAPI.WebSocket.Controller;
 
-public class WebSocketControllerBase
-{
-    public string UserIdentifier { get; set; }
+//public class WebSocketControllerBase
+//{
+//    public string UserIdentifier { get; set; }
 
-    public virtual void Disconnect(string userIdentifier) =>
-        Console.WriteLine("Disconnected: User Identifier: " + userIdentifier);
-}
+//    public virtual void Disconnect(string userIdentifier) =>
+//        Console.WriteLine("Disconnected: User Identifier: " + userIdentifier);
+//}

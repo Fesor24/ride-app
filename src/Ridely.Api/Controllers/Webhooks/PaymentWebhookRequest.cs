@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Ridely.Api.Controllers.Webhooks;
+namespace RidelyAPI.Controllers.Webhooks;
 
 public class PaymentWebhookRequest
 {

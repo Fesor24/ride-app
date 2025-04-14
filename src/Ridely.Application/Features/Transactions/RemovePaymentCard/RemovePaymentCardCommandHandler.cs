@@ -33,7 +33,7 @@ internal sealed class RemovePaymentCardCommandHandler :
                 RiderId = request.RiderId,
                 PageNumber = 1,
                 PageSize = 10,
-                RideStatus = [RideStatus.Matched, RideStatus.InTransit]
+                RideStatus = [RideStatus.Matched, RideStatus.Started]
             });
 
         if (activeRides.TotalItems > 0) return Error.BadRequest("disallowed",
