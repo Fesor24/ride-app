@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="MigrationScripts\" />
+    <Folder Include="Hubs\" />
     <Folder Include="Scripts\" />
   </ItemGroup>
 

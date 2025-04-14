@@ -100,10 +100,10 @@ public static class DependencyInjection
 
         string connectionString = config.GetConnectionString("AzureWebPubSub") ?? "";
 
-        services.AddWebPubSub(options =>
-        {
-            options.ServiceEndpoint = new WebPubSubServiceEndpoint(connectionString);
-        }).AddWebPubSubServiceClient<MainApplicationHub>();
+        //services.AddWebPubSub(options =>
+        //{
+        //    options.ServiceEndpoint = new WebPubSubServiceEndpoint(connectionString);
+        //}).AddWebPubSubServiceClient<MainApplicationHub>();
 
         services.AddSingleton<WebSocketEventHandler>();
     }
@@ -122,30 +122,41 @@ public static class DependencyInjection
 
             // main api...
             config.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("main", false));
-            
+
+            config.UsingRabbitMq((ctx, cfg) =>
+            {
+                cfg.Host(rabbitMqOptions.Host, "/", hst =>
+                {
+                    hst.Username(rabbitMqOptions.Username);
+                    hst.Password(rabbitMqOptions.Password);
+                });
+
+                cfg.ConfigureEndpoints(ctx);
+            });
+
             // todo: use azure service bus image...
-            if(env == "Docker" || env == "Development")
-            {
-                config.UsingRabbitMq((ctx, cfg) =>
-                {
-                    cfg.Host(rabbitMqOptions.Host, "/", hst =>
-                    {
-                        hst.Username(rabbitMqOptions.Username);
-                        hst.Password(rabbitMqOptions.Password);
-                    });
+            //if (env == "Docker" || env == "Development")
+            //{
+            //    config.UsingRabbitMq((ctx, cfg) =>
+            //    {
+            //        cfg.Host(rabbitMqOptions.Host, "/", hst =>
+            //        {
+            //            hst.Username(rabbitMqOptions.Username);
+            //            hst.Password(rabbitMqOptions.Password);
+            //        });
 
-                    cfg.ConfigureEndpoints(ctx);
-                });
-            }
-            else
-            {
-                config.UsingAzureServiceBus((ctx, cfg) =>
-                {
-                    cfg.Host(connectionString);
+            //        cfg.ConfigureEndpoints(ctx);
+            //    });
+            //}
+            //else
+            //{
+            //    config.UsingAzureServiceBus((ctx, cfg) =>
+            //    {
+            //        cfg.Host(connectionString);
 
-                    cfg.ConfigureEndpoints(ctx);
-                });
-            }
+            //        cfg.ConfigureEndpoints(ctx);
+            //    });
+            //}
 
             //config.UsingRabbitMq((ctx, cfg) =>
             //{

@@ -11,8 +11,6 @@ public sealed class WebSocketEventHandler
 
     public WebSocketEventHandler(IServiceProvider serviceProvider)
     {
-        Console.WriteLine("Constructor called");
-
         _eventMapper = new();
 
         var handlerTypes = Assembly.GetExecutingAssembly()

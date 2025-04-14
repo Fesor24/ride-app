@@ -15,12 +15,11 @@ internal class WebSocketManager : IWebSocketManager
     private readonly ConcurrentDictionary<string, WebSocket> _sockets = new();
 
     private readonly ILogger<WebSocketManager> _logger;
-    private readonly WebPubSubServiceClient<MainApplicationHub> _webPubSubServiceClient;
+    //private readonly WebPubSubServiceClient<MainApplicationHub> _webPubSubServiceClient;
 
-    public WebSocketManager(ILogger<WebSocketManager> logger, WebPubSubServiceClient<MainApplicationHub> webPubSubServiceClient)
+    public WebSocketManager(ILogger<WebSocketManager> logger)
     {
         _logger = logger;
-        _webPubSubServiceClient = webPubSubServiceClient;
     }
 
     public WebSocket AddWebSocket(string userKey, WebSocket socket)
@@ -70,30 +69,30 @@ internal class WebSocketManager : IWebSocketManager
 
     public async Task<bool> SendMessageAsync(string userKey, string message)
     {
-        //WebSocket? webSocket = GetWebSocket(userKey);
+        WebSocket? webSocket = GetWebSocket(userKey);
 
-        //if (webSocket is null) return false;
+        if (webSocket is null) return false;
 
-        //if(webSocket.State == WebSocketState.Open)
-        //{
-        //    byte[] messageBytes = Encoding.UTF8.GetBytes(message);
+        if (webSocket.State == WebSocketState.Open)
+        {
+            byte[] messageBytes = Encoding.UTF8.GetBytes(message);
 
-        //    await webSocket.SendAsync(messageBytes, WebSocketMessageType.Text, true, CancellationToken.None);
+            await webSocket.SendAsync(messageBytes, WebSocketMessageType.Text, true, CancellationToken.None);
 
-        //    Console.WriteLine("<---- Message sent ---->");
+            Console.WriteLine("<---- Message sent ---->");
 
-        //    return true;
-        //}
-        //else
-        //{
-        //    await RemoveWebSocket(userKey);
+            return true;
+        }
+        else
+        {
+            await RemoveWebSocket(userKey);
 
-        //    return false;
-        //}
+            return false;
+        }
 
-        await _webPubSubServiceClient.SendToUserAsync(userKey, message, ContentType.ApplicationJson);
+        //await _webPubSubServiceClient.SendToUserAsync(userKey, message, ContentType.ApplicationJson);
 
-        return true;
+        //return true;
     }
 
     public async Task SendToMultipleAsync(List<string> userKeys, string message)
