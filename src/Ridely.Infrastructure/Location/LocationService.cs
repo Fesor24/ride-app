@@ -1,4 +1,6 @@
 ﻿using System.Text.Json;
+using Azure.Messaging.EventHubs;
+using Azure.Messaging.EventHubs.Producer;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Ridely.Application.Abstractions.Location;
@@ -16,13 +18,16 @@ internal sealed class LocationService : ILocationService
     private readonly IDatabase _database;
     private readonly ApplicationDbContext _context;
     private readonly IHubContext<RideHub> _rideHubContext;
+    private readonly EventHubProducerClient _eventHubProducerClient;
 
     public LocationService(IConnectionMultiplexer connectionMultiplexer, 
-        ApplicationDbContext context, IHubContext<RideHub> rideHubContext)
+        ApplicationDbContext context, IHubContext<RideHub> rideHubContext, 
+        EventHubProducerClient eventHubProducerClient)
     {
         _database = connectionMultiplexer.GetDatabase();
         _context = context;
         _rideHubContext = rideHubContext;
+        _eventHubProducerClient = eventHubProducerClient;
     }
 
     public async Task UpdateDriverLocationAsync(Domain.Models.Location location, 
@@ -76,6 +81,11 @@ internal sealed class LocationService : ILocationService
                    location.Longitude
                });
         }
+        
+        // Update location to EventHub
+        // Partitions enable parallel processing of data...
+        // todo: only updated when driver is matched to a ride
+        await PublishLocationEventToHub(location.Latitude, location.Longitude, location.Sequence);
 
         //string riderWebSocketKey = WebSocketKeys.Rider.Key(driverMatched!);
 
@@ -261,5 +271,21 @@ internal sealed class LocationService : ILocationService
             .ToList());
 
         return driverIds;
+    }
+
+    private async Task PublishLocationEventToHub(double lat, double longitude, int sequence)
+    {
+        var locationEventData = new
+        {
+            lat, longitude, sequence
+        };
+        
+        EventData eventData = new(JsonSerializer.Serialize(locationEventData));
+        
+        await _eventHubProducerClient.SendAsync([eventData], new SendEventOptions()
+        {
+            PartitionKey = "1" // should be driver id...
+            // Specifying PartitionId means it will always go to that partition...
+        });
     }
 }

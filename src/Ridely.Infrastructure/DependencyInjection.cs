@@ -6,6 +6,7 @@ using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Ridely.Application.Abstractions.Authentication;
@@ -88,7 +89,20 @@ public static class DependencyInjection
 
         AddMassTransit(services, config);
 
+        AddEventHubs(services, config);
+
         return services;
+    }
+
+    private static void AddEventHubs(IServiceCollection services, IConfiguration config)
+    {
+        string eventHubConnectionString = config["Azure:EventHub:ConnectionStrings"] ?? "";
+        string eventHubName = config["Azure:EventHub:Name"] ?? "";
+        
+        services.AddAzureClients(builder =>
+        {
+            builder.AddEventHubProducerClient(eventHubConnectionString, eventHubName);
+        });
     }
 
     private static void AddDefaultHttpResilience(IServiceCollection services)
