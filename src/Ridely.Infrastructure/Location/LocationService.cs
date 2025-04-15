@@ -85,7 +85,7 @@ internal sealed class LocationService : ILocationService
         // Update location to EventHub
         // Partitions enable parallel processing of data...
         // todo: only updated when driver is matched to a ride
-        await PublishLocationEventToHub(location.Latitude, location.Longitude, location.Sequence);
+        await PublishLocationEventToHub(location.Latitude, location.Longitude, driverId);
 
         //string riderWebSocketKey = WebSocketKeys.Rider.Key(driverMatched!);
 
@@ -273,19 +273,20 @@ internal sealed class LocationService : ILocationService
         return driverIds;
     }
 
-    private async Task PublishLocationEventToHub(double lat, double longitude, int sequence)
+    private async Task PublishLocationEventToHub(double lat, double longitude, string driverId)
     {
         var locationEventData = new
         {
-            lat, longitude, sequence
+            lat, longitude, driverId
         };
         
         EventData eventData = new(JsonSerializer.Serialize(locationEventData));
         
         await _eventHubProducerClient.SendAsync([eventData], new SendEventOptions()
         {
-            PartitionKey = "1" // should be driver id...
+            PartitionKey = driverId
             // Specifying PartitionId means it will always go to that partition...
+            // Hence, we do not specify it...
         });
     }
 }

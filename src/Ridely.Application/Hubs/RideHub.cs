@@ -34,8 +34,7 @@ public class RideHub : Hub
             await _locationService.UpdateDriverLocationAsync(new Domain.Models.Location
             {
                 Latitude = location.Latitude,
-                Longitude = location.Longitude,
-                Sequence = location.Sequence
+                Longitude = location.Longitude
             }, DriverKey.LocationUpdates(driverIdentifier));
         }
 
@@ -127,7 +126,7 @@ public class RideHub : Hub
 }
 
 public sealed record DriverLocationUpdate(
-    double Latitude, double Longitude, int Sequence);
+    double Latitude, double Longitude);
 
 public sealed record RiderLocationUpdate(
     double Latitude, double Longitude);
