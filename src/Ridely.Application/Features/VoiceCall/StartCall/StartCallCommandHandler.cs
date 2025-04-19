@@ -25,7 +25,8 @@ namespace Ridely.Application.Features.VoiceCall.StartCall
             var ride = await _rideRepository
                 .GetAsync(request.RideId);
 
-            if (ride is null) return Error.NotFound("ride.notfound", "Ride not found");
+            if (ride is null) 
+                return Error.NotFound("ride.notfound", "Ride not found");
 
             CallLog callLog = new(
                 ride.Id,

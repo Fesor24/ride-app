@@ -11,7 +11,8 @@ namespace Ridely.Application.Features.VoiceCall.EndCall
         {
             var callLog = await callLogRepository.GetAsync(request.CallId);
 
-            if (callLog is null) return Error.NotFound("calllog.notfound", "Call log not found");
+            if (callLog is null) 
+                return Error.NotFound("calllog.notfound", "Call log not found");
 
             if (callLog.CallEndUtc.HasValue) return true;
 

@@ -277,7 +277,10 @@ internal sealed class LocationService : ILocationService
     {
         var locationEventData = new
         {
-            lat, longitude, driverId
+            lat, 
+            longitude, 
+            driverId,
+            rideId = 1 // todo: replace with actual rideid
         };
         
         EventData eventData = new(JsonSerializer.Serialize(locationEventData));

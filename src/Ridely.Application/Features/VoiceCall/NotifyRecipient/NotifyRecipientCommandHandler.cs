@@ -60,29 +60,8 @@ namespace Ridely.Application.Features.VoiceCall.NotifyRecipient
                 //string driverWebSocketKey = WebSocketKeys.Driver.Key(ride.DriverId.Value.ToString());
 
                 //token for the driver...
-                var (token, channel) = await _voiceService.GenerateAgoraAccessTokenAsync(ride.Id.ToString(), true);
-
-                //var callRouteMessage = WebSocketMessage<object>.Create(
-                //    SocketEventConstants.ROUTE_CALL,
-                //    new
-                //    {
-                //        message = "Call routed",
-                //        createdAt = callInitiatedTime,
-                //        expiryInSeconds = 10,
-                //        rideId = ride.Id,
-                //        callerInfo = new
-                //        {
-                //            caller = "rider",
-                //            name = rider.FirstName + " " + rider.LastName,
-                //            profileImage = rider.ProfileImageUrl
-                //        },
-                //        callInfo = new
-                //        {
-                //            recipient = "driver",
-                //            token,
-                //            channel
-                //        }
-                //    });
+                var (token, channel) = await _voiceService
+                    .GenerateAgoraAccessTokenAsync(ride.Id.ToString(), true);
 
                 var data = new Dictionary<string, string>
                 {
@@ -137,28 +116,8 @@ namespace Ridely.Application.Features.VoiceCall.NotifyRecipient
                 //string riderWebSocketKey = WebSocketKeys.Rider.Key(ride.RiderId.ToString());
 
                 //token for the rider...
-                var (token, channel) = await _voiceService.GenerateAgoraAccessTokenAsync(ride.Id.ToString(), false);
-
-                //var callRouteMessage = WebSocketMessage<object>.Create(
-                //    SocketEventConstants.ROUTE_CALL,
-                //    new
-                //    {
-                //        createdAt = callInitiatedTime,
-                //        expiryInSeconds = 10,
-                //        rideId = ride.Id,
-                //        callerInfo = new
-                //        {
-                //            caller = "driver",
-                //            name = driver.FirstName + " " + driver.LastName,
-                //            profileImage = driver.ProfileImageUrl
-                //        },
-                //        callInfo = new
-                //        {
-                //            recipient = "rider",
-                //            token,
-                //            channel
-                //        }
-                //    });
+                var (token, channel) = await _voiceService
+                    .GenerateAgoraAccessTokenAsync(ride.Id.ToString(), false);
 
                 var data = new Dictionary<string, string>
                 {
