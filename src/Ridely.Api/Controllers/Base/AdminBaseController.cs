@@ -1,9 +1,7 @@
 ﻿using System.Security.Claims;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RidelyAPI.Filter;
 
 namespace RidelyAPI.Controllers.Base

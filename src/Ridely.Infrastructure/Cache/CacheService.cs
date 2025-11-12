@@ -9,9 +9,10 @@ internal class CacheService(IConnectionMultiplexer connectionMultiplexer) : ICac
 
     public async Task<TObject?> GetAsync<TObject>(string key)
     {
-        var value = await db.StringGetAsync(key);
+        string? value = await db.StringGetAsync(key);
 
-        return value.IsNullOrEmpty ? default : JsonSerializer.Deserialize<TObject>(value!);
+        return value is null ? default : 
+            JsonSerializer.Deserialize<TObject>(value!);
     }
 
     public async Task<string?> GetAsync(string key) =>

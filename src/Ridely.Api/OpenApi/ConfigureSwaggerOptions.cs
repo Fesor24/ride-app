@@ -1,6 +1,8 @@
-﻿using Asp.Versioning.ApiExplorer;
+﻿using System.Runtime.CompilerServices;
+using Asp.Versioning.ApiExplorer;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
+//using Microsoft.OpenApi.Models;
+// TODO: Add open api docs...
 using RidelyAPI.Controllers;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -16,30 +18,32 @@ namespace RidelyAPI.OpenApi
 
         public void Configure(SwaggerGenOptions options)
         {
-            foreach(var description in provider.ApiVersionDescriptions)
-            {
-                options.SwaggerDoc(description.GroupName, CreateVersionInfo(description));
-            }
+            return;
+
+            //foreach(var description in provider.ApiVersionDescriptions)
+            //{
+            //    options.SwaggerDoc(description.GroupName, CreateVersionInfo(description));
+            //}
         }
 
-        private static OpenApiInfo CreateVersionInfo(ApiVersionDescription versionDescription)
-        {
-            var openApiInfo = new OpenApiInfo
-            {
-                Title = $"Ridely.Api v{versionDescription.ApiVersion}",
-                Description = "V." + versionDescription.ApiVersion.ToString()
-            };
+        //private static OpenApiInfo CreateVersionInfo(ApiVersionDescription versionDescription)
+        //{
+        //    var openApiInfo = new OpenApiInfo
+        //    {
+        //        Title = $"Ridely.Api v{versionDescription.ApiVersion}",
+        //        Description = "V." + versionDescription.ApiVersion.ToString()
+        //    };
 
-            if (versionDescription.IsDeprecated)
-                openApiInfo.Title += " This Api version has been deprecated";
+        //    if (versionDescription.IsDeprecated)
+        //        openApiInfo.Title += " This Api version has been deprecated";
 
-            if(versionDescription.GroupName.Equals(SwaggerGroupNames.Admin, StringComparison.InvariantCultureIgnoreCase))
-            {
-                openApiInfo.Title = "Ridely.Api Admin";
-                openApiInfo.Description = "Ridely Admin Endpoints";
-            }
+        //    if(versionDescription.GroupName.Equals(SwaggerGroupNames.Admin, StringComparison.InvariantCultureIgnoreCase))
+        //    {
+        //        openApiInfo.Title = "Ridely.Api Admin";
+        //        openApiInfo.Description = "Ridely Admin Endpoints";
+        //    }
 
-            return openApiInfo;
-        }
+        //    return openApiInfo;
+        //}
     }
 }

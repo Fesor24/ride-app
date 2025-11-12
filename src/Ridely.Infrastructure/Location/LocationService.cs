@@ -257,11 +257,11 @@ internal sealed class LocationService : ILocationService
     {
         string key = RideKeys.DriversCancelled(riderId);
 
-        var cancelledDrivers = await _database.StringGetAsync(key);
+        string? cancelledDrivers = await _database.StringGetAsync(key);
 
-        if (cancelledDrivers.IsNullOrEmpty) return [];
+        if (string.IsNullOrWhiteSpace(cancelledDrivers)) return [];
 
-        var drivers = JsonSerializer.Deserialize<List<CancelledDrivers>>(cancelledDrivers!) ?? [];
+        var drivers = JsonSerializer.Deserialize<List<CancelledDrivers>>(cancelledDrivers) ?? [];
 
         List<long> driverIds = [];
 

@@ -81,6 +81,7 @@ public sealed class Driver : Entity
     public ICollection<BankAccount> BankAccounts { get; private set; } = [];
     public ICollection<DriverReferrers> DriverReferrers { get; private set; } = [];
     public ICollection<DriverDiscount> Discounts { get; private set; } = [];
+    //public string IdentityId { get; private set; } = string.Empty;
 
     public void SetStatusAndUpdateLocation(double lat, double longitude, DriverStatus status)
     {

@@ -1,6 +1,7 @@
 ﻿using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.OpenApi.Models;
+//using Microsoft.OpenApi.Models;
+// TODO: Add open api docs....
 using Ridely.Infrastructure.Outbox;
 using RidelyAPI.Middlewares;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -48,51 +49,53 @@ public static class ApplicationBuilderExtensions
 
     private static void JwtBearer(SwaggerGenOptions opts)
     {
-        opts.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
-        {
-            Description = "JWT Authorization header using the bearer scheme",
-            Name = "Authorization",
-            In = ParameterLocation.Header,
-            Type = SecuritySchemeType.Http,
-            Scheme = JwtBearerDefaults.AuthenticationScheme
-        });
+        return;
 
-        opts.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
-        {
-            Description = "x-api-key",
-            In = ParameterLocation.Header,
-            Name = "x-api-key",
-            Type = SecuritySchemeType.ApiKey
-        });
+        //opts.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
+        //{
+        //    Description = "JWT Authorization header using the bearer scheme",
+        //    Name = "Authorization",
+        //    In = ParameterLocation.Header,
+        //    Type = SecuritySchemeType.Http,
+        //    Scheme = JwtBearerDefaults.AuthenticationScheme
+        //});
 
-        opts.AddSecurityRequirement(new OpenApiSecurityRequirement
-        {
-            {
-                new OpenApiSecurityScheme
-                {
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = JwtBearerDefaults.AuthenticationScheme,
-                    },
-                },
-                new List<string>()
-            }
-        });
+        //opts.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+        //{
+        //    Description = "x-api-key",
+        //    In = ParameterLocation.Header,
+        //    Name = "x-api-key",
+        //    Type = SecuritySchemeType.ApiKey
+        //});
 
-        opts.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "ApiKey"
-                        }
-                    },
-                    new string[] {}
-                }
-            });
+        //opts.AddSecurityRequirement(new OpenApiSecurityRequirement
+        //{
+        //    {
+        //        new OpenApiSecurityScheme
+        //        {
+        //            Reference = new OpenApiReference
+        //            {
+        //                Type = ReferenceType.SecurityScheme,
+        //                Id = JwtBearerDefaults.AuthenticationScheme,
+        //            },
+        //        },
+        //        new List<string>()
+        //    }
+        //});
+
+        //opts.AddSecurityRequirement(new OpenApiSecurityRequirement
+        //    {
+        //        {
+        //            new OpenApiSecurityScheme
+        //            {
+        //                Reference = new OpenApiReference
+        //                {
+        //                    Type = ReferenceType.SecurityScheme,
+        //                    Id = "ApiKey"
+        //                }
+        //            },
+        //            new string[] {}
+        //        }
+        //    });
     }
 }

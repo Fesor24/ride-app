@@ -58,6 +58,7 @@ public sealed class Rider : Entity
     public ICollection<SavedLocation> SavedLocations { get; private set; } = [];
     public ICollection<RiderReferrers> Referrers { get; private set; } = [];
     public ICollection<RiderDiscount> Discounts { get; private set; } = [];
+    //public string IdentityId { get; private set; } = string.Empty;
 
     public void UpdateRefreshToken(string refreshToken)
     {

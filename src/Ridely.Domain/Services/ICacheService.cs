@@ -1,4 +1,6 @@
-﻿namespace Ridely.Domain.Services;
+﻿using System.Text.Json;
+
+namespace Ridely.Domain.Services;
 public interface ICacheService
 {
     Task<TObject?> GetAsync<TObject>(string key);
